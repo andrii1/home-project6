@@ -13,6 +13,8 @@ const stripe = require('./stripe.router');
 const comments = require('./comments.router');
 const cloudinary = require('./cloudinary.router');
 const keywords = require('./keywords.router');
+const searches = require('./searches.router');
+const tags = require('./tags.router');
 
 /* GET home page. */
 // router.get('/', function(req, res, next) {
@@ -53,5 +55,7 @@ router.use('/stripe', stripe);
 router.use('/cloudinary', cloudinary);
 router.use('/comments', comments);
 router.use('/keywords', keywords);
+router.use('/searches', searches);
+router.use('/tags', tags);
 
 module.exports = router;

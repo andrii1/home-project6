@@ -97,7 +97,27 @@ router.get('/', (req, res, next) => {
   //     .then((result) => res.json(result))
   //     .catch(next);
   // }
-  else if (req.query.page) {
+  else if (req.query.searchTerm) {
+    quotesController
+      .getQuotesBySearchTerm(
+        req.query.page,
+        req.query.column,
+        req.query.direction,
+        req.query.searchTerm,
+      )
+      .then((result) => res.json(result))
+      .catch(next);
+  } else if (req.query.tag) {
+    quotesController
+      .getQuotesByTag(
+        req.query.page,
+        req.query.column,
+        req.query.direction,
+        req.query.tag,
+      )
+      .then((result) => res.json(result))
+      .catch(next);
+  } else if (req.query.page) {
     quotesController
       .getQuotes(req.query.page, req.query.column, req.query.direction)
       .then((result) => res.json(result))

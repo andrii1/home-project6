@@ -298,6 +298,70 @@ const getQuotes = async (page, column, direction) => {
 //   }
 // };
 
+const getQuotesBySearchTerm = async (page, column, direction, searchTerm) => {
+  const lastItemDirection = getOppositeOrderDirection(direction);
+  try {
+    const getModel = () =>
+      knex('quotes')
+        .select(
+          'quotes.*',
+          'authors.full_name as authorFullName',
+          'searches.id as searchId',
+          'searches.title as searchTitle',
+        )
+        .join('authors', 'quotes.author_id', '=', 'authors.id')
+        .join('searchesQuotes', 'searchesQuotes.deal_id', '=', 'quotes.id')
+        .join('searches', 'searches.id', '=', 'searchesQuotes.search_id')
+        .where('searches.id', '=', `${searchTerm}`);
+    const lastItem = await getModel()
+      .orderBy(column, lastItemDirection)
+      .limit(1);
+    const data = await getModel()
+      .orderBy(column, direction)
+      .offset(page * 10)
+      .limit(10)
+      .select();
+    return {
+      lastItem: lastItem[0],
+      data,
+    };
+  } catch (error) {
+    return error.message;
+  }
+};
+
+const getQuotesByTag = async (page, column, direction, tag) => {
+  const lastItemDirection = getOppositeOrderDirection(direction);
+  try {
+    const getModel = () =>
+      knex('quotes')
+        .select(
+          'quotes.*',
+          'authors.full_name as authorFullName',
+          'tags.id as tagId',
+          'tags.title as tagTitle',
+        )
+        .join('authors', 'quotes.author_id', '=', 'authors.id')
+        .join('tagsQuotes', 'tagsQuotes.quote_id', '=', 'quotes.id')
+        .join('tags', 'tags.id', '=', 'tagsQuotes.tag_id')
+        .where('tags.id', '=', `${tag}`);
+    const lastItem = await getModel()
+      .orderBy(column, lastItemDirection)
+      .limit(1);
+    const data = await getModel()
+      .orderBy(column, direction)
+      .offset(page * 10)
+      .limit(10)
+      .select();
+    return {
+      lastItem: lastItem[0],
+      data,
+    };
+  } catch (error) {
+    return error.message;
+  }
+};
+
 const getQuotesBy = async ({
   page,
   column,
@@ -417,6 +481,8 @@ module.exports = {
   // getAppsByCategoriesSearch,
   // getAppsByTopics,
   // getAppsByTopic,
+  getQuotesByTag,
+  getQuotesBySearchTerm,
   getQuotesBy,
   // getAppsByTopicsSearch,
   // getAppsByCategory,
