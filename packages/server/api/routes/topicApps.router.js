@@ -1,7 +1,7 @@
 const express = require('express');
 
 const router = express.Router({ mergeParams: true });
-const appsController = require('../controllers/apps.controller');
+const appsController = require('../controllers/quotes.controller');
 
 router.get('/', (req, res, next) => {
   appsController

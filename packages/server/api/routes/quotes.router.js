@@ -10,7 +10,7 @@ const topicAppsRouter = require('./topicApps.router');
 router.use('/topics/:topicId/apps', topicAppsRouter);
 
 // controllers
-const appsController = require('../controllers/apps.controller');
+const quotesController = require('../controllers/quotes.controller');
 
 /**
  * @swagger
@@ -29,20 +29,22 @@ const appsController = require('../controllers/apps.controller');
  *        description: Unexpected error.
  */
 router.get('/', (req, res, next) => {
-  if (req.query.filteredTopics && req.query.search) {
-    const array = req.query.filteredTopics.split(',');
-    appsController
-      .getAppsByTopicsSearch(
-        req.query.search,
-        array,
-        req.query.column,
-        req.query.direction,
-        req.query.page,
-        req.query.size,
-      )
-      .then((result) => res.json(result))
-      .catch(next);
-  } else if (
+  // if (req.query.filteredTopics && req.query.search) {
+  //   const array = req.query.filteredTopics.split(',');
+  //   quotesController
+  //     .getAppsByTopicsSearch(
+  //       req.query.search,
+  //       array,
+  //       req.query.column,
+  //       req.query.direction,
+  //       req.query.page,
+  //       req.query.size,
+  //     )
+  //     .then((result) => res.json(result))
+  //     .catch(next);
+  // } else
+
+  if (
     req.query.filteredTopics ||
     req.query.filteredCategories ||
     req.query.filteredPricing ||
@@ -59,8 +61,8 @@ router.get('/', (req, res, next) => {
       arrayDetails = decoded.split(',');
     }
     // const array = req.query.filteredTopics.split(',');
-    appsController
-      .getAppsBy({
+    quotesController
+      .getQuotesBy({
         page: req.query.page,
         column: req.query.column,
         direction: req.query.direction,
@@ -96,13 +98,13 @@ router.get('/', (req, res, next) => {
   //     .catch(next);
   // }
   else if (req.query.page) {
-    appsController
-      .getApps(req.query.page, req.query.column, req.query.direction)
+    quotesController
+      .getQuotes(req.query.page, req.query.column, req.query.direction)
       .then((result) => res.json(result))
       .catch(next);
   } else {
-    appsController
-      .getAppsAll()
+    quotesController
+      .getQuotesAll()
       .then((result) => res.json(result))
       .catch(next);
   }
@@ -112,8 +114,8 @@ router.get('/', (req, res, next) => {
 
 router.post('/', (req, res, next) => {
   const { token } = req.headers;
-  appsController
-    .createApps(token, req.body)
+  quotesController
+    .createQuotes(token, req.body)
     .then((result) => res.json(result))
     .catch(next);
 });
@@ -144,8 +146,8 @@ router.post('/', (req, res, next) => {
  */
 
 router.get('/:id', (req, res, next) => {
-  appsController
-    .getAppById(req.params.id)
+  quotesController
+    .getQuoteById(req.params.id)
     .then((result) => res.json(result))
     .catch(next);
 });

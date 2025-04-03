@@ -4,12 +4,9 @@ documentation. Can be deleted when the first real route is added. */
 const express = require('express');
 
 const router = express.Router({ mergeParams: true });
-// const topicAppsRouter = require('./topicApps.router');
-
-// router.use('/:id/apps', topicAppsRouter);
 
 // controllers
-const topicsController = require('../controllers/topics.controller');
+const authorsController = require('../controllers/authors.controller');
 
 /**
  * @swagger
@@ -29,14 +26,14 @@ const topicsController = require('../controllers/topics.controller');
  */
 router.get('/', (req, res, next) => {
   if (req.query.category) {
-    topicsController
+    authorsController
       .getTopicsByCategory(req.query.category)
       .then((result) => res.json(result))
       .catch(next);
   } else {
     try {
-      topicsController
-        .getTopics()
+      authorsController
+        .getAuthors()
         .then((result) => res.json(result))
         .catch(next);
     } catch (error) {

@@ -6,7 +6,7 @@ const commentsController = require('../controllers/comments.controller');
 router.get('/', (req, res, next) => {
   if (req.query.appId) {
     commentsController
-      .getCommentsByAppId(req.query.appId)
+      .getCommentsByQuoteId(req.query.appId)
       .then((result) => res.json(result))
       .catch(next);
   } else {

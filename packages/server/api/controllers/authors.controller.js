@@ -4,17 +4,15 @@ Can be deleted as soon as the first real controller is added. */
 const knex = require('../../config/db');
 
 /* Get all topics */
-const getTopics = async () => {
+const getAuthors = async () => {
   try {
-    const topics = await knex('topics')
-      .select(
-        'topics.id as id',
-        'topics.title as title',
-        'topics.category_id as categoryId',
-        'categories.title as categoryTitle',
-      )
-      .join('categories', 'topics.category_id', '=', 'categories.id');
-    return topics;
+    const authors = await knex('authors').select(
+      'authors.id as id',
+      'authors.full_name as fullName',
+      'authors.description as description',
+    );
+
+    return authors;
   } catch (error) {
     return error.message;
   }
@@ -31,6 +29,6 @@ const getTopicsByCategory = async (category) => {
 };
 
 module.exports = {
-  getTopics,
+  getAuthors,
   getTopicsByCategory,
 };
