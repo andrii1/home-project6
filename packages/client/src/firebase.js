@@ -20,12 +20,12 @@ import {
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_KEY,
-  authDomain: 'apps-with-ai.firebaseapp.com',
-  projectId: 'apps-with-ai',
-  storageBucket: 'apps-with-ai.appspot.com',
-  messagingSenderId: '116758707192',
-  appId: '1:116758707192:web:29e51c7003df988b63340d',
-  measurementId: 'G-ZLPFT1PR3S',
+  authDomain: 'motivately-7639e.firebaseapp.com',
+  projectId: 'motivately-7639e',
+  storageBucket: 'motivately-7639e.firebasestorage.app',
+  messagingSenderId: '457204494682',
+  appId: '1:457204494682:web:e03826e57146d566bc8363',
+  measurementId: 'G-WTC478NQXV',
 };
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);

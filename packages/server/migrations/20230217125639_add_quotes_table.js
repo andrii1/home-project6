@@ -8,7 +8,6 @@ exports.up = function (knex) {
     table.text('title').notNullable();
     table.text('description').nullable();
     table.text('url').nullable();
-    table.text('url').nullable();
     table.text('meta_description').nullable();
     table.integer('author_id').unsigned();
     table.foreign('author_id').references('id').inTable('authors');
