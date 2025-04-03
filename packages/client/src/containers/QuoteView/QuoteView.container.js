@@ -30,7 +30,7 @@ import appImage from '../../assets/images/app-placeholder.svg';
 import { faHeart } from '@fortawesome/free-regular-svg-icons';
 
 import { apiURL } from '../../apiURL';
-import './AppView.styles.css';
+import './QuoteView.styles.css';
 import { useUserContext } from '../../userContext';
 
 const searches = [
@@ -111,7 +111,7 @@ const alternativeApps = [
     categoryTitle: 'Marketing & Sales',
   },
 ];
-export const AppView = () => {
+export const QuoteView = () => {
   const { id } = useParams();
   const [openModal, setOpenModal] = useState(false);
   const [modalTitle, setModalTitle] = useState('');

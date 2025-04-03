@@ -2,11 +2,11 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
 import { Categories } from './containers/Categories/Categories.Container';
-import { Apps } from './containers/Apps/Apps.Container';
+import { Quotes } from './containers/Quotes/Quotes.Container';
 import { LandingPage } from './containers/LandingPage/LandingPage.Container';
 import TestPage from './containers/TestPage/TestPage.Container';
 import { Prompts } from './containers/Prompts/Prompts.Container';
-import { AppView } from './containers/AppView/AppView.container';
+import { QuoteView } from './containers/QuoteView/QuoteView.container';
 import { Signup } from './containers/Signup/Signup.Container';
 import Login from './containers/Login/Login.Container';
 import Reset from './containers/Reset/Reset.Container';
@@ -28,19 +28,23 @@ function App() {
         <UserProvider>
           <Navigation />
           <Routes>
-            <Route path="/" element={<Apps />} />
+            <Route path="/" element={<Quotes />} />
             <Route path="/landing" element={<LandingPage />} />
             <Route path="/test" element={<Prompts />} />
             <Route path="/categories" element={<Categories />} />
-            <Route exact path="/apps/:id" element={<AppView />} />
-            <Route exact path="/apps/topic/:topicIdParam" element={<Apps />} />
+            <Route exact path="/quotes/:id" element={<QuoteView />} />
             <Route
+              exact
+              path="/quotes/author/:authorIdParam"
+              element={<Quotes />}
+            />
+            {/* <Route
               exact
               path="/apps/category/:categoryIdParam"
               element={<Apps />}
-            />
+            /> */}
             <Route exact path="/faq" element={<Faq />} />
-            <Route exact path="/apps/new" element={<Submit />} />
+            <Route exact path="/quotes/new" element={<Submit />} />
             <Route exact path="/success" element={<StripeSuccess />} />
             <Route exact path="/cancel" element={<StripeCancel />} />
             <Route exact path="/bookmarks" element={<Bookmarks />} />

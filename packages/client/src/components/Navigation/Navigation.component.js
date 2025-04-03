@@ -48,24 +48,23 @@ export const Navigation = () => {
 
   useEffect(() => {
     async function fetchCategories() {
-      const responseCategories = await fetch(`${apiURL()}/categories/`);
-      const responseTopics = await fetch(`${apiURL()}/topics/`);
-      const categoriesResponse = await responseCategories.json();
-      const topicsResponse = await responseTopics.json();
-      setTopics(topicsResponse);
-      const combinedArray = categoriesResponse.concat(topicsResponse);
+      const response = await fetch(`${apiURL()}/authors/`);
+
+      const data = await response.json();
+      // setTopics(topicsResponse);
+
       if (searchTerms) {
-        const filteredSearch = combinedArray.filter((item) =>
+        const filteredSearch = data.filter((item) =>
           item.title.toLowerCase().includes(searchTerms.toLowerCase()),
         );
         setResultsHome(filteredSearch);
       } else {
-        setResultsHome(categoriesResponse);
+        setResultsHome(data);
       }
     }
 
     async function fetchApps() {
-      const responseApps = await fetch(`${apiURL()}/apps/`);
+      const responseApps = await fetch(`${apiURL()}/quotes/`);
 
       const responseAppsJson = await responseApps.json();
       if (searchTerms) {

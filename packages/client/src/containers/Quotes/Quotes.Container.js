@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback, useRef } from 'react';
 import { Link, useParams, useLocation } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
-import './Apps.Style.css';
+import './Quotes.Style.css';
 import { apiURL } from '../../apiURL';
 import { Card } from '../../components/Card/Card.component';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -22,7 +22,7 @@ import {
   faBookOpen,
 } from '@fortawesome/free-solid-svg-icons';
 
-export const Apps = () => {
+export const Quotes = () => {
   const { user } = useUserContext();
   const location = useLocation();
   const { topicIdParam, categoryIdParam } = useParams();
@@ -75,7 +75,7 @@ export const Apps = () => {
   // first fetch
   useEffect(() => {
     setIsLoading(true);
-    const url = `${apiURL()}/apps?page=0&column=${orderBy.column}&direction=${
+    const url = `${apiURL()}/quotes?page=0&column=${orderBy.column}&direction=${
       orderBy.direction
     }${topicIdParam !== undefined ? `&filteredTopics=${topicIdParam}` : ''}${
       categoryIdParam !== undefined
@@ -137,7 +137,7 @@ export const Apps = () => {
     setIsLoading(true);
     setError(null);
 
-    const url = `${apiURL()}/apps?page=${page}&column=${
+    const url = `${apiURL()}/quotes?page=${page}&column=${
       orderBy.column
     }&direction=${orderBy.direction}${
       topicIdParam !== undefined ? `&filteredTopics=${topicIdParam}` : ''
@@ -241,7 +241,7 @@ export const Apps = () => {
   }, [filteredTopics]);
   useEffect(() => {
     async function fetchAppsSearch() {
-      const responseApps = await fetch(`${apiURL()}/apps/`);
+      const responseApps = await fetch(`${apiURL()}/quotes/`);
 
       const responseAppsJson = await responseApps.json();
 
@@ -342,20 +342,19 @@ export const Apps = () => {
 
   useEffect(() => {
     async function fetchTopics() {
-      const response = await fetch(`${apiURL()}/topics/`);
+      const response = await fetch(`${apiURL()}/authors/`);
       const topicsResponse = await response.json();
       setTopics(topicsResponse);
     }
 
-    async function fetchCategories() {
-      const response = await fetch(`${apiURL()}/categories/`);
-      const categoriesResponse = await response.json();
-      setCategories(categoriesResponse);
-    }
+    // async function fetchCategories() {
+    //   const response = await fetch(`${apiURL()}/categories/`);
+    //   const categoriesResponse = await response.json();
+    //   setCategories(categoriesResponse);
+    // }
 
     // fetchApps();
     fetchTopics();
-    fetchCategories();
   }, []);
 
   const handleSearch = (event) => {
@@ -443,7 +442,7 @@ export const Apps = () => {
   };
 
   const dropdownList = resultsHome.map((app) => (
-    <Link key={app.id} to={`/apps/${app.id}`}>
+    <Link key={app.id} to={`/quotes/${app.id}`}>
       <li>{app.title}</li>
     </Link>
   ));
@@ -494,13 +493,13 @@ export const Apps = () => {
   if (topicIdParam) {
     pageTitle = `${topics
       .filter((topic) => topic.id === parseInt(topicIdParam, 10))
-      .map((item) => item.title)} - AI apps`;
+      .map((item) => item.title)} - motivately`;
   } else if (categoryIdParam) {
     pageTitle = `${categories
       .filter((category) => category.id === parseInt(categoryIdParam, 10))
-      .map((item) => item.title)} - AI apps`;
+      .map((item) => item.title)} - motivately`;
   } else {
-    pageTitle = 'Apps With AI - browse 200+ AI apps';
+    pageTitle = 'motivately - best quotes';
   }
 
   const sortOptions = ['Recent', 'A-Z', 'Z-A'];
@@ -589,7 +588,7 @@ export const Apps = () => {
       </Helmet>
       {/* <div className="hero"></div> */}
       <div className="hero">
-        <h1 className="hero-header">Browse 200+ AI apps</h1>
+        <h1 className="hero-header">Browse best quotes</h1>
         <form className="home">
           <label>
             <FontAwesomeIcon className="search-icon" icon={faSearch} />
