@@ -3,16 +3,10 @@
  * @returns { Promise<void> }
  */
 exports.up = function (knex) {
-  return knex.schema.createTable('topics', (table) => {
+  return knex.schema.createTable('searches', (table) => {
     table.increments();
     table.string('title').notNullable();
-    table.integer('category_id').unsigned();
-    table
-      .foreign('category_id')
-      .references('id')
-      .inTable('categories')
-      .onUpdate('CASCADE')
-      .onDelete('CASCADE');
+    table.text('meta_description').nullable();
   });
 };
 
@@ -21,5 +15,5 @@ exports.up = function (knex) {
  * @returns { Promise<void> }
  */
 exports.down = function (knex) {
-  return knex.schema.dropTable('topics');
+  return knex.schema.dropTable('searches');
 };

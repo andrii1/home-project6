@@ -3,10 +3,15 @@
  * @returns { Promise<void> }
  */
 exports.up = function (knex) {
-  return knex.schema.createTable('ratings', (table) => {
+  return knex.schema.createTable('quotes', (table) => {
     table.increments();
-    table.integer('quote_id').unsigned();
-    table.foreign('quote_id').references('id').inTable('quotes');
+    table.text('title').notNullable();
+    table.text('description').nullable();
+    table.text('url').nullable();
+    table.text('url').nullable();
+    table.text('meta_description').nullable();
+    table.integer('author_id').unsigned();
+    table.foreign('author_id').references('id').inTable('authors');
     table.integer('user_id').unsigned();
     table.foreign('user_id').references('id').inTable('users');
     table.datetime('created_at', { precision: 6 }).defaultTo(knex.fn.now(6));
@@ -18,5 +23,5 @@ exports.up = function (knex) {
  * @returns { Promise<void> }
  */
 exports.down = function (knex) {
-  return knex.schema.dropTable('ratings');
+  return knex.schema.dropTable('quotes');
 };
