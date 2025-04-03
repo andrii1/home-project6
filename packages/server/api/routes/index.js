@@ -12,6 +12,7 @@ const ratings = require('./ratings.router');
 const stripe = require('./stripe.router');
 const comments = require('./comments.router');
 const cloudinary = require('./cloudinary.router');
+const keywords = require('./keywords.router');
 
 /* GET home page. */
 // router.get('/', function(req, res, next) {
@@ -51,5 +52,6 @@ router.use('/ratings', ratings);
 router.use('/stripe', stripe);
 router.use('/cloudinary', cloudinary);
 router.use('/comments', comments);
+router.use('/keywords', keywords);
 
 module.exports = router;
