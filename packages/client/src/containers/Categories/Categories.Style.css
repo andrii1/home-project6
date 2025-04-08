@@ -34,19 +34,6 @@ main {
   font-weight: 700;
 }
 
-.container-cards {
-  /* margin: 3rem 0rem; */
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 2rem;
-  /* justify-content: end;
-  align-content: end; */
-  /* display: flex;
-  flex-direction: column;
-  gap: 2rem; */
-  margin-top: 2rem;
-}
-
 .input-search-home {
   min-width: 28rem !important;
   border: 1px solid #d9e1ec !important;
