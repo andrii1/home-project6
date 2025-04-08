@@ -17,7 +17,7 @@ const getOppositeOrderDirection = (direction) => {
 const getQuotesAll = async () => {
   try {
     const quotes = knex('quotes')
-      .select('apps.*', 'authors.full_name as authorFullName')
+      .select('quotes.*', 'authors.full_name as authorFullName')
       .join('authors', 'quotes.author_id', '=', 'authors.id');
 
     return quotes;
@@ -32,7 +32,7 @@ const getQuotes = async (page, column, direction) => {
     const getModel = () =>
       knex('quotes')
         .select('quotes.*', 'authors.full_name as authorFullName')
-        .join('topics', 'quotes.author_id', '=', 'authors.id');
+        .join('authors', 'quotes.author_id', '=', 'authors.id');
     const lastItem = await getModel()
       .orderBy(column, lastItemDirection)
       .limit(1);

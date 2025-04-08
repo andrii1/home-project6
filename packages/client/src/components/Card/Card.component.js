@@ -60,7 +60,7 @@ export const Card = ({
 
   return (
     <div className={listCard ? 'card-list' : 'card-category'}>
-      <Link
+      {/* <Link
         to={`/apps/${id}`}
         target="_blank"
         className={`card-image ${listCard ? 'list' : ''}`}
@@ -71,62 +71,55 @@ export const Card = ({
           backgroundRepeat: 'no-repeat',
           backgroundSize: 'cover',
         }}
-      />
-      <div className={`card-body ${listCard ? 'list' : ''}`}>
-        <div className="card-header">
-          <div className="card-title">
-            <Link to={`/apps/${id}`} target="_blank">
-              <h2>{title}</h2>
-            </Link>
-            <Link to={`/apps/${id}`} target="_blank">
-              <FontAwesomeIcon
-                className="icon-card"
-                icon={faArrowUpRightFromSquare}
-                style={{ color: '#e5989b' }}
-                size="lg"
-              />
-            </Link>
-          </div>
-          <Badge label={pricingType} size="small" />
-        </div>
-        <div className="card-description">
-          {`${description.split(' ').slice(0, 15).join(' ')}...`}
-        </div>
-        <div className="topics-bookmark">
-          <Link to={`/apps/topic/${topicId}`}>
-            <Button label={topic} size="small" />
-          </Link>
-
-          {user && isFavorite ? (
-            <button
-              type="button"
-              onClick={deleteBookmark}
-              onKeyDown={deleteBookmark}
-              className="button-bookmark"
-            >
-              <FontAwesomeIcon icon={faHeartSolid} size="lg" />
-            </button>
-          ) : user ? (
-            <button
-              type="button"
-              onClick={addFavorite}
-              onKeyDown={addFavorite}
-              className="button-bookmark"
-            >
-              <FontAwesomeIcon icon={faHeart} size="lg" />
-            </button>
-          ) : (
-            <button
-              type="button"
-              onClick={bookmarkOnClick}
-              onKeyDown={addFavorite}
-              className="button-bookmark"
-            >
-              <FontAwesomeIcon icon={faHeart} size="lg" />
-            </button>
-          )}
-        </div>
+      /> */}
+      {/* <div className={`card-body ${listCard ? 'list' : ''}`}> */}
+      <div className="card-header">
+        <Link to={`/apps/${id}`} target="_blank">
+          <h2>
+            {title}
+            {/* <FontAwesomeIcon
+              className="icon-card"
+              icon={faArrowUpRightFromSquare}
+              style={{ color: '#e5989b' }}
+              size="sm"
+            /> */}
+          </h2>
+        </Link>
       </div>
+      <div className="topics-bookmark">
+        {user && isFavorite ? (
+          <button
+            type="button"
+            onClick={deleteBookmark}
+            onKeyDown={deleteBookmark}
+            className="button-bookmark"
+          >
+            <FontAwesomeIcon icon={faHeartSolid} size="lg" />
+          </button>
+        ) : user ? (
+          <button
+            type="button"
+            onClick={addFavorite}
+            onKeyDown={addFavorite}
+            className="button-bookmark"
+          >
+            <FontAwesomeIcon icon={faHeart} size="lg" />
+          </button>
+        ) : (
+          <button
+            type="button"
+            onClick={bookmarkOnClick}
+            onKeyDown={addFavorite}
+            className="button-bookmark"
+          >
+            <FontAwesomeIcon icon={faHeart} size="lg" />
+          </button>
+        )}
+        <Link to={`/apps/topic/${topicId}`}>
+          <Button label={topic} size="small" />
+        </Link>
+      </div>
+      {/* </div> */}
     </div>
   );
 

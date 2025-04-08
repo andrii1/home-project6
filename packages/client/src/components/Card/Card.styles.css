@@ -10,6 +10,7 @@
   align-items: center;
   justify-content: space-between;
   box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+  padding: 1rem;
 }
 
 .card-list {
@@ -72,10 +73,19 @@
   border-top-right-radius: 0rem !important;
 }
 .card-header {
-  display: flex;
+  flex: auto;
+  /* display: flex;
   gap: 1rem;
   align-items: center;
-  justify-content: space-between;
+  justify-content: space-between; */
+}
+
+.topics-bookmark {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
 }
 
 @media only screen and (max-width: 768px) {
@@ -105,11 +115,6 @@
   display: flex;
   gap: 0.5rem;
   align-items: center;
-}
-
-.topics-bookmark {
-  display: flex;
-  justify-content: space-between;
 }
 
 .card-header a .fa-arrow-up-right-from-square:hover {
