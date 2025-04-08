@@ -5,7 +5,7 @@
   display: flex;
   flex-direction: column;
   /* height: 8.5rem; */
-  min-height: 20rem;
+  /* min-height: 20rem; */
   width: 100%;
   align-items: center;
   justify-content: space-between;
@@ -14,6 +14,8 @@
 }
 
 .card-list {
+  flex-direction: column;
+  padding: 1rem;
   background-color: white;
   border: 1px solid #efefef;
   border-radius: 8px;
@@ -21,7 +23,7 @@
   min-height: 7rem;
   width: 100%;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   border-radius: 0.5rem;
   box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
 }
@@ -86,12 +88,16 @@
   flex-wrap: wrap;
   gap: 1rem;
   align-items: center;
+  margin-top: 0.5rem !important;
 }
 
 @media only screen and (max-width: 768px) {
   .card-list .card-header {
     flex-wrap: wrap;
     gap: 0.5rem;
+  }
+  .card-category {
+    min-height: auto;
   }
 }
 
@@ -105,6 +111,7 @@
 
 .card-list .topics-bookmark {
   margin-top: 0.5rem !important;
+  justify-content: center;
 }
 
 .card-header a h2:hover {
