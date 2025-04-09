@@ -45,7 +45,7 @@ router.get('/', (req, res, next) => {
   // } else
 
   if (
-    req.query.filteredTopics ||
+    req.query.filteredAuthors ||
     req.query.filteredCategories ||
     req.query.filteredPricing ||
     req.query.filteredDetails
@@ -66,7 +66,7 @@ router.get('/', (req, res, next) => {
         page: req.query.page,
         column: req.query.column,
         direction: req.query.direction,
-        filteredTopics: req.query.filteredTopics,
+        filteredAuthors: req.query.filteredAuthors,
         filteredCategories: req.query.filteredCategories,
         filteredPricing: arrayPricing,
         filteredDetails: arrayDetails,

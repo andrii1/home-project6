@@ -173,11 +173,11 @@ export const Navigation = () => {
                     <NavLink
                       onClick={() => {
                         setOpenModal(true);
-                        setModalTitle('Do you want to add your prompts?');
+                        setModalTitle('Do you want to add your quotes?');
                       }}
                       className="login submit"
                     >
-                      Submit an app
+                      Submit a quote
                     </NavLink>
                   )}
                 </li>
@@ -265,21 +265,21 @@ export const Navigation = () => {
         <div className="nav-buttons">
           <ul>
             <li>
-              {user ? (
-                <NavLink to="/apps/new" className="login submit">
+              {/* {user ? (
+                <NavLink to="/quotes/new" className="login submit">
                   Submit
                 </NavLink>
               ) : (
                 <NavLink
                   onClick={() => {
                     setOpenModal(true);
-                    setModalTitle('Do you want to add your prompts?');
+                    setModalTitle('Do you want to add your quotes?');
                   }}
                   className="login submit"
                 >
                   Submit
                 </NavLink>
-              )}
+              )} */}
             </li>
             {user ? (
               <div className="container-logged-in">

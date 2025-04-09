@@ -12,6 +12,7 @@ import DropDownView from '../../components/CategoriesListDropDown/CategoriesList
 import InfiniteScroll from 'react-infinite-scroll-component';
 import Modal from '../../components/Modal/Modal.Component';
 import { useUserContext } from '../../userContext';
+// eslint-disable-next-line import/no-extraneous-dependencies
 import Masonry from 'react-masonry-css';
 
 import {
@@ -26,12 +27,12 @@ import {
 export const Quotes = () => {
   const { user } = useUserContext();
   const location = useLocation();
-  const { topicIdParam, categoryIdParam } = useParams();
+  const { authorIdParam, tagIdParam } = useParams();
   const [searchTerms, setSearchTerms] = useState();
   const [sortOrder, setSortOrder] = useState();
   const [resultsHome, setResultsHome] = useState([]);
 
-  const [topics, setTopics] = useState([]);
+  const [authors, setAuthors] = useState([]);
   const [openModal, setOpenModal] = useState(false);
   const [modalTitle, setModalTitle] = useState('');
   const [categories, setCategories] = useState([]);
@@ -78,10 +79,8 @@ export const Quotes = () => {
     setIsLoading(true);
     const url = `${apiURL()}/quotes?page=0&column=${orderBy.column}&direction=${
       orderBy.direction
-    }${topicIdParam !== undefined ? `&filteredTopics=${topicIdParam}` : ''}${
-      categoryIdParam !== undefined
-        ? `&filteredCategories=${categoryIdParam}`
-        : ''
+    }${authorIdParam !== undefined ? `&filteredAuthors=${authorIdParam}` : ''}${
+      tagIdParam !== undefined ? `&filteredTags=${tagIdParam}` : ''
     }${
       filtersSubmitted && filteredPricing.length > 0
         ? `&filteredPricing=${encodeURIComponent(filteredPricing)}`
@@ -125,8 +124,8 @@ export const Quotes = () => {
 
     fetchData();
   }, [
-    categoryIdParam,
-    topicIdParam,
+    tagIdParam,
+    authorIdParam,
     orderBy.column,
     orderBy.direction,
     filteredDetails,
@@ -141,12 +140,8 @@ export const Quotes = () => {
     const url = `${apiURL()}/quotes?page=${page}&column=${
       orderBy.column
     }&direction=${orderBy.direction}${
-      topicIdParam !== undefined ? `&filteredTopics=${topicIdParam}` : ''
-    }${
-      categoryIdParam !== undefined
-        ? `&filteredCategories=${categoryIdParam}`
-        : ''
-    }${
+      authorIdParam !== undefined ? `&filteredTopics=${authorIdParam}` : ''
+    }${tagIdParam !== undefined ? `&filteredCategories=${tagIdParam}` : ''}${
       filtersSubmitted && filteredPricing.length > 0
         ? `&filteredPricing=${encodeURIComponent(filteredPricing)}`
         : ''
@@ -342,10 +337,10 @@ export const Quotes = () => {
   // }, [handleObserver]);
 
   useEffect(() => {
-    async function fetchTopics() {
+    async function fetchAuthors() {
       const response = await fetch(`${apiURL()}/authors/`);
-      const topicsResponse = await response.json();
-      setTopics(topicsResponse);
+      const data = await response.json();
+      setAuthors(data);
     }
 
     // async function fetchCategories() {
@@ -355,7 +350,7 @@ export const Quotes = () => {
     // }
 
     // fetchApps();
-    fetchTopics();
+    fetchAuthors();
   }, []);
 
   const handleSearch = (event) => {
@@ -448,28 +443,22 @@ export const Quotes = () => {
     </Link>
   ));
 
-  const topicsList = topics.map((topic) => {
-    if (topicIdParam) {
+  const authorsList = authors.map((author) => {
+    if (authorIdParam) {
       return (
-        <Link to={`/apps/topic/${topic.id}`}>
+        <Link to={`/quotes/author/${author.id}`}>
           <Button
-            primary={topic.id.toString() === topicIdParam.toString() && true}
-            secondary={topic.id !== topicIdParam && true}
-            label={topic.title}
+            primary={author.id.toString() === authorIdParam.toString() && true}
+            secondary={author.id !== authorIdParam && true}
+            label={author.fullName}
           />
         </Link>
       );
     }
-    if (categoryIdParam) {
-      return (
-        <Link to={`/apps/topic/${topic.id}`}>
-          <Button secondary label={topic.title} />
-        </Link>
-      );
-    }
+
     return (
-      <Link to={`/apps/topic/${topic.id}`}>
-        <Button secondary label={topic.title} />
+      <Link to={`/quotes/author/${author.id}`}>
+        <Button secondary label={author.fullName} />
       </Link>
     );
   });
@@ -491,14 +480,14 @@ export const Quotes = () => {
     setOrderBy({ column, direction });
   }, [sortOrder]);
   let pageTitle;
-  if (topicIdParam) {
-    pageTitle = `${topics
-      .filter((topic) => topic.id === parseInt(topicIdParam, 10))
-      .map((item) => item.title)} - motivately`;
-  } else if (categoryIdParam) {
+  if (authorIdParam) {
+    pageTitle = `${authors
+      .filter((author) => author.id === parseInt(authorIdParam, 10))
+      .map((item) => item.fullName)} quotes - motivately`;
+  } else if (tagIdParam) {
     pageTitle = `${categories
-      .filter((category) => category.id === parseInt(categoryIdParam, 10))
-      .map((item) => item.title)} - motivately`;
+      .filter((category) => category.id === parseInt(tagIdParam, 10))
+      .map((item) => item.title)} quotes - motivately`;
   } else {
     pageTitle = 'motivately - best quotes';
   }
@@ -605,7 +594,7 @@ export const Quotes = () => {
               className="input-search-home"
               onChange={handleSearch}
               /* onFocus={handleClick} */
-              placeholder="I want to build..."
+              placeholder="Quote about..."
             />
           </label>
         </form>
@@ -615,7 +604,7 @@ export const Quotes = () => {
               {resultsHome.length > 0 ? (
                 dropdownList
               ) : (
-                <span className="search-no-apps">No apps found :(</span>
+                <span className="search-no-apps">No quotes found :(</span>
               )}
             </ul>
           </div>
@@ -624,7 +613,14 @@ export const Quotes = () => {
         )}
       </div>
       <section className={`container-topics ${showTopicsContainer && 'show'}`}>
-        {topicsList}
+        <Link to="/">
+          <Button
+            primary={!authorIdParam}
+            secondary={authorIdParam}
+            label="All authors"
+          />
+        </Link>
+        {authorsList}
       </section>
       <section className="container-filters">
         <Button
@@ -649,7 +645,7 @@ export const Quotes = () => {
           label="Filters"
           icon={<FontAwesomeIcon className="filter-icon" icon={faFilter} />}
         />
-        <Button
+        {/* <Button
           secondary
           onClick={() => setListView(!listView)}
           backgroundColor="#ffe5d9"
@@ -658,7 +654,7 @@ export const Quotes = () => {
             <FontAwesomeIcon size="lg" icon={faGrip} />
             <FontAwesomeIcon icon={faList} />
           </div>
-        </Button>
+        </Button> */}
       </section>
       <section
         className={`container-details-section ${
