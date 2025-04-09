@@ -7,6 +7,20 @@
   gap: 2.5rem;
   align-items: start;
 }
+
+.container-quoteview-main {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.container-quote {
+  flex: 0 0 48%;
+}
+
+.container-quote-info {
+  flex: 0 0 48%;
+}
 .container-bookmark {
   display: flex;
   align-items: center;

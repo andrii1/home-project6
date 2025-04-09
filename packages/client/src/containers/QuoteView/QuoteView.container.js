@@ -362,128 +362,191 @@ export const QuoteView = () => {
       </Helmet>
       <main>
         <section className="container-appview">
-          <h1 className="hero-header">{quote.title}</h1>
-          <img
-            className="appview-image"
-            alt={`${quote.title} screenshot`}
-            src={`http://res.cloudinary.com/dgarvanzw/image/upload/q_auto,f_auto/apps_ai/${quote.url_image}.png`}
-          />
-
-          <div className="container-bookmark">
-            <div className="container-rating">
-              Rating
-              {user &&
-              allRatings.some((rating) => rating.quote_id === quote.id) &&
-              ratings.some((rating) => rating.id === quote.id) ? (
-                <button
-                  type="button"
-                  className="button-rating"
-                  onClick={(event) => deleteRating(quote.id)}
-                >
-                  <FontAwesomeIcon icon={faCaretUp} />
-                  {
-                    allRatings.filter((rating) => rating.quote_id === quote.id)
-                      .length
-                  }
-                </button>
-              ) : user ? (
-                <button
-                  type="button"
-                  className="button-rating"
-                  onClick={(event) => addRating(quote.id)}
-                >
-                  <FontAwesomeIcon icon={faCaretUp} />
-                  {
-                    allRatings.filter((rating) => rating.quote_id === quote.id)
-                      .length
-                  }
-                </button>
-              ) : (
-                <button
-                  type="button"
-                  className="button-rating"
-                  onClick={() => {
-                    setOpenModal(true);
-                    setModalTitle('Sign up to vote');
-                  }}
-                >
-                  <FontAwesomeIcon icon={faCaretUp} />
-                  {
-                    allRatings.filter((rating) => rating.quote_id === quote.id)
-                      .length
-                  }
-                </button>
-              )}
-              {/* <button type="button" className="button-rating">
+          <div className="container-quoteview-main">
+            <div className="container-quote">
+              <h1 className="hero-header">{quote.title}</h1>
+              <div className="container-bookmark">
+                <div className="container-rating">
+                  Rating
+                  {user &&
+                  allRatings.some((rating) => rating.quote_id === quote.id) &&
+                  ratings.some((rating) => rating.id === quote.id) ? (
+                    <button
+                      type="button"
+                      className="button-rating"
+                      onClick={(event) => deleteRating(quote.id)}
+                    >
+                      <FontAwesomeIcon icon={faCaretUp} />
+                      {
+                        allRatings.filter(
+                          (rating) => rating.quote_id === quote.id,
+                        ).length
+                      }
+                    </button>
+                  ) : user ? (
+                    <button
+                      type="button"
+                      className="button-rating"
+                      onClick={(event) => addRating(quote.id)}
+                    >
+                      <FontAwesomeIcon icon={faCaretUp} />
+                      {
+                        allRatings.filter(
+                          (rating) => rating.quote_id === quote.id,
+                        ).length
+                      }
+                    </button>
+                  ) : (
+                    <button
+                      type="button"
+                      className="button-rating"
+                      onClick={() => {
+                        setOpenModal(true);
+                        setModalTitle('Sign up to vote');
+                      }}
+                    >
+                      <FontAwesomeIcon icon={faCaretUp} />
+                      {
+                        allRatings.filter(
+                          (rating) => rating.quote_id === quote.id,
+                        ).length
+                      }
+                    </button>
+                  )}
+                  {/* <button type="button" className="button-rating">
                   <FontAwesomeIcon icon={faCaretUp} />
                   10
                 </button> */}
-            </div>
-            <div>
-              {user && favorites.some((x) => x.id === quote.id) ? (
+                </div>
+                <div>
+                  {user && favorites.some((x) => x.id === quote.id) ? (
+                    <button
+                      type="button"
+                      onClick={() => handleDeleteBookmarks(quote.id)}
+                      onKeyDown={() => handleDeleteBookmarks(quote.id)}
+                      className="button-bookmark"
+                    >
+                      Remove from saved{' '}
+                      <FontAwesomeIcon icon={faHeartSolid} size="lg" />
+                    </button>
+                  ) : user ? (
+                    <button
+                      type="button"
+                      onClick={() => addFavorite(quote.id)}
+                      onKeyDown={() => addFavorite(quote.id)}
+                      className="button-bookmark"
+                    >
+                      Save <FontAwesomeIcon icon={faHeart} size="lg" />
+                    </button>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setOpenModal(true);
+                        setModalTitle('Sign up to add bookmarks');
+                      }}
+                      onKeyDown={() => addFavorite(quote.id)}
+                      className="button-bookmark"
+                    >
+                      Save <FontAwesomeIcon icon={faHeart} size="lg" />
+                    </button>
+                  )}
+                </div>
+              </div>
+              <div className="container-details">
+                <div className="container-tags">
+                  <div className="badges">
+                    <p>Pricing: </p>{' '}
+                    <div>
+                      <Badge label={quote.pricing_type} size="small" />
+                    </div>
+                  </div>
+                  <p>Edit app</p>
+                </div>
+                <div className="container-tags">
+                  <div className="badges">
+                    <p>Tagged: </p>
+                    <div>
+                      <Badge secondary label={quote.topicTitle} size="small" />
+                    </div>
+                  </div>
+                  <div className="badges">
+                    <p>Category: </p>
+                    <div>
+                      <Badge
+                        secondary
+                        label={quote.categoryTitle}
+                        size="small"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="icons-apps-page">
+                <span>Share it: </span>
                 <button
                   type="button"
-                  onClick={() => handleDeleteBookmarks(quote.id)}
-                  onKeyDown={() => handleDeleteBookmarks(quote.id)}
-                  className="button-bookmark"
-                >
-                  Remove from saved{' '}
-                  <FontAwesomeIcon icon={faHeartSolid} size="lg" />
-                </button>
-              ) : user ? (
-                <button
-                  type="button"
-                  onClick={() => addFavorite(quote.id)}
-                  onKeyDown={() => addFavorite(quote.id)}
-                  className="button-bookmark"
-                >
-                  Save <FontAwesomeIcon icon={faHeart} size="lg" />
-                </button>
-              ) : (
-                <button
-                  type="button"
+                  className="button-copy"
                   onClick={() => {
-                    setOpenModal(true);
-                    setModalTitle('Sign up to add bookmarks');
+                    navigator.clipboard.writeText(quote.title);
                   }}
-                  onKeyDown={() => addFavorite(quote.id)}
-                  className="button-bookmark"
                 >
-                  Save <FontAwesomeIcon icon={faHeart} size="lg" />
+                  <img src={iconCopy} alt="copy" className="icon-copy" />
                 </button>
+                <FontAwesomeIcon
+                  icon={faLink}
+                  className="button-copy"
+                  onClick={() => {
+                    navigator.clipboard.writeText(
+                      `https://www.Apphunt.me/Apps/${quote.id}`,
+                    );
+                  }}
+                />
+                <FacebookShareButton url={`/Apps/${quote.id}`}>
+                  <FontAwesomeIcon className="share-icon" icon={faFacebookF} />
+                </FacebookShareButton>
+                <TwitterShareButton
+                  url={`https://www.Apphunt.me/Apps/${quote.id}`}
+                  title={`Check out this GPT App: '${quote.title}'`}
+                  hashtags={['Apps']}
+                >
+                  <FontAwesomeIcon className="share-icon" icon={faTwitter} />
+                </TwitterShareButton>
+                <LinkedinShareButton
+                  url={`https://www.Apphunt.me/Apps/${quote.id}`}
+                >
+                  <FontAwesomeIcon className="share-icon" icon={faLinkedinIn} />
+                </LinkedinShareButton>
+                <EmailShareButton
+                  subject="Check out this GPT App!"
+                  body={`This GPT App is great: '${quote.title}'`}
+                  url={`https://www.Apphunt.me/Apps/${quote.id}`}
+                >
+                  <FontAwesomeIcon icon={faEnvelope} />
+                </EmailShareButton>
+              </div>
+            </div>
+            <div className="container-quote-info">
+              {quote.description && (
+                <div className="container-description">
+                  <p>{quote.description}</p>
+                </div>
+              )}
+              {quote.authorFullName && (
+                <div className="container-description">
+                  <strong>Author:</strong>
+                  <p>{quote.authorFullName}</p>
+                  <strong>Info:</strong>
+                </div>
               )}
             </div>
           </div>
-          {quote.description && (
-            <div className="container-description">
-              <p>{quote.description}</p>
-            </div>
-          )}
-          <div className="container-details">
-            <div className="container-tags">
-              <div className="badges">
-                <p>Pricing: </p>{' '}
-                <div>
-                  <Badge label={quote.pricing_type} size="small" />
-                </div>
-              </div>
-              <p>Edit app</p>
-            </div>
-            <div className="container-tags">
-              <div className="badges">
-                <p>Tagged: </p>
-                <div>
-                  <Badge secondary label={quote.topicTitle} size="small" />
-                </div>
-              </div>
-              <div className="badges">
-                <p>Category: </p>
-                <div>
-                  <Badge secondary label={quote.categoryTitle} size="small" />
-                </div>
-              </div>
-            </div>
-          </div>
+          {/* <img
+            className="appview-image"
+            alt={`${quote.title} screenshot`}
+            src={`http://res.cloudinary.com/dgarvanzw/image/upload/q_auto,f_auto/apps_ai/${quote.url_image}.png`}
+          /> */}
+
           {/* <div className="container-related-searches">
             <h3>Related searches</h3>
             <div className="topics-div searches">
@@ -494,49 +557,7 @@ export const QuoteView = () => {
               ))}
             </div>
           </div> */}
-          <div className="icons-apps-page">
-            <span>Share it: </span>
-            <button
-              type="button"
-              className="button-copy"
-              onClick={() => {
-                navigator.clipboard.writeText(quote.title);
-              }}
-            >
-              <img src={iconCopy} alt="copy" className="icon-copy" />
-            </button>
-            <FontAwesomeIcon
-              icon={faLink}
-              className="button-copy"
-              onClick={() => {
-                navigator.clipboard.writeText(
-                  `https://www.Apphunt.me/Apps/${quote.id}`,
-                );
-              }}
-            />
-            <FacebookShareButton url={`/Apps/${quote.id}`}>
-              <FontAwesomeIcon className="share-icon" icon={faFacebookF} />
-            </FacebookShareButton>
-            <TwitterShareButton
-              url={`https://www.Apphunt.me/Apps/${quote.id}`}
-              title={`Check out this GPT App: '${quote.title}'`}
-              hashtags={['Apps']}
-            >
-              <FontAwesomeIcon className="share-icon" icon={faTwitter} />
-            </TwitterShareButton>
-            <LinkedinShareButton
-              url={`https://www.Apphunt.me/Apps/${quote.id}`}
-            >
-              <FontAwesomeIcon className="share-icon" icon={faLinkedinIn} />
-            </LinkedinShareButton>
-            <EmailShareButton
-              subject="Check out this GPT App!"
-              body={`This GPT App is great: '${quote.title}'`}
-              url={`https://www.Apphunt.me/Apps/${quote.id}`}
-            >
-              <FontAwesomeIcon icon={faEnvelope} />
-            </EmailShareButton>
-          </div>
+
           <div className="container-comments">
             {comments.length === 0 && (
               <div>
