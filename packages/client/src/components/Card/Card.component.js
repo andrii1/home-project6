@@ -77,7 +77,7 @@ export const Card = ({
       /> */}
       {/* <div className={`card-body ${listCard ? 'list' : ''}`}> */}
       <div className="card-header">
-        <Link to={`/apps/${id}`} target="_blank">
+        <Link to={`/quotes/${id}`} target="_blank">
           <h2>
             {title}
             {/* <FontAwesomeIcon
@@ -118,7 +118,7 @@ export const Card = ({
             <FontAwesomeIcon icon={faHeart} size="lg" />
           </button>
         )}
-        <Link to={`/apps/topic/${topicId}`}>
+        <Link to={`/quotes/author/${topicId}`}>
           <Button label={topic} size="small" />
         </Link>
       </div>

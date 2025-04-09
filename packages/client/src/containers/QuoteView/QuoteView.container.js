@@ -117,7 +117,7 @@ export const QuoteView = () => {
   const [modalTitle, setModalTitle] = useState('');
   const [favorites, setFavorites] = useState([]);
   const navigate = useNavigate();
-  const [app, setApp] = useState({});
+  const [quote, setQuote] = useState({});
   const [similarApps, setSimilarApps] = useState([]);
   const [comments, setComments] = useState([]);
   const [error, setError] = useState('');
@@ -129,34 +129,34 @@ export const QuoteView = () => {
   const [ratings, setRatings] = useState([]);
   const [openConfirmationModal, setOpenConfirmationModal] = useState(false);
   useEffect(() => {
-    async function fetchSingleApp(appId) {
-      const response = await fetch(`${apiURL()}/apps/${appId}`);
+    async function fetchSingleQuote(quoteId) {
+      const response = await fetch(`${apiURL()}/quotes/${quoteId}`);
       const appResponse = await response.json();
-      setApp(appResponse[0]);
+      setQuote(appResponse[0]);
     }
 
-    fetchSingleApp(id);
+    fetchSingleQuote(id);
   }, [id]);
 
   useEffect(() => {
     async function fetchSimilarApps() {
       const response = await fetch(
-        `${apiURL()}/apps?page=0&column=id&direction=desc&filteredTopics=${
-          app.topic_id
+        `${apiURL()}/quotes?page=0&column=id&direction=desc&filteredTopics=${
+          quote.topic_id
         }`,
       );
       const appsResponse = await response.json();
       const similarAppsArray = appsResponse.data.filter(
-        (item) => item.id !== app.id,
+        (item) => item.id !== quote.id,
       );
       setSimilarApps(similarAppsArray);
     }
 
     fetchSimilarApps();
-  }, [app.topic_id, app.id]);
+  }, [quote.topic_id, quote.id]);
 
-  const fetchCommentsByAppId = useCallback(async (appId) => {
-    const response = await fetch(`${apiURL()}/comments?appId=${appId}`);
+  const fetchCommentsByAppId = useCallback(async (quoteId) => {
+    const response = await fetch(`${apiURL()}/comments?quoteId=${quoteId}`);
     const commentResponse = await response.json();
     setComments(commentResponse);
   }, []);
@@ -357,37 +357,74 @@ export const QuoteView = () => {
   return (
     <>
       <Helmet>
-        <title>{`${String(app.title).substring(0, 50)} - AI Apps`}</title>
-        <meta
-          name="description"
-          content={`Top AI Apps for ${app.topicTitle} and ${app.categoryTitle}`}
-        />
+        <title>{`${String(quote.title).substring(0, 50)} - motivately`}</title>
+        <meta name="description" content="Best quotes - motivately" />
       </Helmet>
       <main>
         <section className="container-appview">
-          <h1 className="hero-header">{app.title}</h1>
+          <h1 className="hero-header">{quote.title}</h1>
           <img
             className="appview-image"
-            alt={`${app.title} screenshot`}
-            src={`http://res.cloudinary.com/dgarvanzw/image/upload/q_auto,f_auto/apps_ai/${app.url_image}.png`}
+            alt={`${quote.title} screenshot`}
+            src={`http://res.cloudinary.com/dgarvanzw/image/upload/q_auto,f_auto/apps_ai/${quote.url_image}.png`}
           />
 
           <div className="container-bookmark">
-            <Link to={app.url} target="_blank">
-              <Button
-                primary
-                icon={
-                  <FontAwesomeIcon icon={faArrowUpRightFromSquare} size="sm" />
-                }
-                label={`Visit ${app.title}'s website`}
-              />
-            </Link>
-            <div>
-              {user && favorites.some((x) => x.id === app.id) ? (
+            <div className="container-rating">
+              Rating
+              {user &&
+              allRatings.some((rating) => rating.quote_id === quote.id) &&
+              ratings.some((rating) => rating.id === quote.id) ? (
                 <button
                   type="button"
-                  onClick={() => handleDeleteBookmarks(app.id)}
-                  onKeyDown={() => handleDeleteBookmarks(app.id)}
+                  className="button-rating"
+                  onClick={(event) => deleteRating(quote.id)}
+                >
+                  <FontAwesomeIcon icon={faCaretUp} />
+                  {
+                    allRatings.filter((rating) => rating.quote_id === quote.id)
+                      .length
+                  }
+                </button>
+              ) : user ? (
+                <button
+                  type="button"
+                  className="button-rating"
+                  onClick={(event) => addRating(quote.id)}
+                >
+                  <FontAwesomeIcon icon={faCaretUp} />
+                  {
+                    allRatings.filter((rating) => rating.quote_id === quote.id)
+                      .length
+                  }
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  className="button-rating"
+                  onClick={() => {
+                    setOpenModal(true);
+                    setModalTitle('Sign up to vote');
+                  }}
+                >
+                  <FontAwesomeIcon icon={faCaretUp} />
+                  {
+                    allRatings.filter((rating) => rating.quote_id === quote.id)
+                      .length
+                  }
+                </button>
+              )}
+              {/* <button type="button" className="button-rating">
+                  <FontAwesomeIcon icon={faCaretUp} />
+                  10
+                </button> */}
+            </div>
+            <div>
+              {user && favorites.some((x) => x.id === quote.id) ? (
+                <button
+                  type="button"
+                  onClick={() => handleDeleteBookmarks(quote.id)}
+                  onKeyDown={() => handleDeleteBookmarks(quote.id)}
                   className="button-bookmark"
                 >
                   Remove from saved{' '}
@@ -396,8 +433,8 @@ export const QuoteView = () => {
               ) : user ? (
                 <button
                   type="button"
-                  onClick={() => addFavorite(app.id)}
-                  onKeyDown={() => addFavorite(app.id)}
+                  onClick={() => addFavorite(quote.id)}
+                  onKeyDown={() => addFavorite(quote.id)}
                   className="button-bookmark"
                 >
                   Save <FontAwesomeIcon icon={faHeart} size="lg" />
@@ -409,7 +446,7 @@ export const QuoteView = () => {
                     setOpenModal(true);
                     setModalTitle('Sign up to add bookmarks');
                   }}
-                  onKeyDown={() => addFavorite(app.id)}
+                  onKeyDown={() => addFavorite(quote.id)}
                   className="button-bookmark"
                 >
                   Save <FontAwesomeIcon icon={faHeart} size="lg" />
@@ -417,67 +454,17 @@ export const QuoteView = () => {
               )}
             </div>
           </div>
-          <div className="container-description">
-            <div className="container-title">
-              <h3>What is {app.title}?</h3>
-              <div className="container-rating">
-                Rating
-                {user &&
-                allRatings.some((rating) => rating.app_id === app.id) &&
-                ratings.some((rating) => rating.id === app.id) ? (
-                  <button
-                    type="button"
-                    className="button-rating"
-                    onClick={(event) => deleteRating(app.id)}
-                  >
-                    <FontAwesomeIcon icon={faCaretUp} />
-                    {
-                      allRatings.filter((rating) => rating.app_id === app.id)
-                        .length
-                    }
-                  </button>
-                ) : user ? (
-                  <button
-                    type="button"
-                    className="button-rating"
-                    onClick={(event) => addRating(app.id)}
-                  >
-                    <FontAwesomeIcon icon={faCaretUp} />
-                    {
-                      allRatings.filter((rating) => rating.app_id === app.id)
-                        .length
-                    }
-                  </button>
-                ) : (
-                  <button
-                    type="button"
-                    className="button-rating"
-                    onClick={() => {
-                      setOpenModal(true);
-                      setModalTitle('Sign up to vote');
-                    }}
-                  >
-                    <FontAwesomeIcon icon={faCaretUp} />
-                    {
-                      allRatings.filter((rating) => rating.app_id === app.id)
-                        .length
-                    }
-                  </button>
-                )}
-                {/* <button type="button" className="button-rating">
-                  <FontAwesomeIcon icon={faCaretUp} />
-                  10
-                </button> */}
-              </div>
+          {quote.description && (
+            <div className="container-description">
+              <p>{quote.description}</p>
             </div>
-            <p>{app.description}</p>
-          </div>
+          )}
           <div className="container-details">
             <div className="container-tags">
               <div className="badges">
                 <p>Pricing: </p>{' '}
                 <div>
-                  <Badge label={app.pricing_type} size="small" />
+                  <Badge label={quote.pricing_type} size="small" />
                 </div>
               </div>
               <p>Edit app</p>
@@ -486,13 +473,13 @@ export const QuoteView = () => {
               <div className="badges">
                 <p>Tagged: </p>
                 <div>
-                  <Badge secondary label={app.topicTitle} size="small" />
+                  <Badge secondary label={quote.topicTitle} size="small" />
                 </div>
               </div>
               <div className="badges">
                 <p>Category: </p>
                 <div>
-                  <Badge secondary label={app.categoryTitle} size="small" />
+                  <Badge secondary label={quote.categoryTitle} size="small" />
                 </div>
               </div>
             </div>
@@ -513,7 +500,7 @@ export const QuoteView = () => {
               type="button"
               className="button-copy"
               onClick={() => {
-                navigator.clipboard.writeText(app.title);
+                navigator.clipboard.writeText(quote.title);
               }}
             >
               <img src={iconCopy} alt="copy" className="icon-copy" />
@@ -523,27 +510,29 @@ export const QuoteView = () => {
               className="button-copy"
               onClick={() => {
                 navigator.clipboard.writeText(
-                  `https://www.Apphunt.me/Apps/${app.id}`,
+                  `https://www.Apphunt.me/Apps/${quote.id}`,
                 );
               }}
             />
-            <FacebookShareButton url={`/Apps/${app.id}`}>
+            <FacebookShareButton url={`/Apps/${quote.id}`}>
               <FontAwesomeIcon className="share-icon" icon={faFacebookF} />
             </FacebookShareButton>
             <TwitterShareButton
-              url={`https://www.Apphunt.me/Apps/${app.id}`}
-              title={`Check out this GPT App: '${app.title}'`}
+              url={`https://www.Apphunt.me/Apps/${quote.id}`}
+              title={`Check out this GPT App: '${quote.title}'`}
               hashtags={['Apps']}
             >
               <FontAwesomeIcon className="share-icon" icon={faTwitter} />
             </TwitterShareButton>
-            <LinkedinShareButton url={`https://www.Apphunt.me/Apps/${app.id}`}>
+            <LinkedinShareButton
+              url={`https://www.Apphunt.me/Apps/${quote.id}`}
+            >
               <FontAwesomeIcon className="share-icon" icon={faLinkedinIn} />
             </LinkedinShareButton>
             <EmailShareButton
               subject="Check out this GPT App!"
-              body={`This GPT App is great: '${app.title}'`}
-              url={`https://www.Apphunt.me/Apps/${app.id}`}
+              body={`This GPT App is great: '${quote.title}'`}
+              url={`https://www.Apphunt.me/Apps/${quote.id}`}
             >
               <FontAwesomeIcon icon={faEnvelope} />
             </EmailShareButton>
@@ -624,7 +613,7 @@ export const QuoteView = () => {
           </div>
           {similarApps.length > 0 && (
             <div className="container-alternatives">
-              <h3>🔎 Similar to {app.title}</h3>
+              <h3>🔎 Similar to {quote.title}</h3>
               <div className="container-cards small-cards">{cardItems}</div>
             </div>
           )}
