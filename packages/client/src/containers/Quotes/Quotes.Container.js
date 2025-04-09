@@ -12,6 +12,7 @@ import DropDownView from '../../components/CategoriesListDropDown/CategoriesList
 import InfiniteScroll from 'react-infinite-scroll-component';
 import Modal from '../../components/Modal/Modal.Component';
 import { useUserContext } from '../../userContext';
+import Masonry from 'react-masonry-css';
 
 import {
   faSearch,
@@ -580,6 +581,13 @@ export const Quotes = () => {
     deleteFavorites();
   };
 
+  const breakpoints = {
+    default: 3,
+    1100: 3,
+    700: 2,
+    500: 1,
+  };
+
   return (
     <main>
       <Helmet>
@@ -691,28 +699,36 @@ export const Quotes = () => {
             endMessage={<p>No more data to load.</p>}
             className={`container-cards ${listView ? 'list' : 'grid'}`}
           >
-            {apps.data.map((app) => {
-              return (
-                <Card
-                  listCard={listView}
-                  id={app.id}
-                  title={app.title}
-                  description={app.description}
-                  url={app.url}
-                  urlImage={app.url_image}
-                  topic={app.topicTitle}
-                  topicId={app.topic_id}
-                  pricingType={app.pricing_type}
-                  isFavorite={favorites.some((x) => x.id === app.id)}
-                  addFavorite={(event) => addFavorite(app.id)}
-                  deleteBookmark={() => handleDeleteBookmarks(app.id)}
-                  bookmarkOnClick={() => {
-                    setOpenModal(true);
-                    setModalTitle('Sign up to add bookmarks');
-                  }}
-                />
-              );
-            })}
+            <Masonry // Masonry layout
+              breakpointCols={breakpoints}
+              className="masonry-grid"
+              columnClassName="masonry-column"
+            >
+              {apps.data.map((app) => {
+                return (
+                  <Card
+                    className="masonry-item" // Masonry layout
+                    listCard={listView}
+                    id={app.id}
+                    title={app.title}
+                    description={app.description}
+                    url={app.url}
+                    urlImage={app.url_image}
+                    topic={app.topicTitle}
+                    topicId={app.topic_id}
+                    pricingType={app.pricing_type}
+                    isFavorite={favorites.some((x) => x.id === app.id)}
+                    addFavorite={(event) => addFavorite(app.id)}
+                    deleteBookmark={() => handleDeleteBookmarks(app.id)}
+                    bookmarkOnClick={() => {
+                      setOpenModal(true);
+                      setModalTitle('Sign up to add bookmarks');
+                    }}
+                  />
+                );
+              })}
+              {/* Masonry layout */}
+            </Masonry>
           </InfiniteScroll>
         </section>
       ) : (

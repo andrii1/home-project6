@@ -59,7 +59,10 @@ export const Card = ({
   }
 
   return (
-    <div className={listCard ? 'card-list' : 'card-category'}>
+    <div
+      key={id}
+      className={`${listCard ? 'card-list' : 'card-category'} ${className}`}
+    >
       {/* <Link
         to={`/apps/${id}`}
         target="_blank"

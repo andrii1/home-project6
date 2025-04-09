@@ -46,5 +46,8 @@
     "**/*.+(css)": [
       "yarn stylelint:check"
     ]
+  },
+  "dependencies": {
+    "react-masonry-css": "^1.0.16"
   }
 }
