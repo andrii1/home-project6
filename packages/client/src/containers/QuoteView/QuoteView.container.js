@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable no-nested-ternary */
 import React, { useEffect, useState, useCallback, useRef } from 'react';
 import { useNavigate, useParams, Link } from 'react-router-dom';
@@ -121,6 +123,8 @@ const defaultColors = [
   '#9b59b6',
 ];
 
+const defaultFontColors = ['#ffffff', '#cccccc'];
+
 export const QuoteView = () => {
   const { id } = useParams();
   const [openModal, setOpenModal] = useState(false);
@@ -140,7 +144,11 @@ export const QuoteView = () => {
   const [openConfirmationModal, setOpenConfirmationModal] = useState(false);
   const [color, setColor] = useState('#252525');
   const [colorPickerSelected, setColorPickerSelected] = useState(false);
+  const [fontColor, setFontColor] = useState('#ffffff');
+  const [fontColorPickerSelected, setFontColorPickerSelected] = useState(false);
   const [imageDataUrl, setImageDataUrl] = useState('');
+  const [images, setImages] = useState([]);
+  const [selectedImage, setSelectedImage] = useState('');
   const canvasRef = useRef(null);
   useEffect(() => {
     async function fetchSingleQuote(quoteId) {
@@ -372,9 +380,43 @@ export const QuoteView = () => {
     setColor(colorParam);
   };
 
+  const handleChangeFontColor = (colorParam) => {
+    setFontColorPickerSelected(false);
+    setFontColor(colorParam);
+  };
+
   const width = 500;
   const height = 350;
   const lineHeight = 38;
+
+  useEffect(() => {
+    const fetchImage = async () => {
+      let count = 0;
+      const fetchedImages = [];
+
+      while (count < 5) {
+        const randomNumber = Math.floor(Math.random() * 1000); // Random number for seed
+        const url = `https://picsum.photos/id/${randomNumber}/130/100`;
+
+        try {
+          // eslint-disable-next-line no-await-in-loop
+          const response = await fetch(url);
+
+          if (response.ok) {
+            fetchedImages.push(url); // Add the image URL if response is OK
+            count += 1; // Increment count when image is successfully added
+          }
+        } catch (e) {
+          return;
+        }
+      }
+
+      setImages(fetchedImages); // Update state with 5 valid images
+      // setLoading(false); // Set loading to false once 5 images are fetched
+    };
+
+    fetchImage();
+  }, []);
 
   useEffect(() => {
     if (Object.keys(quote).length === 0) return;
@@ -388,7 +430,7 @@ export const QuoteView = () => {
       ctx.fillStyle = color;
       ctx.fillRect(0, 0, width, height);
 
-      ctx.fillStyle = 'white';
+      ctx.fillStyle = fontColor;
       ctx.textAlign = 'center';
       ctx.textBaseline = 'top';
       ctx.font = 'bold 28px Norwester';
@@ -432,7 +474,7 @@ export const QuoteView = () => {
 
       ctx.fillStyle = color;
       ctx.fillRect(0, 0, width, height);
-      ctx.fillStyle = 'white';
+      ctx.fillStyle = fontColor;
       ctx.font = 'bold 28px Norwester';
       wrapText(ctx, quoteText, width / 2, centerY, width * 0.9);
 
@@ -445,7 +487,7 @@ export const QuoteView = () => {
       const dataUrl = canvas.toDataURL('image/png');
       setImageDataUrl(dataUrl);
     });
-  }, [quote, color]);
+  }, [quote, color, fontColor]);
 
   const handleDownload = () => {
     const canvas = canvasRef.current;
@@ -518,15 +560,15 @@ export const QuoteView = () => {
                 <div className="color-group font">
                   <p className="color-group-tab-1">Font</p>
                   <div className="color-group-tab-2">
-                    {defaultColors.map((item) => (
+                    {defaultFontColors.map((item) => (
                       // eslint-disable-next-line jsx-a11y/control-has-associated-label
                       <button
                         type="button"
                         className={`color-input ${
-                          item === color && 'selected'
+                          item === fontColor && 'selected'
                         }`}
                         style={{ backgroundColor: item }}
-                        onClick={() => handleChangeColor(item)}
+                        onClick={() => handleChangeFontColor(item)}
                       />
                     ))}
                   </div>
@@ -535,14 +577,32 @@ export const QuoteView = () => {
                     <input
                       type="color"
                       className={`color-picker ${
-                        colorPickerSelected && 'selected'
+                        fontColorPickerSelected && 'selected'
                       }`}
                       onChange={(event) => {
-                        setColor(event.target.value);
-                        setColorPickerSelected(true);
+                        setFontColor(event.target.value);
+                        setFontColorPickerSelected(true);
                       }}
                     />
                   </div>
+                </div>
+                <div className="images-group">
+                  {images.map((image) => (
+                    <div
+                      onClick={() => setSelectedImage(image)}
+                      className={`quote-image-input ${
+                        image === selectedImage && 'selected'
+                      }`}
+                      style={{
+                        backgroundImage: `url(${image})`,
+                        backgroundRepeat: 'no-repeat',
+                        backgroundSize: 'fit',
+                        height: '100px',
+                        // border: '1px',
+                        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', // Optional styling for shadow
+                      }}
+                    />
+                  ))}
                 </div>
               </div>
               <Button onClick={handleDownload} primary label="Download" />

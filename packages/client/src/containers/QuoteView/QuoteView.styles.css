@@ -226,3 +226,16 @@
 .color-picker.selected {
   border: 1px solid;
 }
+
+.images-group {
+  display: flex;
+}
+
+.images-group div {
+  flex: 0 0 20%;
+  cursor: pointer;
+}
+
+.quote-image-input.selected {
+  border: 4px solid blue;
+}
