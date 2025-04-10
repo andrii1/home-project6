@@ -1,6 +1,13 @@
+@font-face {
+  font-family: 'Norwester';
+  src: url('../../../public/assets/fonts/norwester.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
 .container-appview {
   text-align: left;
-  max-width: 60rem;
+  max-width: 80rem;
   margin: 0 auto;
   display: flex;
   flex-direction: column;

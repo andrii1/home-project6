@@ -1,5 +1,5 @@
 /* eslint-disable no-nested-ternary */
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, useRef } from 'react';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import { Button } from '../../components/Button/Button.component';
@@ -111,6 +111,9 @@ const alternativeApps = [
     categoryTitle: 'Marketing & Sales',
   },
 ];
+
+const defaultColors = ['#8acf00', '#3498db', '#e74c3c', '#f39c12', '#9b59b6'];
+
 export const QuoteView = () => {
   const { id } = useParams();
   const [openModal, setOpenModal] = useState(false);
@@ -128,6 +131,10 @@ export const QuoteView = () => {
   const [allRatings, setAllRatings] = useState([]);
   const [ratings, setRatings] = useState([]);
   const [openConfirmationModal, setOpenConfirmationModal] = useState(false);
+  const [color, setColor] = useState('#8acf00');
+  const [colorPickerSelected, setColorPickerSelected] = useState(false);
+  const [imageDataUrl, setImageDataUrl] = useState('');
+  const canvasRef = useRef(null);
   useEffect(() => {
     async function fetchSingleQuote(quoteId) {
       const response = await fetch(`${apiURL()}/quotes/${quoteId}`);
@@ -353,7 +360,93 @@ export const QuoteView = () => {
       fetchAllRatings();
     }
   };
+  const handleChangeColor = (colorParam) => {
+    setColorPickerSelected(false);
+    setColor(colorParam);
+  };
 
+  const width = 500;
+  const height = 350;
+  const lineHeight = 38;
+
+  useEffect(() => {
+    if (Object.keys(quote).length === 0) return;
+
+    document.fonts.load('28px Norwester').then(() => {
+      const canvas = canvasRef.current;
+      const ctx = canvas.getContext('2d');
+
+      ctx.clearRect(0, 0, width, height);
+
+      ctx.fillStyle = '#252525';
+      ctx.fillRect(0, 0, width, height);
+
+      ctx.fillStyle = 'white';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'top';
+      ctx.font = 'bold 28px Norwester';
+
+      const wrapText = (ctxParam, text, x, y, maxWidth) => {
+        const words = text?.split(' ');
+        let line = '';
+        const lines = [];
+
+        for (let i = 0; i < words.length; i += 1) {
+          const testLine = `${line + words[i]} `;
+          const metrics = ctxParam.measureText(testLine);
+          const testWidth = metrics.width;
+
+          if (testWidth > maxWidth && i > 0) {
+            lines.push(line);
+            line = `${words[i]} `;
+          } else {
+            line = testLine;
+          }
+        }
+        lines.push(line);
+
+        lines.forEach((lineParam, index) => {
+          ctx.fillText(lineParam.trim(), x, y + index * lineHeight);
+        });
+
+        return lines.length;
+      };
+
+      const quoteText = quote?.title?.toUpperCase();
+      const linesCount = wrapText(
+        ctx,
+        quoteText,
+        width / 2,
+        height * 0.2,
+        width * 0.9,
+      );
+      const textHeight = linesCount * lineHeight;
+      const centerY = (height - textHeight) / 2;
+
+      ctx.fillStyle = '#252525';
+      ctx.fillRect(0, 0, width, height);
+      ctx.fillStyle = 'white';
+      ctx.font = 'bold 28px Norwester';
+      wrapText(ctx, quoteText, width / 2, centerY, width * 0.9);
+
+      ctx.font = 'bold 12px Norwester';
+      ctx.fillText(
+        `– ${quote.authorFullName.toUpperCase()}`,
+        width / 2,
+        height - 50,
+      );
+      const dataUrl = canvas.toDataURL('image/png');
+      setImageDataUrl(dataUrl);
+    });
+  }, [quote]);
+
+  const handleDownload = () => {
+    const canvas = canvasRef.current;
+    const link = document.createElement('a');
+    link.download = 'quote.png';
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+  };
   return (
     <>
       <Helmet>
@@ -364,6 +457,28 @@ export const QuoteView = () => {
         <section className="container-appview">
           <div className="container-quoteview-main">
             <div className="container-quote">
+              {/* <canvas
+                ref={canvasRef}
+                style={{
+                  width: '100%', // makes it fill the container width
+                  height: 'auto', // maintain aspect ratio
+                  display: 'block',
+                }}
+              /> */}
+              <canvas
+                ref={canvasRef}
+                width={500}
+                height={350}
+                style={{ display: 'none' }}
+              />
+              {imageDataUrl && (
+                <img
+                  src={imageDataUrl}
+                  alt="Quote"
+                  style={{ width: '100%', height: 'auto' }}
+                />
+              )}
+              <Button onClick={handleDownload} primary label="Download" />
               <h1 className="hero-header">{quote.title}</h1>
               <div className="container-bookmark">
                 <div className="container-rating">
