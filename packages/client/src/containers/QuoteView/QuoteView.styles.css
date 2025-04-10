@@ -155,3 +155,74 @@
     margin: 0 auto;
   }
 }
+
+/* Colors */
+.color-group {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  width: 100%;
+}
+.color-group.font {
+  margin-top: 0.5rem;
+}
+.color-group p {
+  margin: 0;
+  line-height: normal;
+}
+.color-group-tab-1 {
+  flex: 0 0 17%;
+}
+.color-group-tab-2 {
+  flex: 0 0 50%;
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+.color-group-tab-3 {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+.color-input {
+  border-radius: 50%;
+  width: 2rem;
+  height: 2rem;
+  border: 0;
+  cursor: pointer;
+}
+
+.color-input.selected {
+  border: 1px solid;
+}
+
+.color-picker {
+  appearance: none; /* Removes default styling */
+  width: 2rem; /* Adjust size */
+  height: 2rem;
+  border: none;
+  border-radius: 50%;
+  padding: 0;
+  cursor: pointer;
+  background: none;
+}
+
+/* Remove the default color picker UI (for WebKit browsers like Chrome, Safari) */
+.color-picker::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+.color-picker::-webkit-color-swatch {
+  border: none;
+  border-radius: 50%;
+}
+
+/* Remove default border in Firefox */
+.color-picker::-moz-color-swatch {
+  border-radius: 50%;
+  border: none;
+}
+
+.color-picker.selected {
+  border: 1px solid;
+}

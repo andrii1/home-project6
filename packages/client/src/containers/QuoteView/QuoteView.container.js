@@ -112,7 +112,14 @@ const alternativeApps = [
   },
 ];
 
-const defaultColors = ['#8acf00', '#3498db', '#e74c3c', '#f39c12', '#9b59b6'];
+const defaultColors = [
+  '#252525',
+  '#8acf00',
+  '#3498db',
+  '#e74c3c',
+  '#f39c12',
+  '#9b59b6',
+];
 
 export const QuoteView = () => {
   const { id } = useParams();
@@ -131,7 +138,7 @@ export const QuoteView = () => {
   const [allRatings, setAllRatings] = useState([]);
   const [ratings, setRatings] = useState([]);
   const [openConfirmationModal, setOpenConfirmationModal] = useState(false);
-  const [color, setColor] = useState('#8acf00');
+  const [color, setColor] = useState('#252525');
   const [colorPickerSelected, setColorPickerSelected] = useState(false);
   const [imageDataUrl, setImageDataUrl] = useState('');
   const canvasRef = useRef(null);
@@ -378,7 +385,7 @@ export const QuoteView = () => {
 
       ctx.clearRect(0, 0, width, height);
 
-      ctx.fillStyle = '#252525';
+      ctx.fillStyle = color;
       ctx.fillRect(0, 0, width, height);
 
       ctx.fillStyle = 'white';
@@ -423,7 +430,7 @@ export const QuoteView = () => {
       const textHeight = linesCount * lineHeight;
       const centerY = (height - textHeight) / 2;
 
-      ctx.fillStyle = '#252525';
+      ctx.fillStyle = color;
       ctx.fillRect(0, 0, width, height);
       ctx.fillStyle = 'white';
       ctx.font = 'bold 28px Norwester';
@@ -438,7 +445,7 @@ export const QuoteView = () => {
       const dataUrl = canvas.toDataURL('image/png');
       setImageDataUrl(dataUrl);
     });
-  }, [quote]);
+  }, [quote, color]);
 
   const handleDownload = () => {
     const canvas = canvasRef.current;
@@ -478,6 +485,66 @@ export const QuoteView = () => {
                   style={{ width: '100%', height: 'auto' }}
                 />
               )}
+              <div className="container-color-group">
+                <div className="color-group">
+                  <p className="color-group-tab-1">Background</p>
+                  <div className="color-group-tab-2">
+                    {defaultColors.map((item) => (
+                      // eslint-disable-next-line jsx-a11y/control-has-associated-label
+                      <button
+                        type="button"
+                        className={`color-input ${
+                          item === color && 'selected'
+                        }`}
+                        style={{ backgroundColor: item }}
+                        onClick={() => handleChangeColor(item)}
+                      />
+                    ))}
+                  </div>
+                  <div className="color-group-tab-3">
+                    <p>Custom</p>
+                    <input
+                      type="color"
+                      className={`color-picker ${
+                        colorPickerSelected && 'selected'
+                      }`}
+                      onChange={(event) => {
+                        setColor(event.target.value);
+                        setColorPickerSelected(true);
+                      }}
+                    />
+                  </div>
+                </div>
+                <div className="color-group font">
+                  <p className="color-group-tab-1">Font</p>
+                  <div className="color-group-tab-2">
+                    {defaultColors.map((item) => (
+                      // eslint-disable-next-line jsx-a11y/control-has-associated-label
+                      <button
+                        type="button"
+                        className={`color-input ${
+                          item === color && 'selected'
+                        }`}
+                        style={{ backgroundColor: item }}
+                        onClick={() => handleChangeColor(item)}
+                      />
+                    ))}
+                  </div>
+                  <div className="color-group-tab-3">
+                    <p>Custom</p>
+                    <input
+                      type="color"
+                      className={`color-picker ${
+                        colorPickerSelected && 'selected'
+                      }`}
+                      onChange={(event) => {
+                        setColor(event.target.value);
+                        setColorPickerSelected(true);
+                      }}
+                    />
+                  </div>
+                </div>
+              </div>
               <Button onClick={handleDownload} primary label="Download" />
               <h1 className="hero-header">{quote.title}</h1>
               <div className="container-bookmark">
