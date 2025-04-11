@@ -497,7 +497,6 @@ export const QuoteView = () => {
       };
 
       const quoteText = getQuoteWithoutAuthor(quote.title).toUpperCase();
-      console.log(quoteText, 'text');
 
       const linesCount = wrapText(
         ctx,
@@ -544,7 +543,7 @@ export const QuoteView = () => {
         <meta name="description" content="Best quotes - motivately" />
       </Helmet>
       <main>
-        <section className="container-appview">
+        <section className="container-quoteview">
           <div className="container-quoteview-main">
             <div className="container-quote">
               {/* <canvas
@@ -579,7 +578,7 @@ export const QuoteView = () => {
                       style={{
                         backgroundImage: `url(https://picsum.photos/id/${image}/130/100)`,
                         backgroundRepeat: 'no-repeat',
-                        backgroundSize: 'fit',
+                        backgroundSize: 'cover',
                         height: '100px',
                         // border: '1px',
                         boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', // Optional styling for shadow
@@ -811,7 +810,7 @@ export const QuoteView = () => {
                       <Badge secondary label={quote.topicTitle} size="small" />
                     </div>
                   </div>
-                  <div className="badges">
+                  {/* <div className="badges">
                     <p>Category: </p>
                     <div>
                       <Badge
@@ -820,8 +819,73 @@ export const QuoteView = () => {
                         size="small"
                       />
                     </div>
-                  </div>
+                  </div> */}
                 </div>
+              </div>
+              <div className="container-comments">
+                {comments.length === 0 && (
+                  <div>
+                    <i>No comments for this App. </i>
+                    {user && <i>Add first one below.</i>}
+                  </div>
+                )}
+                {comments.length > 0 &&
+                  comments.map((item) => (
+                    <div className="form-container">
+                      <div className="comment-box submit-box">
+                        <div>{item.content}</div>
+                        <div className="comment-author-date">{`by ${
+                          item.full_name
+                        } on ${getOnlyYearMonthDay(item.created_at)}`}</div>
+                      </div>
+                    </div>
+                  ))}
+                {!user && (
+                  <div>
+                    <i>
+                      <br />
+                      <Link to="/signup" className="simple-link">
+                        Sign up
+                      </Link>{' '}
+                      or{' '}
+                      <Link to="/login" className="simple-link">
+                        log in
+                      </Link>{' '}
+                      to add comments
+                    </i>
+                  </div>
+                )}
+                {user && (
+                  <div className="form-container">
+                    <div className="comment-box submit-box">
+                      <form onSubmit={handleSubmit}>
+                        <textarea
+                          className="form-input"
+                          value={comment}
+                          placeholder="Your comment"
+                          onChange={commentHandler}
+                        />
+
+                        <Button
+                          primary
+                          className="btn-add-prompt"
+                          type="submit"
+                          label="Add comment"
+                        />
+                        {validForm && (
+                          <Modal
+                            title="Your comment has been submitted!"
+                            open={openConfirmationModal}
+                            toggle={() => setOpenConfirmationModal(false)}
+                          />
+                        )}
+                        {invalidForm && (
+                          <p className="error-message">{error}</p>
+                        )}
+                      </form>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -842,80 +906,19 @@ export const QuoteView = () => {
             </div>
           </div> */}
 
-          <div className="container-comments">
-            {comments.length === 0 && (
+          {!user && (
+            <div className="container-details cta">
               <div>
-                <i>No comments for this App. </i>
-                {user && <i>Add first one below.</i>}
+                <h2>🔥 Create a free account</h2>
+                <p>Bookmark you favorite AI apps</p>
               </div>
-            )}
-            {comments.length > 0 &&
-              comments.map((item) => (
-                <div className="form-container">
-                  <div className="comment-box submit-box">
-                    <div>{item.content}</div>
-                    <div className="comment-author-date">{`by ${
-                      item.full_name
-                    } on ${getOnlyYearMonthDay(item.created_at)}`}</div>
-                  </div>
-                </div>
-              ))}
-            {!user && (
               <div>
-                <i>
-                  <br />
-                  <Link to="/signup" className="simple-link">
-                    Sign up
-                  </Link>{' '}
-                  or{' '}
-                  <Link to="/login" className="simple-link">
-                    log in
-                  </Link>{' '}
-                  to add comments
-                </i>
+                <Link to="/signup">
+                  <Button primary label="Create my account 👌" />
+                </Link>
               </div>
-            )}
-            {user && (
-              <div className="form-container">
-                <div className="comment-box submit-box">
-                  <form onSubmit={handleSubmit}>
-                    <textarea
-                      className="form-input"
-                      value={comment}
-                      placeholder="Your comment"
-                      onChange={commentHandler}
-                    />
-
-                    <Button
-                      primary
-                      className="btn-add-prompt"
-                      type="submit"
-                      label="Add comment"
-                    />
-                    {validForm && (
-                      <Modal
-                        title="Your comment has been submitted!"
-                        open={openConfirmationModal}
-                        toggle={() => setOpenConfirmationModal(false)}
-                      />
-                    )}
-                    {invalidForm && <p className="error-message">{error}</p>}
-                  </form>
-                </div>
-              </div>
-            )}
-          </div>
-          <div className="container-details cta">
-            <div>
-              <h2>🔥 Create a free account</h2>
-              <p>Bookmark you favorite AI apps</p>
             </div>
-            <div>
-              <Link to="/signup">
-                <Button primary label="Create my account 👌" />
-              </Link>
-            </div>
-          </div>
+          )}
           {similarApps.length > 0 && (
             <div className="container-alternatives">
               <h3>🔎 Similar to {quote.title}</h3>

@@ -39,11 +39,12 @@ export const Card = ({
     return (
       <Link
         className="card-category--small card-image--small"
-        style={{
-          backgroundImage: `url(http://res.cloudinary.com/dgarvanzw/image/upload/w_500,q_auto,f_auto/apps_ai/${urlImage}.png )`,
-          backgroundRepeat: 'no-repeat',
-          backgroundSize: 'cover',
-        }}
+        // style={{
+
+        //   // backgroundImage: `url(http://res.cloudinary.com/dgarvanzw/image/upload/w_500,q_auto,f_auto/apps_ai/${urlImage}.png )`,
+        //   // backgroundRepeat: 'no-repeat',
+        //   // backgroundSize: 'cover',
+        // }}
       >
         <div className="card-header">
           <Link to={`/apps/${id}`} target="_blank">
