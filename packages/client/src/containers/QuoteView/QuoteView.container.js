@@ -657,7 +657,7 @@ export const QuoteView = () => {
                   className="button-copy"
                   onClick={() => {
                     navigator.clipboard.writeText(
-                      `https://www.Apphunt.me/Apps/${quote.id}`,
+                      `https://www.motivately.co/quotes/${quote.id}`,
                     );
                   }}
                 />
@@ -665,21 +665,21 @@ export const QuoteView = () => {
                   <FontAwesomeIcon className="share-icon" icon={faFacebookF} />
                 </FacebookShareButton>
                 <TwitterShareButton
-                  url={`https://www.Apphunt.me/Apps/${quote.id}`}
-                  title={`Check out this GPT App: '${quote.title}'`}
-                  hashtags={['Apps']}
+                  url={`https://www.motivately.co/quotes/${quote.id}`}
+                  title={`'${quote.title}'`}
+                  hashtags={['quotes', 'inspirational']}
                 >
                   <FontAwesomeIcon className="share-icon" icon={faTwitter} />
                 </TwitterShareButton>
                 <LinkedinShareButton
-                  url={`https://www.Apphunt.me/Apps/${quote.id}`}
+                  url={`https://www.motivately.co/quotes/${quote.id}`}
                 >
                   <FontAwesomeIcon className="share-icon" icon={faLinkedinIn} />
                 </LinkedinShareButton>
                 <EmailShareButton
-                  subject="Check out this GPT App!"
-                  body={`This GPT App is great: '${quote.title}'`}
-                  url={`https://www.Apphunt.me/Apps/${quote.id}`}
+                  subject="Check out this quote!"
+                  body={`This quote is awesome: '${quote.title}'`}
+                  url={`https://www.motivately.co/quotes/${quote.id}`}
                 >
                   <FontAwesomeIcon icon={faEnvelope} />
                 </EmailShareButton>
