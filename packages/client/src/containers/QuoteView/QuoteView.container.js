@@ -555,6 +555,24 @@ export const QuoteView = () => {
                 />
               )}
               <div className="container-color-group">
+                <div className="images-group">
+                  {images.map((image) => (
+                    <div
+                      onClick={() => setSelectedImage(image)}
+                      className={`quote-image-input ${
+                        image === selectedImage && 'selected'
+                      }`}
+                      style={{
+                        backgroundImage: `url(https://picsum.photos/id/${image}/130/100)`,
+                        backgroundRepeat: 'no-repeat',
+                        backgroundSize: 'fit',
+                        height: '100px',
+                        // border: '1px',
+                        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', // Optional styling for shadow
+                      }}
+                    />
+                  ))}
+                </div>
                 <div className="color-group">
                   <p className="color-group-tab-1">Background</p>
                   <div className="color-group-tab-2">
@@ -618,24 +636,6 @@ export const QuoteView = () => {
                       }}
                     />
                   </div>
-                </div>
-                <div className="images-group">
-                  {images.map((image) => (
-                    <div
-                      onClick={() => setSelectedImage(image)}
-                      className={`quote-image-input ${
-                        image === selectedImage && 'selected'
-                      }`}
-                      style={{
-                        backgroundImage: `url(https://picsum.photos/id/${image}/130/100)`,
-                        backgroundRepeat: 'no-repeat',
-                        backgroundSize: 'fit',
-                        height: '100px',
-                        // border: '1px',
-                        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', // Optional styling for shadow
-                      }}
-                    />
-                  ))}
                 </div>
               </div>
               <Button onClick={handleDownload} primary label="Download" />

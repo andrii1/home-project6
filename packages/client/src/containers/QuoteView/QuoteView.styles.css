@@ -239,3 +239,10 @@
 .quote-image-input.selected {
   border: 4px solid blue;
 }
+
+.container-color-group {
+  margin-top: -0.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
