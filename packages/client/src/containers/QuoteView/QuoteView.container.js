@@ -403,7 +403,7 @@ export const QuoteView = () => {
           const response = await fetch(url);
 
           if (response.ok) {
-            fetchedImages.push(url); // Add the image URL if response is OK
+            fetchedImages.push(randomNumber); // Add the image URL if response is OK
             count += 1; // Increment count when image is successfully added
           }
         } catch (e) {
@@ -500,9 +500,11 @@ export const QuoteView = () => {
         image.onload = () => {
           ctx.clearRect(0, 0, width, height);
           ctx.drawImage(image, 0, 0, width, height);
+          ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+          ctx.fillRect(0, 0, width, height);
           drawText();
         };
-        image.src = selectedImage;
+        image.src = `https://picsum.photos/id/${selectedImage}/1000/700`;
       } else {
         ctx.clearRect(0, 0, width, height);
         ctx.fillStyle = color;
@@ -617,7 +619,7 @@ export const QuoteView = () => {
                         image === selectedImage && 'selected'
                       }`}
                       style={{
-                        backgroundImage: `url(${image})`,
+                        backgroundImage: `url(https://picsum.photos/id/${image}/130/100)`,
                         backgroundRepeat: 'no-repeat',
                         backgroundSize: 'fit',
                         height: '100px',
