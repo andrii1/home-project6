@@ -376,11 +376,13 @@ export const QuoteView = () => {
     }
   };
   const handleChangeColor = (colorParam) => {
+    setSelectedImage('');
     setColorPickerSelected(false);
     setColor(colorParam);
   };
 
   const handleChangeFontColor = (colorParam) => {
+    setSelectedImage('');
     setFontColorPickerSelected(false);
     setFontColor(colorParam);
   };
@@ -564,7 +566,9 @@ export const QuoteView = () => {
                           item === color && 'selected'
                         }`}
                         style={{ backgroundColor: item }}
-                        onClick={() => handleChangeColor(item)}
+                        onClick={() => {
+                          handleChangeColor(item);
+                        }}
                       />
                     ))}
                   </div>
@@ -576,6 +580,7 @@ export const QuoteView = () => {
                         colorPickerSelected && 'selected'
                       }`}
                       onChange={(event) => {
+                        setSelectedImage('');
                         setColor(event.target.value);
                         setColorPickerSelected(true);
                       }}
@@ -593,7 +598,9 @@ export const QuoteView = () => {
                           item === fontColor && 'selected'
                         }`}
                         style={{ backgroundColor: item }}
-                        onClick={() => handleChangeFontColor(item)}
+                        onClick={() => {
+                          handleChangeFontColor(item);
+                        }}
                       />
                     ))}
                   </div>
@@ -605,6 +612,7 @@ export const QuoteView = () => {
                         fontColorPickerSelected && 'selected'
                       }`}
                       onChange={(event) => {
+                        setSelectedImage('');
                         setFontColor(event.target.value);
                         setFontColorPickerSelected(true);
                       }}
