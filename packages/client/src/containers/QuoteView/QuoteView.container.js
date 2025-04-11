@@ -425,15 +425,36 @@ export const QuoteView = () => {
       const canvas = canvasRef.current;
       const ctx = canvas.getContext('2d');
 
-      ctx.clearRect(0, 0, width, height);
+      const drawText = () => {
+        ctx.fillStyle = fontColor;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'top';
+        ctx.font = 'bold 28px Norwester';
 
-      ctx.fillStyle = color;
-      ctx.fillRect(0, 0, width, height);
+        // Redraw background before drawing centered text
+        if (!selectedImage) {
+          ctx.fillStyle = color;
+          ctx.fillRect(0, 0, width, height);
+        }
 
-      ctx.fillStyle = fontColor;
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'top';
-      ctx.font = 'bold 28px Norwester';
+        const canvas2 = canvasRef.current;
+        const ctx2 = canvas2.getContext('2d');
+
+        ctx2.fillStyle = fontColor;
+        ctx2.font = 'bold 28px Norwester';
+
+        wrapText(ctx2, quoteText, width / 2, centerY, width * 0.9);
+
+        ctx2.font = 'bold 12px Norwester';
+        ctx2.fillText(
+          `– ${quote.authorFullName.toUpperCase()}`,
+          width / 2,
+          height - 50,
+        );
+
+        const dataUrl = canvas2.toDataURL('image/png');
+        setImageDataUrl(dataUrl);
+      };
 
       const wrapText = (ctxParam, text, x, y, maxWidth) => {
         const words = text?.split(' ');
@@ -472,22 +493,24 @@ export const QuoteView = () => {
       const textHeight = linesCount * lineHeight;
       const centerY = (height - textHeight) / 2;
 
-      ctx.fillStyle = color;
-      ctx.fillRect(0, 0, width, height);
-      ctx.fillStyle = fontColor;
-      ctx.font = 'bold 28px Norwester';
-      wrapText(ctx, quoteText, width / 2, centerY, width * 0.9);
-
-      ctx.font = 'bold 12px Norwester';
-      ctx.fillText(
-        `– ${quote.authorFullName.toUpperCase()}`,
-        width / 2,
-        height - 50,
-      );
-      const dataUrl = canvas.toDataURL('image/png');
-      setImageDataUrl(dataUrl);
+      // ctx.clearRect(0, 0, width, height);
+      if (selectedImage) {
+        const image = new Image();
+        image.crossOrigin = 'anonymous'; // Important if image is from another domain
+        image.onload = () => {
+          ctx.clearRect(0, 0, width, height);
+          ctx.drawImage(image, 0, 0, width, height);
+          drawText();
+        };
+        image.src = selectedImage;
+      } else {
+        ctx.clearRect(0, 0, width, height);
+        ctx.fillStyle = color;
+        ctx.fillRect(0, 0, width, height);
+        drawText();
+      }
     });
-  }, [quote, color, fontColor]);
+  }, [quote, color, fontColor, selectedImage]);
 
   const handleDownload = () => {
     const canvas = canvasRef.current;
