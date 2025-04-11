@@ -708,9 +708,7 @@ export const QuoteView = () => {
               <div className="container-bookmark">
                 <div className="container-rating">
                   Rating
-                  {user &&
-                  allRatings.some((rating) => rating.quote_id === quote.id) &&
-                  ratings.some((rating) => rating.id === quote.id) ? (
+                  {user && ratings.some((rating) => rating.id === quote.id) ? (
                     <button
                       type="button"
                       className="button-rating"
