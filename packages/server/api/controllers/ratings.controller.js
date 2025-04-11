@@ -20,8 +20,8 @@ const getRatingsByUserId = async (token) => {
   }
 
   try {
-    const ratings = await knex('apps')
-      .select('apps.*', 'ratings.id as ratingsID')
+    const ratings = await knex('quotes')
+      .select('quotes.*', 'ratings.id as ratingsID')
       .leftJoin('ratings', function () {
         this.on('quotes.id', '=', 'ratings.quote_id');
       })
@@ -37,8 +37,8 @@ const getRatingsByUserId = async (token) => {
   }
 };
 
-// get by user-id and prompt-id
-const getRatingsByQuoteId = async (token, appsId) => {
+// get by user-id and quote-id
+const getRatingsByQuoteId = async (token, quoteId) => {
   const userUid = token.split(' ')[1];
   const user = (await knex('users').where({ uid: userUid }))[0];
 
@@ -47,17 +47,17 @@ const getRatingsByQuoteId = async (token, appsId) => {
   }
 
   try {
-    const ratings = await knex('apps')
+    const ratings = await knex('quotes')
       .select('quotes.*', 'ratings.id as ratingsID')
       .leftJoin('ratings', function () {
         this.on('quotes.id', '=', 'ratings.quote_id');
       })
       .where('ratings.user_id', '=', `${user.id}`)
-      .where('ratings.quote_id', '=', `${appsId}`);
+      .where('ratings.quote_id', '=', `${quoteId}`);
 
     if (ratings.length === 0) {
       throw new HttpError(
-        `There are no ratings available with this user for this app`,
+        `There are no ratings available with this user for this quote`,
         404,
       );
     }

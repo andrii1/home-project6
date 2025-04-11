@@ -276,7 +276,7 @@ export const QuoteView = () => {
     fetchFavorites();
   }, [fetchFavorites]);
 
-  const addFavorite = async (appId) => {
+  const addFavorite = async (quoteId) => {
     const response = await fetch(`${apiURL()}/favorites`, {
       method: 'POST',
       headers: {
@@ -284,7 +284,7 @@ export const QuoteView = () => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        app_id: appId,
+        quote_id: quoteId,
       }),
     });
     if (response.ok) {
@@ -345,7 +345,7 @@ export const QuoteView = () => {
     fetchRatings();
   }, [fetchRatings]);
 
-  const addRating = async (appId) => {
+  const addRating = async (quoteId) => {
     const response = await fetch(`${apiURL()}/ratings`, {
       method: 'POST',
       headers: {
@@ -353,7 +353,7 @@ export const QuoteView = () => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        app_id: appId,
+        quote_id: quoteId,
       }),
     });
     if (response.ok) {
@@ -362,8 +362,8 @@ export const QuoteView = () => {
     }
   };
 
-  const deleteRating = async (appId) => {
-    const response = await fetch(`${apiURL()}/ratings/${appId}`, {
+  const deleteRating = async (quoteId) => {
+    const response = await fetch(`${apiURL()}/ratings/${quoteId}`, {
       method: 'DELETE',
       headers: {
         token: `token ${user?.uid}`,
@@ -536,6 +536,9 @@ export const QuoteView = () => {
     link.href = canvas.toDataURL('image/png');
     link.click();
   };
+
+  console.log(ratings, 'ratings', allRatings, 'allratings');
+
   return (
     <>
       <Helmet>
