@@ -638,8 +638,55 @@ export const QuoteView = () => {
                   </div>
                 </div>
               </div>
-              <Button onClick={handleDownload} primary label="Download" />
-              <h1 className="hero-header">{quote.title}</h1>
+              <div>
+                <Button onClick={handleDownload} primary label="Download" />
+              </div>
+              <div className="icons-apps-page">
+                <span>Share it: </span>
+                <button
+                  type="button"
+                  className="button-copy"
+                  onClick={() => {
+                    navigator.clipboard.writeText(quote.title);
+                  }}
+                >
+                  <img src={iconCopy} alt="copy" className="icon-copy" />
+                </button>
+                <FontAwesomeIcon
+                  icon={faLink}
+                  className="button-copy"
+                  onClick={() => {
+                    navigator.clipboard.writeText(
+                      `https://www.Apphunt.me/Apps/${quote.id}`,
+                    );
+                  }}
+                />
+                <FacebookShareButton url={`/Apps/${quote.id}`}>
+                  <FontAwesomeIcon className="share-icon" icon={faFacebookF} />
+                </FacebookShareButton>
+                <TwitterShareButton
+                  url={`https://www.Apphunt.me/Apps/${quote.id}`}
+                  title={`Check out this GPT App: '${quote.title}'`}
+                  hashtags={['Apps']}
+                >
+                  <FontAwesomeIcon className="share-icon" icon={faTwitter} />
+                </TwitterShareButton>
+                <LinkedinShareButton
+                  url={`https://www.Apphunt.me/Apps/${quote.id}`}
+                >
+                  <FontAwesomeIcon className="share-icon" icon={faLinkedinIn} />
+                </LinkedinShareButton>
+                <EmailShareButton
+                  subject="Check out this GPT App!"
+                  body={`This GPT App is great: '${quote.title}'`}
+                  url={`https://www.Apphunt.me/Apps/${quote.id}`}
+                >
+                  <FontAwesomeIcon icon={faEnvelope} />
+                </EmailShareButton>
+              </div>
+            </div>
+            <div className="container-quote-info">
+              <h1 className="hero-header">{`"${quote.title}"`}</h1>
               <div className="container-bookmark">
                 <div className="container-rating">
                   Rating
@@ -728,16 +775,19 @@ export const QuoteView = () => {
                   )}
                 </div>
               </div>
-              <div className="container-details">
-                <div className="container-tags">
-                  <div className="badges">
-                    <p>Pricing: </p>{' '}
-                    <div>
-                      <Badge label={quote.pricing_type} size="small" />
-                    </div>
-                  </div>
-                  <p>Edit app</p>
+              {quote.description && (
+                <div className="container-description">
+                  <p>{quote.description}</p>
                 </div>
+              )}
+              {quote.authorFullName && (
+                <div className="container-description">
+                  <strong>Author:</strong>
+                  <p>{quote.authorFullName}</p>
+                  <strong>Info:</strong>
+                </div>
+              )}
+              <div className="container-details">
                 <div className="container-tags">
                   <div className="badges">
                     <p>Tagged: </p>
@@ -757,63 +807,6 @@ export const QuoteView = () => {
                   </div>
                 </div>
               </div>
-              <div className="icons-apps-page">
-                <span>Share it: </span>
-                <button
-                  type="button"
-                  className="button-copy"
-                  onClick={() => {
-                    navigator.clipboard.writeText(quote.title);
-                  }}
-                >
-                  <img src={iconCopy} alt="copy" className="icon-copy" />
-                </button>
-                <FontAwesomeIcon
-                  icon={faLink}
-                  className="button-copy"
-                  onClick={() => {
-                    navigator.clipboard.writeText(
-                      `https://www.Apphunt.me/Apps/${quote.id}`,
-                    );
-                  }}
-                />
-                <FacebookShareButton url={`/Apps/${quote.id}`}>
-                  <FontAwesomeIcon className="share-icon" icon={faFacebookF} />
-                </FacebookShareButton>
-                <TwitterShareButton
-                  url={`https://www.Apphunt.me/Apps/${quote.id}`}
-                  title={`Check out this GPT App: '${quote.title}'`}
-                  hashtags={['Apps']}
-                >
-                  <FontAwesomeIcon className="share-icon" icon={faTwitter} />
-                </TwitterShareButton>
-                <LinkedinShareButton
-                  url={`https://www.Apphunt.me/Apps/${quote.id}`}
-                >
-                  <FontAwesomeIcon className="share-icon" icon={faLinkedinIn} />
-                </LinkedinShareButton>
-                <EmailShareButton
-                  subject="Check out this GPT App!"
-                  body={`This GPT App is great: '${quote.title}'`}
-                  url={`https://www.Apphunt.me/Apps/${quote.id}`}
-                >
-                  <FontAwesomeIcon icon={faEnvelope} />
-                </EmailShareButton>
-              </div>
-            </div>
-            <div className="container-quote-info">
-              {quote.description && (
-                <div className="container-description">
-                  <p>{quote.description}</p>
-                </div>
-              )}
-              {quote.authorFullName && (
-                <div className="container-description">
-                  <strong>Author:</strong>
-                  <p>{quote.authorFullName}</p>
-                  <strong>Info:</strong>
-                </div>
-              )}
             </div>
           </div>
           {/* <img
