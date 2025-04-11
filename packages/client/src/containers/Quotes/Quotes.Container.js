@@ -537,7 +537,7 @@ export const Quotes = () => {
     fetchFavorites();
   }, [fetchFavorites]);
 
-  const addFavorite = async (appId) => {
+  const addFavorite = async (quoteId) => {
     const response = await fetch(`${apiURL()}/favorites`, {
       method: 'POST',
       headers: {
@@ -545,7 +545,7 @@ export const Quotes = () => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        app_id: appId,
+        quote_id: quoteId,
       }),
     });
     if (response.ok) {
@@ -710,8 +710,8 @@ export const Quotes = () => {
                     description={app.description}
                     url={app.url}
                     urlImage={app.url_image}
-                    topic={app.topicTitle}
-                    topicId={app.topic_id}
+                    author={app.authorFullName}
+                    authorId={app.authorId}
                     pricingType={app.pricing_type}
                     isFavorite={favorites.some((x) => x.id === app.id)}
                     addFavorite={(event) => addFavorite(app.id)}

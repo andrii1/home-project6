@@ -20,8 +20,8 @@ import './Card.styles.css';
 export const Card = ({
   title,
   description,
-  topic,
-  topicId,
+  author,
+  authorId,
   pricingType,
   url,
   urlImage,
@@ -51,10 +51,10 @@ export const Card = ({
             <h2>{title}</h2>
           </Link>
         </div>
-        <div className="topics-bookmark--small">
-          <Badge secondary label={topic} size="small" />
-          <Badge label={pricingType} size="small" />
-        </div>
+        {/* <div className="topics-bookmark--small">
+          {authorId !== 1 && <Badge label={author} size="small" />}
+          {/* <Badge label={pricingType} size="small" />
+        </div> */}
       </Link>
     );
   }
@@ -119,9 +119,11 @@ export const Card = ({
             <FontAwesomeIcon icon={faHeart} size="lg" />
           </button>
         )}
-        <Link to={`/quotes/author/${topicId}`}>
-          <Button label={topic} size="small" />
-        </Link>
+        {authorId !== 1 && (
+          <Link to={`/quotes/author/${authorId}`}>
+            <Button secondary label={author} size="small" />
+          </Link>
+        )}
       </div>
       {/* </div> */}
     </div>
@@ -173,8 +175,8 @@ export const Card = ({
 Card.propTypes = {
   title: PropTypes.string,
   description: PropTypes.string,
-  topic: PropTypes.string,
-  topicId: PropTypes.string,
+  author: PropTypes.string,
+  authorId: PropTypes.string,
   pricingType: PropTypes.string,
   id: PropTypes.string,
   url: PropTypes.shape,
@@ -192,8 +194,8 @@ Card.defaultProps = {
   title: null,
   description: null,
   pricingType: null,
-  topicId: null,
-  topic: null,
+  authorId: null,
+  author: null,
   url: null,
   urlImage: null,
   id: null,

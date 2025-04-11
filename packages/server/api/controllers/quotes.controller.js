@@ -17,7 +17,11 @@ const getOppositeOrderDirection = (direction) => {
 const getQuotesAll = async () => {
   try {
     const quotes = knex('quotes')
-      .select('quotes.*', 'authors.full_name as authorFullName')
+      .select(
+        'quotes.*',
+        'authors.full_name as authorFullName',
+        'authors.id as authorId',
+      )
       .join('authors', 'quotes.author_id', '=', 'authors.id');
 
     return quotes;
@@ -31,7 +35,11 @@ const getQuotes = async (page, column, direction) => {
   try {
     const getModel = () =>
       knex('quotes')
-        .select('quotes.*', 'authors.full_name as authorFullName')
+        .select(
+          'quotes.*',
+          'authors.full_name as authorFullName',
+          'authors.id as authorId',
+        )
         .join('authors', 'quotes.author_id', '=', 'authors.id');
     const lastItem = await getModel()
       .orderBy(column, lastItemDirection)
@@ -306,6 +314,7 @@ const getQuotesBySearchTerm = async (page, column, direction, searchTerm) => {
         .select(
           'quotes.*',
           'authors.full_name as authorFullName',
+          'authors.id as authorId',
           'searches.id as searchId',
           'searches.title as searchTitle',
         )
@@ -338,6 +347,7 @@ const getQuotesByTag = async (page, column, direction, tag) => {
         .select(
           'quotes.*',
           'authors.full_name as authorFullName',
+          'authors.id as authorId',
           'tags.id as tagId',
           'tags.title as tagTitle',
         )
@@ -375,7 +385,11 @@ const getQuotesBy = async ({
   try {
     const getModel = () =>
       knex('quotes')
-        .select('quotes.*', 'authors.full_name as authorFullName')
+        .select(
+          'quotes.*',
+          'authors.full_name as authorFullName',
+          'authors.id as authorId',
+        )
         .join('authors', 'quotes.author_id', '=', 'authors.id')
         .modify((queryBuilder) => {
           if (filteredAuthors !== undefined) {
@@ -439,7 +453,11 @@ const getQuoteById = async (id) => {
   }
   try {
     const app = await knex('quotes')
-      .select('quotes.*', 'authors.full_name as authorFullName')
+      .select(
+        'quotes.*',
+        'authors.full_name as authorFullName',
+        'authors.id as authorId',
+      )
       .join('authors', 'quotes.author_id', '=', 'authors.id')
       .where({ 'quotes.id': id });
     if (app.length === 0) {
