@@ -420,6 +420,14 @@ export const QuoteView = () => {
     fetchImage();
   }, []);
 
+  const getQuoteWithoutAuthor = (quoteParam) => {
+    const match = quoteParam?.match(/^(.*?)[\s"”]?[–—-]\s*([\w\s.]+)$/);
+    if (match) {
+      return match[1].trim();
+    }
+    return quoteParam;
+  };
+
   useEffect(() => {
     if (Object.keys(quote).length === 0) return;
 
@@ -446,13 +454,17 @@ export const QuoteView = () => {
         ctx2.font = 'bold 28px Norwester';
 
         wrapText(ctx2, quoteText, width / 2, centerY, width * 0.9);
+        if (quote.authorFullName !== 'Unknown') {
+          ctx2.font = 'bold 14px Norwester';
+          ctx2.fillText(
+            `– ${quote.authorFullName.toUpperCase()}`,
+            width / 2,
+            height - 40,
+          );
+        }
 
-        ctx2.font = 'bold 12px Norwester';
-        ctx2.fillText(
-          `– ${quote.authorFullName.toUpperCase()}`,
-          width / 2,
-          height - 50,
-        );
+        ctx2.font = 'normal 10px Norwester';
+        ctx2.fillText(`motivately.co`, width - 40, height - 15);
 
         const dataUrl = canvas2.toDataURL('image/png');
         setImageDataUrl(dataUrl);
@@ -484,7 +496,9 @@ export const QuoteView = () => {
         return lines.length;
       };
 
-      const quoteText = quote?.title?.toUpperCase();
+      const quoteText = getQuoteWithoutAuthor(quote.title).toUpperCase();
+      console.log(quoteText, 'text');
+
       const linesCount = wrapText(
         ctx,
         quoteText,
@@ -686,7 +700,9 @@ export const QuoteView = () => {
               </div>
             </div>
             <div className="container-quote-info">
-              <h1 className="hero-header">{`"${quote.title}"`}</h1>
+              <h1 className="hero-header">{`"${getQuoteWithoutAuthor(
+                quote?.title,
+              )}"`}</h1>
               <div className="container-bookmark">
                 <div className="container-rating">
                   Rating
