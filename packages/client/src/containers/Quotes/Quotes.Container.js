@@ -14,6 +14,7 @@ import Modal from '../../components/Modal/Modal.Component';
 import { useUserContext } from '../../userContext';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import Masonry from 'react-masonry-css';
+import { capitalize } from '../../utils/capitalize';
 
 import {
   faSearch,
@@ -491,6 +492,8 @@ export const Quotes = () => {
     pageTitle = `${categories
       .filter((category) => category.id === parseInt(tagIdParam, 10))
       .map((item) => item.title)} quotes - motivately`;
+  } else if (searchParam) {
+    pageTitle = `${capitalize(searchParam)} quotes - motivately`;
   } else {
     pageTitle = 'motivately - best quotes';
   }
