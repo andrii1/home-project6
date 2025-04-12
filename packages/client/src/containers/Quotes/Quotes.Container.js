@@ -27,11 +27,11 @@ import {
 export const Quotes = () => {
   const { user } = useUserContext();
   const location = useLocation();
-  const { authorIdParam, tagIdParam } = useParams();
+  const { authorIdParam, tagIdParam, searchParam } = useParams();
   const [searchTerms, setSearchTerms] = useState();
+  const [search, setSearch] = useState('');
   const [sortOrder, setSortOrder] = useState();
   const [resultsHome, setResultsHome] = useState([]);
-
   const [authors, setAuthors] = useState([]);
   const [openModal, setOpenModal] = useState(false);
   const [modalTitle, setModalTitle] = useState('');
@@ -81,7 +81,7 @@ export const Quotes = () => {
       orderBy.direction
     }${authorIdParam !== undefined ? `&filteredAuthors=${authorIdParam}` : ''}${
       tagIdParam !== undefined ? `&filteredTags=${tagIdParam}` : ''
-    }${
+    }${searchParam !== undefined ? `&search=${searchParam}` : ''}${
       filtersSubmitted && filteredPricing.length > 0
         ? `&filteredPricing=${encodeURIComponent(filteredPricing)}`
         : ''
@@ -131,6 +131,7 @@ export const Quotes = () => {
     filteredDetails,
     filteredPricing,
     filtersSubmitted,
+    searchParam,
   ]);
 
   const fetchApps = async () => {
@@ -142,6 +143,8 @@ export const Quotes = () => {
     }&direction=${orderBy.direction}${
       authorIdParam !== undefined ? `&filteredTopics=${authorIdParam}` : ''
     }${tagIdParam !== undefined ? `&filteredCategories=${tagIdParam}` : ''}${
+      searchParam !== undefined ? `&search=${searchParam}` : ''
+    }${
       filtersSubmitted && filteredPricing.length > 0
         ? `&filteredPricing=${encodeURIComponent(filteredPricing)}`
         : ''

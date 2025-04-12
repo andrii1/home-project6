@@ -38,6 +38,11 @@ function App() {
               path="/quotes/author/:authorIdParam"
               element={<Quotes />}
             />
+            <Route
+              exact
+              path="/quotes/search/:searchParam"
+              element={<Quotes />}
+            />
             {/* <Route
               exact
               path="/apps/category/:categoryIdParam"

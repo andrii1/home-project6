@@ -10,7 +10,10 @@ import { Card } from '../../components/Card/Card.component';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Modal from '../../components/Modal/Modal.Component';
 import iconCopy from '../../assets/images/icons8-copy-24.png';
+// eslint-disable-next-line import/no-extraneous-dependencies
 import Markdown from 'markdown-to-jsx';
+import { extractMeaningfulWords } from '../../utils/extractMeaningfulWords';
+
 import {
   faEnvelope,
   faLink,
@@ -792,6 +795,34 @@ export const QuoteView = () => {
                   )}
                 </div>
               </div>
+
+              {quote.title && (
+                <div className="container-description">
+                  <strong>Related topics:</strong>
+                  <p>{extractMeaningfulWords(quote?.title)}</p>
+                </div>
+              )}
+
+              {/* <div className="container-details">
+                <div className="container-tags">
+                  <div className="badges">
+                    <p>Related topics: </p>
+                    <div>
+                      <Badge secondary label={quote.topicTitle} size="small" />
+                    </div>
+                  </div>
+                  {/* <div className="badges">
+                    <p>Category: </p>
+                    <div>
+                      <Badge
+                        secondary
+                        label={quote.categoryTitle}
+                        size="small"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div> */}
               {quote.description && (
                 <div className="container-description">
                   <p>{quote.description}</p>
@@ -813,26 +844,7 @@ export const QuoteView = () => {
                   <strong>Info:</strong>
                 </div>
               )}
-              <div className="container-details">
-                <div className="container-tags">
-                  <div className="badges">
-                    <p>Tagged: </p>
-                    <div>
-                      <Badge secondary label={quote.topicTitle} size="small" />
-                    </div>
-                  </div>
-                  {/* <div className="badges">
-                    <p>Category: </p>
-                    <div>
-                      <Badge
-                        secondary
-                        label={quote.categoryTitle}
-                        size="small"
-                      />
-                    </div>
-                  </div> */}
-                </div>
-              </div>
+
               <div className="container-comments">
                 {comments.length === 0 && (
                   <div>

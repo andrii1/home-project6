@@ -380,6 +380,7 @@ const getQuotesBy = async ({
   filteredCategories,
   filteredPricing,
   filteredDetails,
+  search,
 }) => {
   const lastItemDirection = getOppositeOrderDirection(direction);
   try {
@@ -427,6 +428,9 @@ const getQuotesBy = async ({
             queryBuilder
               .whereNotNull('apps.url_x')
               .orWhereNotNull('apps.url_discord');
+          }
+          if (search !== undefined) {
+            queryBuilder.where('quotes.title', 'like', `%${search}%`);
           }
         });
     const lastItem = await getModel()
