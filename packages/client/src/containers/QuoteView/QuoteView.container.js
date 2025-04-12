@@ -1,3 +1,4 @@
+/* eslint-disable no-await-in-loop */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable no-nested-ternary */
@@ -153,7 +154,9 @@ export const QuoteView = () => {
   const [imageDataUrl, setImageDataUrl] = useState('');
   const [images, setImages] = useState([]);
   const [selectedImage, setSelectedImage] = useState('');
+  const [topicsFromQuotes, setTopicsFromQuotes] = useState([]);
   const canvasRef = useRef(null);
+
   useEffect(() => {
     async function fetchSingleQuote(quoteId) {
       const response = await fetch(`${apiURL()}/quotes/${quoteId}`);
@@ -194,6 +197,33 @@ export const QuoteView = () => {
   const navigateBack = () => {
     navigate(-1);
   };
+
+  useEffect(() => {
+    const words = extractMeaningfulWords(quote?.title);
+
+    async function fetchData() {
+      const results = [];
+
+      for (const word of words) {
+        try {
+          const res = await fetch(
+            `${apiURL()}/quotes?page=0&column=id&direction=desc&search=${word}`,
+          );
+          const data = await res.json();
+          if (data.data.length > 1) {
+            const wordWithLink = { title: word, url: `quotes/search/${word}` };
+            results.push(wordWithLink);
+          }
+        } catch (err) {
+          return;
+        }
+      }
+
+      setTopicsFromQuotes(results);
+    }
+
+    fetchData();
+  }, [quote.title]);
 
   const addComment = async (commentContent) => {
     const response = await fetch(`${apiURL()}/comments`, {
@@ -796,10 +826,19 @@ export const QuoteView = () => {
                 </div>
               </div>
 
-              {quote.title && (
+              {topicsFromQuotes.length > 0 && (
                 <div className="container-description">
                   <strong>Related topics:</strong>
-                  <p>{extractMeaningfulWords(quote?.title)}</p>
+                  <p>
+                    {topicsFromQuotes.map((topic, index) => (
+                      <>
+                        <Link className="underline" to={`../../${topic.url}`}>
+                          {topic.title}
+                        </Link>
+                        {index < topicsFromQuotes.length - 1 && ', '}
+                      </>
+                    ))}
+                  </p>
                 </div>
               )}
 
@@ -837,14 +876,16 @@ export const QuoteView = () => {
                   >
                     <p>{quote.authorFullName}</p>
                   </Link>
-                  <strong>Bio:</strong>
+
                   {quote.authorDescription && (
-                    <Markdown>{quote.authorDescription}</Markdown>
+                    <>
+                      <strong>Bio:</strong>
+                      <Markdown>{quote.authorDescription}</Markdown>
+                    </>
                   )}
-                  <strong>Info:</strong>
                 </div>
               )}
-
+              {/* <strong>Info:</strong> */}
               <div className="container-comments">
                 {comments.length === 0 && (
                   <div>

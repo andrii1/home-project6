@@ -15,6 +15,14 @@
   align-items: start;
 }
 
+.container-quoteview p {
+  margin: 0;
+}
+
+.container-description p {
+  margin-top: 0.5rem;
+}
+
 .container-quoteview-main {
   width: 100%;
   display: flex;

@@ -43,9 +43,11 @@ export const extractMeaningfulWords = (quote) => {
     'shall',
   ]);
 
-  return quote
-    .toLowerCase()
+  const words = quote
+    ?.toLowerCase()
     .replace(/[^\w\s]/g, '')
     .split(/\s+/)
     .filter((word) => word && !stopWords.has(word));
+
+  return Array.from(new Set(words)); // removes duplicates
 };
