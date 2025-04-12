@@ -281,3 +281,21 @@
   width: 100% !important;
   margin: 0rem;
 }
+
+@media only screen and (min-width: 993px) {
+  .container-comments {
+    margin-top: 1rem;
+  }
+}
+
+.container-quoteview a.underline {
+  text-decoration: underline;
+}
+.container-quoteview a.underline:hover {
+  color: #ffb4a2;
+  text-decoration: none;
+}
+
+.container-quoteview ul li {
+  list-style-type: disc;
+}

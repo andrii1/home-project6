@@ -457,6 +457,7 @@ const getQuoteById = async (id) => {
         'quotes.*',
         'authors.full_name as authorFullName',
         'authors.id as authorId',
+        'authors.description as authorDescription',
       )
       .join('authors', 'quotes.author_id', '=', 'authors.id')
       .where({ 'quotes.id': id });

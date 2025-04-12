@@ -10,6 +10,7 @@ import { Card } from '../../components/Card/Card.component';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Modal from '../../components/Modal/Modal.Component';
 import iconCopy from '../../assets/images/icons8-copy-24.png';
+import Markdown from 'markdown-to-jsx';
 import {
   faEnvelope,
   faLink,
@@ -799,7 +800,16 @@ export const QuoteView = () => {
               {quote.authorFullName && (
                 <div className="container-description">
                   <strong>Author:</strong>
-                  <p>{quote.authorFullName}</p>
+                  <Link
+                    className="underline"
+                    to={`/quotes/author/${quote.authorId}`}
+                  >
+                    <p>{quote.authorFullName}</p>
+                  </Link>
+                  <strong>Bio:</strong>
+                  {quote.authorDescription && (
+                    <Markdown>{quote.authorDescription}</Markdown>
+                  )}
                   <strong>Info:</strong>
                 </div>
               )}
@@ -826,8 +836,8 @@ export const QuoteView = () => {
               <div className="container-comments">
                 {comments.length === 0 && (
                   <div>
-                    <i>No comments for this App. </i>
-                    {user && <i>Add first one below.</i>}
+                    <i>No comments for this quote. </i>
+                    {user && <i>Add a first one below.</i>}
                   </div>
                 )}
                 {comments.length > 0 &&
