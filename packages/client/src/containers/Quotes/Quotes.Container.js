@@ -587,36 +587,11 @@ export const Quotes = () => {
     <main>
       <Helmet>
         <title>{pageTitle}</title>
-        <meta name="description" content="Find best AI apps for free" />
+        <meta name="description" content="Find best quotes" />
       </Helmet>
       {/* <div className="hero"></div> */}
       <div className="hero">
         <h1 className="hero-header">Browse best quotes</h1>
-        <form className="home">
-          <label>
-            <FontAwesomeIcon className="search-icon" icon={faSearch} />
-            <input
-              type="text"
-              className="input-search-home"
-              onChange={handleSearch}
-              /* onFocus={handleClick} */
-              placeholder="Quote about..."
-            />
-          </label>
-        </form>
-        {searchTerms ? (
-          <div className="dropdown-search">
-            <ul>
-              {resultsHome.length > 0 ? (
-                dropdownList
-              ) : (
-                <span className="search-no-apps">No quotes found :(</span>
-              )}
-            </ul>
-          </div>
-        ) : (
-          ''
-        )}
       </div>
       <section className={`container-topics ${showTopicsContainer && 'show'}`}>
         <Link to="/">

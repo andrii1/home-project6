@@ -1,8 +1,21 @@
 .navigation {
   display: flex;
   justify-content: space-between;
-  padding: 0.5rem 2rem 1.5rem 2rem;
+  margin: 1.5rem auto 0rem auto;
   align-items: center;
+}
+
+.navigation.desktop {
+  gap: 2rem;
+  max-width: 85rem;
+}
+
+.menu.desktop {
+  flex: 1 0 70%;
+}
+
+.navigation-search {
+  flex: 1 0 50%;
 }
 
 .menu ul,
@@ -17,6 +30,18 @@ ul li,
 .menu ul li {
   list-style-type: none;
   color: black;
+}
+
+.nav-buttons-login {
+  gap: 1.5rem;
+}
+
+.nav-buttons-login li {
+  margin: 0rem !important;
+}
+
+.navigation-mobile .container-logged-out {
+  gap: 1.5rem;
 }
 
 @media only screen and (min-width: 769px) {
@@ -47,7 +72,13 @@ ul li,
 .nav-link {
   color: black;
 }
+
+.logo-link {
+  display: flex;
+}
+
 .container-logged-in {
+  position: relative;
   display: flex;
   gap: 1.5rem;
   align-items: center;
@@ -65,10 +96,31 @@ ul li,
 }
 
 .hamburger-menu-button {
-  min-width: 3.5rem;
+  /* min-width: 3.5rem; */
+  padding: 0rem;
 }
 
-.hamburger-menu-button.storybook-button svg {
+.hamburger-menu-button.no-border {
+  box-shadow: none !important;
+}
+
+.hamburger-menu-button.no-border .svg-inline--fa {
+  height: 2rem;
+}
+
+.search-form-mobile .svg-inline--fa {
+  height: 1.5rem;
+}
+
+.hamburger-menu-button-circle {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  padding: 0rem;
+}
+
+.hamburger-menu-button.storybook-button svg,
+.hamburger-menu-button-circle.storybook-button svg {
   margin: 0 !important;
 }
 
@@ -83,13 +135,16 @@ ul li,
   z-index: 999;
   background: white;
   max-width: 100%;
-  top: 3.5rem;
+  top: 3.7rem;
   right: 0px;
   /* bottom: 0px; */
   left: 0px;
   min-height: 40rem;
-  padding: 1rem;
+  padding: 2rem;
   border-bottom: 1px solid #c8a2aa;
+  height: 100%;
+  text-align: left;
+  font-size: 2rem;
 }
 
 .menu-user.menu-open {
@@ -116,16 +171,68 @@ ul li,
   margin: 0.75rem 0.5rem;
 }
 
+.container-mobile-menu-search {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.modal-content .search-icon {
+  padding: 1rem !important;
+}
+
 @media only screen and (max-width: 768px) {
+  .hamburger-menu .nav-link,
+  .menu-user .nav-link {
+    text-decoration: underline;
+  }
   .container-logged-in {
     flex-direction: column;
     gap: 1.5rem;
   }
   .navigation-mobile {
     display: block;
+    width: 90%;
+    margin: 1rem auto 0rem auto;
   }
   .navigation {
     display: none;
+  }
+  .search-icon.mobile {
+    position: relative;
+    padding: 0rem;
+  }
+
+  /* mobile search */
+  .overlay-navigation {
+    height: 100%;
+    padding-top: 0rem;
+  }
+  .modal-container {
+    height: 100%;
+    max-height: 100%;
+    border-radius: 0px;
+    padding: 35px 20px;
+  }
+  .input-search-modal.mobile {
+    min-width: 22rem !important;
+  }
+  .modal-close-btn {
+    top: -2rem;
+    right: -1.2rem;
+  }
+  .modal-content {
+    padding-top: 1rem;
+  }
+  .modal-content .search-icon {
+    padding: 1rem !important;
+  }
+
+  .dropdown-search-modal {
+    min-width: 100% !important;
+  }
+  .logout-icon {
+    width: 10%;
   }
 }
 
@@ -136,7 +243,8 @@ ul li,
 
 .input-search-navigation {
   border: 1px solid #d9e1ec !important;
-  min-width: 15rem !important;
+  /* min-width: 15rem !important; */
+  width: 100%;
   padding: 1rem 1.5rem 1rem 2rem !important;
   border-radius: 5px !important;
 }
@@ -155,8 +263,7 @@ ul li,
 }
 
 .img-logo {
-  max-width: 14rem;
-  /* padding-top: 1rem; */
+  max-width: 12rem;
 }
 
 .input-search-modal {
@@ -165,4 +272,54 @@ ul li,
   padding: 1rem 1.5rem 1rem 2.5rem !important;
   border-radius: 5px !important;
   height: 3rem !important;
+}
+
+/* Dropdown Content (Hidden by Default) */
+.dropdown-content {
+  display: none;
+  position: absolute;
+  top: 2.4rem;
+  right: 0rem;
+  background-color: #fff;
+  min-width: 11.25rem;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+  border-radius: 0.5rem;
+}
+
+/* Links inside the dropdown */
+.dropdown-content a,
+.dropdown-content div {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  text-align: left;
+  cursor: pointer;
+}
+
+/* Change color of dropdown links on hover */
+.dropdown-content a:hover,
+.dropdown-content div:hover {
+  background-color: #ddd;
+}
+
+/* Show the dropdown menu on hover */
+.container-logged-in:hover .dropdown-content {
+  display: block;
+}
+
+/* Change the background color of the dropdown button when the dropdown content is shown */
+.dropdown-content:hover .dropdown-content {
+  display: block;
+}
+
+.div-logout {
+  border-top: 1px solid #ddd;
+}
+
+@media only screen and (max-width: 1150px) {
+  li.hide-on-tablet {
+    display: none;
+  }
 }

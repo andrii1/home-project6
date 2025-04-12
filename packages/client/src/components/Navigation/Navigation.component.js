@@ -1,3 +1,6 @@
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+
 import React, { useState, useEffect } from 'react';
 import './Navigation.Style.css';
 import { apiURL } from '../../apiURL';
@@ -14,6 +17,7 @@ import {
   faXmark,
 } from '@fortawesome/free-solid-svg-icons';
 import Modal from '../Modal/Modal.Component';
+import { ProfileImage } from '../ProfileImage/ProfileImage.Component';
 
 export const Navigation = () => {
   const { user, name, logout } = useUserContext();
@@ -23,8 +27,9 @@ export const Navigation = () => {
   const [openSearchModal, setOpenSearchModal] = useState(false);
   const [modalTitle, setModalTitle] = useState('');
   const [searchTerms, setSearchTerms] = useState();
+  const [apps, setApps] = useState([]);
   const [resultsHome, setResultsHome] = useState([]);
-  const [resultsHomeApps, setResultsHomeApps] = useState([]);
+  // const [resultsHomeApps, setResultsHomeApps] = useState([]);
   const [topics, setTopics] = useState([]);
   const toggleModal = () => {
     setOpenModal(false);
@@ -47,45 +52,47 @@ export const Navigation = () => {
   }, []);
 
   useEffect(() => {
-    async function fetchCategories() {
-      const response = await fetch(`${apiURL()}/authors/`);
-
-      const data = await response.json();
-      // setTopics(topicsResponse);
-
-      if (searchTerms) {
-        const filteredSearch = data.filter((item) =>
-          item.title.toLowerCase().includes(searchTerms.toLowerCase()),
-        );
-        setResultsHome(filteredSearch);
-      } else {
-        setResultsHome(data);
-      }
-    }
+    // async function fetchCategories() {
+    //   const responseCategories = await fetch(`${apiURL()}/categories/`);
+    //   const responseTopics = await fetch(`${apiURL()}/topics/`);
+    //   const categoriesResponse = await responseCategories.json();
+    //   const topicsResponse = await responseTopics.json();
+    //   setTopics(topicsResponse);
+    //   const combinedArray = categoriesResponse.concat(topicsResponse);
+    //   if (searchTerms) {
+    //     const filteredSearch = combinedArray?.filter((item) =>
+    //       item.title.toLowerCase().includes(searchTerms.toLowerCase()),
+    //     );
+    //     setResultsHome(filteredSearch);
+    //   } else {
+    //     setResultsHome(categoriesResponse);
+    //   }
+    // }
 
     async function fetchApps() {
-      const responseApps = await fetch(`${apiURL()}/quotes/`);
-
+      const responseApps = await fetch(`${apiURL()}/deals/`);
       const responseAppsJson = await responseApps.json();
-      if (searchTerms) {
-        const filteredSearch = responseAppsJson.filter(
-          (item) =>
-            item.title.toLowerCase().includes(searchTerms.toLowerCase()) ||
-            item.description
-              .toLowerCase()
-              .includes(searchTerms.toLowerCase()) ||
-            item.topicTitle.toLowerCase().includes(searchTerms.toLowerCase()) ||
-            item.categoryTitle
-              .toLowerCase()
-              .includes(searchTerms.toLowerCase()),
-        );
-        setResultsHomeApps(filteredSearch);
-      }
+      setApps(responseAppsJson);
     }
 
-    fetchCategories();
     fetchApps();
-  }, [searchTerms]);
+  }, []);
+
+  const filterAppsBySearch = (search) => {
+    if (search) {
+      return apps.filter(
+        (item) =>
+          item.title.toLowerCase().includes(searchTerms.toLowerCase()) ||
+          item.description?.toLowerCase().includes(searchTerms.toLowerCase()) ||
+          item.topicTitle.toLowerCase().includes(searchTerms.toLowerCase()) ||
+          item.categoryTitle.toLowerCase().includes(searchTerms.toLowerCase()),
+      );
+    }
+    return apps;
+  };
+
+  const resultsHomeApps = filterAppsBySearch(searchTerms);
+
   const handleSearch = (event) => {
     setSearchTerms(event.target.value);
   };
@@ -112,7 +119,7 @@ export const Navigation = () => {
     if (Object.keys(result).length > 2) {
       finalResult = (
         <Link
-          to={`/apps/topic/${result.id}`}
+          to={`/deals/topic/${result.id}`}
           /* state={{ frontPageItem: [result.id] }} */
           onClick={() => toggleSearchModal()}
         >
@@ -122,7 +129,7 @@ export const Navigation = () => {
     } else {
       finalResult = (
         <Link
-          to={`/apps/category/${result.id}`}
+          to={`/deals/category/${result.id}`}
           /* state={{ frontPageItem: relatedTopics }} */
           onClick={() => toggleSearchModal()}
         >
@@ -132,9 +139,9 @@ export const Navigation = () => {
     }
     return finalResult;
   });
-  const dropDownResultsApps = resultsHomeApps.map((result) => (
+  const dropDownResultsApps = resultsHomeApps?.map((result) => (
     <Link
-      to={`/apps/${result.id}`}
+      to={`/deals/${result.id}`}
       /* state={{ frontPageItem: relatedTopics }} */
       onClick={() => toggleSearchModal()}
     >
@@ -146,75 +153,126 @@ export const Navigation = () => {
       <div className="navigation-mobile">
         <div className="menu">
           <ul>
-            <li>
-              <Button
-                secondary
-                className="hamburger-menu-button"
-                onClick={toggleHamburger}
-              >
-                <FontAwesomeIcon icon={hamburgerOpen ? faXmark : faBars} />
-              </Button>
-              <ul
-                className={`hamburger-menu ${
-                  hamburgerOpen ? 'menu-open' : 'menu-closed'
-                }`}
-              >
-                <li>
-                  <NavLink to="/categories" className="nav-link">
-                    Categories
-                  </NavLink>
-                </li>
-                <li>
-                  {user ? (
-                    <NavLink to="/apps/new" className="login submit">
-                      Submit
-                    </NavLink>
-                  ) : (
+            <div className="container-mobile-menu-search">
+              <li>
+                <Button
+                  secondary
+                  className="hamburger-menu-button no-border"
+                  onClick={toggleHamburger}
+                >
+                  <FontAwesomeIcon
+                    onClick={toggleHamburger}
+                    icon={hamburgerOpen ? faXmark : faBars}
+                  />
+                </Button>
+                <ul
+                  className={`hamburger-menu ${
+                    hamburgerOpen ? 'menu-open' : 'menu-closed'
+                  }`}
+                >
+                  <li>
                     <NavLink
-                      onClick={() => {
-                        setOpenModal(true);
-                        setModalTitle('Do you want to add your quotes?');
-                      }}
-                      className="login submit"
+                      to="/categories"
+                      onClick={toggleHamburger}
+                      className="nav-link"
                     >
-                      Submit a quote
+                      Categories
                     </NavLink>
-                  )}
-                </li>
-              </ul>
-            </li>
-            {/* <li>
+                  </li>
+                  <li>
+                    <NavLink
+                      to="/all-apps"
+                      onClick={toggleHamburger}
+                      className="nav-link"
+                    >
+                      Apps
+                    </NavLink>
+                  </li>
+                  <li>
+                    {!user && (
+                      <NavLink
+                        onClick={() => {
+                          setOpenModal(true);
+                          setModalTitle('Sign up');
+                        }}
+                        className="login submit nav-link"
+                      >
+                        Add your referral code
+                      </NavLink>
+                    )}
+                  </li>
+                </ul>
+              </li>
+              {/* <li>
               <FontAwesomeIcon className="search-icon" icon={faSearch} />
             </li> */}
-            <li>
-              <NavLink to="/" className="nav-link">
+              <li>
+                <form className="search-form-mobile">
+                  <label>
+                    <FontAwesomeIcon
+                      className="search-icon mobile"
+                      icon={faSearch}
+                      onClick={() => {
+                        setOpenSearchModal(true);
+                        setHamburgerOpen(false);
+                        setHamburgerUserOpen(false);
+                      }}
+                    />
+                  </label>
+                </form>
+              </li>
+            </div>
+            {/* <li>
+              <NavLink
+                to="/"
+                className="nav-link"
+                onClick={() => {
+                  setHamburgerOpen(false);
+                  setHamburgerUserOpen(false);
+                }}
+              >
                 <img src={logo} alt="logo" className="img-logo" />
               </NavLink>
-            </li>
+            </li> */}
             <li>
               {user ? (
                 <div className="container-logged-in">
-                  <Button
-                    className="hamburger-menu-button"
-                    onClick={toggleHamburgerUser}
-                    primary
-                  >
-                    <FontAwesomeIcon
-                      icon={hamburgerUserOpen ? faXmark : faUser}
-                    />
-                  </Button>
+                  {hamburgerUserOpen && (
+                    <Button
+                      className="hamburger-menu-button-circle"
+                      onClick={toggleHamburgerUser}
+                      primary
+                    >
+                      <FontAwesomeIcon icon={faXmark} />
+                    </Button>
+                  )}
+                  {!hamburgerUserOpen && (
+                    <ProfileImage name={name} onClick={toggleHamburgerUser} />
+                  )}
+
                   <div
                     className={`menu-user ${
                       hamburgerUserOpen ? 'menu-open' : 'menu-closed'
                     }`}
                   >
-                    {name}
-                    <NavLink to="/bookmarks" className="login">
+                    Hi, {name}
+                    <NavLink
+                      onClick={toggleHamburgerUser}
+                      to="/bookmarks"
+                      className="login nav-link"
+                    >
                       Bookmarks
+                    </NavLink>
+                    <NavLink
+                      onClick={toggleHamburgerUser}
+                      to="/codes/new"
+                      className="login nav-link"
+                    >
+                      Add referral code
                     </NavLink>
                     <FontAwesomeIcon
                       onClick={logout}
-                      className="share-icon"
+                      className="share-icon logout-icon"
                       icon={faRightFromBracket}
                     />
                   </div>
@@ -234,15 +292,15 @@ export const Navigation = () => {
           </ul>
         </div>
       </div>
-      <div className="navigation">
-        <div className="menu">
+      <div className="navigation desktop">
+        <div className="menu desktop">
           <ul>
             <li>
-              <NavLink to="/" className="nav-link">
+              <NavLink to="/" className="nav-link logo-link">
                 <img src={logo} alt="logo" className="img-logo" />
               </NavLink>
             </li>
-            <li>
+            <li className="navigation-search">
               <form>
                 <label>
                   <FontAwesomeIcon className="search-icon" icon={faSearch} />
@@ -255,46 +313,49 @@ export const Navigation = () => {
                 </label>
               </form>
             </li>
-            <li>
+            <li className="hide-on-tablet">
               <NavLink to="/categories" className="nav-link">
                 Categories
+              </NavLink>
+            </li>
+            <li className="hide-on-tablet">
+              <NavLink to="/all-apps" className="nav-link">
+                Apps
               </NavLink>
             </li>
           </ul>
         </div>
         <div className="nav-buttons">
-          <ul>
-            <li>
-              {/* {user ? (
-                <NavLink to="/quotes/new" className="login submit">
+          <ul className="nav-buttons-login">
+            {/* <li>
+              {user ? (
+                <NavLink to="/apps/new" className="login submit">
                   Submit
                 </NavLink>
               ) : (
                 <NavLink
                   onClick={() => {
                     setOpenModal(true);
-                    setModalTitle('Do you want to add your quotes?');
+                    setModalTitle('Do you want to add your referral codes?');
                   }}
                   className="login submit"
                 >
                   Submit
                 </NavLink>
-              )} */}
-            </li>
+              )}
+            </li> */}
             {user ? (
               <div className="container-logged-in">
-                <NavLink to="/bookmarks" className="login">
-                  Bookmarks
-                </NavLink>
-                {name}
-                <Link to="/">
-                  <FontAwesomeIcon icon={faUser} />
-                </Link>
-                <FontAwesomeIcon
-                  onClick={logout}
-                  className="share-icon"
-                  icon={faRightFromBracket}
-                />
+                <ProfileImage name={name} />
+                <div className="dropdown-content">
+                  <NavLink to="/bookmarks" className="login">
+                    Bookmarks
+                  </NavLink>
+                  <NavLink to="/codes/new">Add your referral code</NavLink>
+                  <div className="div-logout" onClick={logout}>
+                    Logout
+                  </div>
+                </div>
               </div>
             ) : (
               <>
@@ -319,7 +380,7 @@ export const Navigation = () => {
         </Link>
         or
         <Link to="/login">
-          <Button label="Log in" />
+          <Button secondary label="Log in" />
         </Link>
       </Modal>
       <Modal
@@ -334,7 +395,7 @@ export const Navigation = () => {
               // eslint-disable-next-line jsx-a11y/no-autofocus
               autoFocus
               type="text"
-              className="input-search-modal"
+              className="input-search-modal mobile"
               onChange={handleSearch}
               /* onFocus={handleClick} */
               placeholder="Search"
@@ -343,12 +404,12 @@ export const Navigation = () => {
         </form>
         {searchTerms ? (
           <div className="dropdown-search-modal">
-            <h3>Apps</h3>
+            <h3>Deals</h3>
             <ul>
               {dropDownResultsApps.length > 0 ? (
                 dropDownResultsApps
               ) : (
-                <li>No apps found :(</li>
+                <li>No deals found :(</li>
               )}
             </ul>
             <h3>Topics & categories</h3>
