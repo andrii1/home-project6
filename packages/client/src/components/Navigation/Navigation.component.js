@@ -27,7 +27,8 @@ export const Navigation = () => {
   const [openSearchModal, setOpenSearchModal] = useState(false);
   const [modalTitle, setModalTitle] = useState('');
   const [searchTerms, setSearchTerms] = useState();
-  const [apps, setApps] = useState([]);
+  const [quotes, setQuotes] = useState([]);
+  const [authors, setAuthors] = useState([]);
   const [resultsHome, setResultsHome] = useState([]);
   // const [resultsHomeApps, setResultsHomeApps] = useState([]);
   const [topics, setTopics] = useState([]);
@@ -69,29 +70,45 @@ export const Navigation = () => {
     //   }
     // }
 
-    async function fetchApps() {
-      const responseApps = await fetch(`${apiURL()}/deals/`);
-      const responseAppsJson = await responseApps.json();
-      setApps(responseAppsJson);
+    async function fetchQuotes() {
+      const response = await fetch(`${apiURL()}/quotes/`);
+      const data = await response.json();
+      setQuotes(data);
     }
 
-    fetchApps();
+    async function fetchAuthors() {
+      const response = await fetch(`${apiURL()}/authors/`);
+      const data = await response.json();
+      setAuthors(data);
+    }
+
+    fetchQuotes();
+    fetchAuthors();
   }, []);
 
-  const filterAppsBySearch = (search) => {
+  const filterQuotesBySearch = (search) => {
     if (search) {
-      return apps.filter(
+      return quotes.filter(
         (item) =>
           item.title.toLowerCase().includes(searchTerms.toLowerCase()) ||
           item.description?.toLowerCase().includes(searchTerms.toLowerCase()) ||
-          item.topicTitle.toLowerCase().includes(searchTerms.toLowerCase()) ||
-          item.categoryTitle.toLowerCase().includes(searchTerms.toLowerCase()),
+          item.authorFullName.toLowerCase().includes(searchTerms.toLowerCase()),
       );
     }
-    return apps;
+    return quotes;
   };
 
-  const resultsHomeApps = filterAppsBySearch(searchTerms);
+  const filterAuthorsBySearch = (search) => {
+    if (search) {
+      return authors.filter((item) =>
+        item.fullName.toLowerCase().includes(searchTerms.toLowerCase()),
+      );
+    }
+    return authors;
+  };
+
+  const resultsHomeQuotes = filterQuotesBySearch(searchTerms);
+  const resultsHomeAuthors = filterAuthorsBySearch(searchTerms);
 
   const handleSearch = (event) => {
     setSearchTerms(event.target.value);
@@ -114,34 +131,17 @@ export const Navigation = () => {
     }
   }, [hamburgerOpen, hamburgerUserOpen]);
 
-  const dropDownResultsTopics = resultsHome.map((result) => {
-    let finalResult;
-    if (Object.keys(result).length > 2) {
-      finalResult = (
-        <Link
-          to={`/deals/topic/${result.id}`}
-          /* state={{ frontPageItem: [result.id] }} */
-          onClick={() => toggleSearchModal()}
-        >
-          <li key={result.id}>{result.title}</li>
-        </Link>
-      );
-    } else {
-      finalResult = (
-        <Link
-          to={`/deals/category/${result.id}`}
-          /* state={{ frontPageItem: relatedTopics }} */
-          onClick={() => toggleSearchModal()}
-        >
-          <li key={result.id}>{result.title}</li>
-        </Link>
-      );
-    }
-    return finalResult;
-  });
-  const dropDownResultsApps = resultsHomeApps?.map((result) => (
+  const dropDownResultsAuthors = resultsHomeAuthors.map((result) => (
     <Link
-      to={`/deals/${result.id}`}
+      to={`/quotes/author/${result.id}`}
+      onClick={() => toggleSearchModal()}
+    >
+      <li key={result.id}>{result.fullName}</li>
+    </Link>
+  ));
+  const dropDownResultsQuotes = resultsHomeQuotes?.map((result) => (
+    <Link
+      to={`/quotes/${result.id}`}
       /* state={{ frontPageItem: relatedTopics }} */
       onClick={() => toggleSearchModal()}
     >
@@ -314,8 +314,8 @@ export const Navigation = () => {
               </form>
             </li>
             <li className="hide-on-tablet">
-              <NavLink to="/categories" className="nav-link">
-                Categories
+              <NavLink to="/authors" className="nav-link">
+                Authors
               </NavLink>
             </li>
             <li className="hide-on-tablet">
@@ -404,20 +404,20 @@ export const Navigation = () => {
         </form>
         {searchTerms ? (
           <div className="dropdown-search-modal">
-            <h3>Deals</h3>
+            <h3>Quotes</h3>
             <ul>
-              {dropDownResultsApps.length > 0 ? (
-                dropDownResultsApps
+              {dropDownResultsQuotes.length > 0 ? (
+                dropDownResultsQuotes
               ) : (
-                <li>No deals found :(</li>
+                <li>No quotes found :(</li>
               )}
             </ul>
-            <h3>Topics & categories</h3>
+            <h3>Authors</h3>
             <ul>
-              {dropDownResultsTopics.length > 0 ? (
-                dropDownResultsTopics
+              {dropDownResultsAuthors.length > 0 ? (
+                dropDownResultsAuthors
               ) : (
-                <li>No topics found :(</li>
+                <li>No authors found :(</li>
               )}
             </ul>
           </div>

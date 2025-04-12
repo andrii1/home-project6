@@ -250,6 +250,7 @@ ul li,
 }
 
 .dropdown-search-modal {
+  padding: 0rem 1rem;
   position: relative;
   background-color: #fff;
   border: 1px dashed #946b54 !important;
