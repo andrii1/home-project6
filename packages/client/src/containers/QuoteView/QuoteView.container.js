@@ -128,7 +128,7 @@ const defaultColors = [
   '#9b59b6',
 ];
 
-const defaultFontColors = ['#ffffff', '#cccccc'];
+const defaultFontColors = ['#ffffff', '#cccccc', '#000000'];
 
 export const QuoteView = () => {
   const { id } = useParams();

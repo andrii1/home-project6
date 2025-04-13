@@ -15,6 +15,7 @@ const cloudinary = require('./cloudinary.router');
 const keywords = require('./keywords.router');
 const searches = require('./searches.router');
 const tags = require('./tags.router');
+const blogs = require('./blogs.router');
 
 /* GET home page. */
 // router.get('/', function(req, res, next) {
@@ -57,5 +58,6 @@ router.use('/comments', comments);
 router.use('/keywords', keywords);
 router.use('/searches', searches);
 router.use('/tags', tags);
+router.use('/blogs', blogs);
 
 module.exports = router;

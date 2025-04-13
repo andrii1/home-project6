@@ -20,10 +20,8 @@ import { PageNotFound } from './containers/PageNotFound/PageNotFound.Container';
 import { Navigation } from './components/Navigation/Navigation.component';
 import { Footer } from './components/Footer/Footer.component';
 import { UserProvider } from './userContext';
-import {
-  AllAuthors,
-  Authors,
-} from './containers/AllAuthors/AllAuthors.Container';
+import { AllAuthors } from './containers/AllAuthors/AllAuthors.Container';
+import { Blog } from './containers/Blog/Blog.Container';
 
 function App() {
   return (
@@ -36,6 +34,7 @@ function App() {
             <Route path="/landing" element={<LandingPage />} />
             <Route path="/test" element={<Prompts />} />
             <Route path="/categories" element={<Categories />} />
+            <Route path="/blog" element={<Blog />} />
             <Route exact path="/quotes/:id" element={<QuoteView />} />
             <Route
               exact
