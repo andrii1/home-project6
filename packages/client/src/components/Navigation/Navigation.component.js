@@ -386,10 +386,10 @@ export const Navigation = () => {
       <Modal
         open={openSearchModal}
         toggle={toggleSearchModal}
-        overlayClass="overlay-navigation"
+        overlayClass="overlay-navigation overlay-search"
       >
         <form>
-          <label>
+          <label className="modal-label">
             <FontAwesomeIcon className="search-icon" icon={faSearch} />
             <input
               // eslint-disable-next-line jsx-a11y/no-autofocus
