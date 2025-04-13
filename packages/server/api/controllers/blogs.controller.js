@@ -7,12 +7,8 @@ const HttpError = require('../lib/utils/http-error');
 const moment = require('moment-timezone');
 
 const getBlogs = async () => {
-  return knex('blogs');
-};
-
-const getQuotesAll = async () => {
   try {
-    const quotes = knex('blogs')
+    const blogs = knex('blogs')
       .select(
         'blogs.*',
         'user.id as userId',
@@ -21,7 +17,7 @@ const getQuotesAll = async () => {
       )
       .join('users', 'blogs.user_id', '=', 'users.id');
 
-    return quotes;
+    return blogs;
   } catch (error) {
     return error.message;
   }
