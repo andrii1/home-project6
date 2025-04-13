@@ -1,0 +1,9 @@
+.container-apps-sort {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.apps-sort-underline {
+  text-decoration: underline !important;
+}

@@ -20,6 +20,10 @@ import { PageNotFound } from './containers/PageNotFound/PageNotFound.Container';
 import { Navigation } from './components/Navigation/Navigation.component';
 import { Footer } from './components/Footer/Footer.component';
 import { UserProvider } from './userContext';
+import {
+  AllAuthors,
+  Authors,
+} from './containers/AllAuthors/AllAuthors.Container';
 
 function App() {
   return (
@@ -48,6 +52,7 @@ function App() {
               path="/apps/category/:categoryIdParam"
               element={<Apps />}
             /> */}
+            <Route path="/authors" element={<AllAuthors />} />
             <Route exact path="/faq" element={<Faq />} />
             <Route exact path="/quotes/new" element={<Submit />} />
             <Route exact path="/success" element={<StripeSuccess />} />

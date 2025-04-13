@@ -172,23 +172,23 @@ export const Navigation = () => {
                 >
                   <li>
                     <NavLink
-                      to="/categories"
+                      to="/authors"
                       onClick={toggleHamburger}
                       className="nav-link"
                     >
-                      Categories
+                      Authors
                     </NavLink>
                   </li>
-                  <li>
+                  {/* <li>
                     <NavLink
-                      to="/all-apps"
+                      to="/tags"
                       onClick={toggleHamburger}
                       className="nav-link"
                     >
-                      Apps
+                      Tags
                     </NavLink>
-                  </li>
-                  <li>
+                  </li> */}
+                  {/* <li>
                     {!user && (
                       <NavLink
                         onClick={() => {
@@ -200,7 +200,7 @@ export const Navigation = () => {
                         Add your referral code
                       </NavLink>
                     )}
-                  </li>
+                  </li> */}
                 </ul>
               </li>
               {/* <li>
@@ -318,11 +318,11 @@ export const Navigation = () => {
                 Authors
               </NavLink>
             </li>
-            <li className="hide-on-tablet">
-              <NavLink to="/all-apps" className="nav-link">
-                Apps
+            {/* <li className="hide-on-tablet">
+              <NavLink to="/tags" className="nav-link">
+                Tags
               </NavLink>
-            </li>
+            </li> */}
           </ul>
         </div>
         <div className="nav-buttons">
@@ -351,7 +351,7 @@ export const Navigation = () => {
                   <NavLink to="/bookmarks" className="login">
                     Bookmarks
                   </NavLink>
-                  <NavLink to="/codes/new">Add your referral code</NavLink>
+                  {/* <NavLink to="/codes/new">Add your referral code</NavLink> */}
                   <div className="div-logout" onClick={logout}>
                     Logout
                   </div>

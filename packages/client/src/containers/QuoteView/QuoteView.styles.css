@@ -27,6 +27,7 @@
   width: 100%;
   display: flex;
   justify-content: space-between;
+  margin-top: 2rem;
 }
 
 .container-quote {
@@ -186,6 +187,14 @@
   }
   .container-cards.small-cards {
     width: 100%;
+    grid-template-columns: repeat(1, 1fr);
+  }
+  .container-quoteview .form-container {
+    margin-top: 0.5rem;
+    text-align: center;
+  }
+  .container-quoteview .container-comments > div {
+    text-align: center;
   }
 }
 @media only screen and (max-width: 768px) {

@@ -889,7 +889,7 @@ export const QuoteView = () => {
               <div className="container-comments">
                 {comments.length === 0 && (
                   <div>
-                    <i>No comments for this quote. </i>
+                    <i>No comments yet. </i>
                     {user && <i>Add a first one below.</i>}
                   </div>
                 )}
