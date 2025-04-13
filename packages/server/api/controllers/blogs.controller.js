@@ -10,6 +10,23 @@ const getBlogs = async () => {
   return knex('blogs');
 };
 
+const getQuotesAll = async () => {
+  try {
+    const quotes = knex('blogs')
+      .select(
+        'blogs.*',
+        'user.id as userId',
+        'user.email as userEmail',
+        'users.full_name as userFullName',
+      )
+      .join('users', 'blogs.user_id', '=', 'users.id');
+
+    return quotes;
+  } catch (error) {
+    return error.message;
+  }
+};
+
 const getBlogById = async (id) => {
   if (!id) {
     throw new HttpError('Id should be a number', 400);
@@ -41,22 +58,31 @@ const getBlogById = async (id) => {
 //   return knex('exampleResources').where({ id: exampleResourceId }).del();
 // };
 
-const createBlog = async (body) => {
-  await knex('blogs').insert({
-    title: body.title,
-    content: body.content,
-    slug: body.slug,
-    cover_image_url: body.cover_image_url,
-    published: body.published,
-    created_at: body.created_at,
-    updated_at: body.updated_at,
-    meta_description: body.meta_description,
-    user_id: body.user_id,
-  });
+const createBlog = async (token, body) => {
+  try {
+    const userUid = token.split(' ')[1];
+    const user = (await knex('users').where({ uid: userUid }))[0];
+    if (!user) {
+      throw new HttpError('User not found', 401);
+    }
+    await knex('blogs').insert({
+      title: body.title,
+      content: body.content,
+      slug: body.slug,
+      cover_image_url: body.cover_image_url,
+      published: body.published,
+      created_at: body.created_at,
+      updated_at: body.updated_at,
+      meta_description: body.meta_description,
+      user_id: body.user_id,
+    });
 
-  return {
-    successful: true,
-  };
+    return {
+      successful: true,
+    };
+  } catch (error) {
+    return error.message;
+  }
 };
 
 module.exports = {
