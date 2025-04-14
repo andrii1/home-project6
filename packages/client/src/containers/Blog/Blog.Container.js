@@ -9,6 +9,7 @@ import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { Button } from '../../components/Button/Button.component';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import Markdown from 'markdown-to-jsx';
+import { getDateFromTimestamp } from '../../utils/getDateFromTimestamp';
 
 export const Blog = () => {
   const [searchTerms, setSearchTerms] = useState();
@@ -24,14 +25,6 @@ export const Blog = () => {
     }
     fetchBlogs();
   }, []);
-
-  const getDateFromTimestamp = (timestamp) => {
-    const date = new Date(timestamp.replace(' ', 'T'));
-
-    const options = { year: 'numeric', month: 'long', day: 'numeric' };
-    const formattedDate = date.toLocaleDateString('en-US', options);
-    return formattedDate;
-  };
 
   // const filteredApps = useMemo(() => {
   //   // if (showAppsBy === 'topics') {
@@ -81,11 +74,11 @@ export const Blog = () => {
   // }, [authors]);
 
   const cardItems = blogs.map((blog) => (
-    <div className="card-blog">
+    <Link to={`../blogs/${blog.slug}`} className="card-blog">
       <h2>{blog.title}</h2>
       <div className="blog-preview">{`${blog.content.slice(0, 200)}...`}</div>
       <div className="date">{getDateFromTimestamp(blog.created_at)}</div>
-    </div>
+    </Link>
   ));
 
   return (

@@ -14,7 +14,8 @@ import Modal from '../../components/Modal/Modal.Component';
 import iconCopy from '../../assets/images/icons8-copy-24.png';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import Markdown from 'markdown-to-jsx';
-import { extractMeaningfulWords } from '../../utils/extractMeaningfulWords';
+
+import { getDateFromTimestamp } from '../../utils/getDateFromTimestamp';
 
 import {
   faEnvelope,
@@ -41,55 +42,49 @@ import { apiURL } from '../../apiURL';
 
 import { useUserContext } from '../../userContext';
 
-const defaultColors = [
-  '#252525',
-  '#8acf00',
-  '#3498db',
-  '#e74c3c',
-  '#f39c12',
-  '#9b59b6',
-];
-
-const defaultFontColors = ['#ffffff', '#cccccc', '#000000'];
 export const BlogView = () => {
   const { user } = useUserContext();
-  const { slug } = useParams();
+  const { slugParam } = useParams();
   const [blog, setBlog] = useState({});
+
   useEffect(() => {
-    async function fetchSingleBlog(blogId) {
-      const response = await fetch(`${apiURL()}/blogs/${blogId}`);
+    async function fetchSingleBlog(blogSlug) {
+      const response = await fetch(`${apiURL()}/blogs/${blogSlug}`);
       const data = await response.json();
-      setBlog(data);
+      setBlog(data[0]);
     }
 
-    fetchSingleBlog(slug);
-  }, [slug]);
+    fetchSingleBlog(slugParam);
+  }, [slugParam]);
+
+  console.log(slugParam);
+  console.log(blog);
 
   return (
-    <main>
+    <>
       <Helmet>
-        <title>Blog - motivately</title>
+        <title>{blog.title}</title>
         <meta name="description" content="motivately blog" />
       </Helmet>
-      {/* <div className="hero"></div> */}
-      <div className="hero">
-        <h1 className="hero-header">Blog</h1>
+      <div className="container-blog">
+        <header>
+          <h1>{blog.title}</h1>
+        </header>
+        <main>
+          <article>
+            <Markdown>{blog.content}</Markdown>
+            <footer>
+              <p>
+                Published{' '}
+                <time dateTime={blog?.created_at}>
+                  {getDateFromTimestamp(blog?.created_at)}
+                </time>{' '}
+                by <strong>{blog?.userFullName?.split(' ')[0]}</strong>
+              </p>
+            </footer>
+          </article>
+        </main>
       </div>
-      {/* <div className="container-apps-sort">
-        <Link
-          className={showAppsBy === 'alphabet' ? '' : 'apps-sort-underline'}
-          onClick={() => setShowAppsBy('alphabet')}
-        >
-          By alphabet
-        </Link>
-        <Link
-          className={showAppsBy === 'topics' ? '' : 'apps-sort-underline'}
-          onClick={() => setShowAppsBy('topics')}
-        >
-          By topics
-        </Link>
-      </div> */}
-      <section className="container-cards-blog">{cardItems}</section>
-    </main>
+    </>
   );
 };

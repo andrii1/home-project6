@@ -41,7 +41,7 @@ async function slugExists(slug) {
 
 const getBlogs = async () => {
   try {
-    const blogs = knex('blogs')
+    const blogs = await knex('blogs')
       .select(
         'blogs.*',
         'users.email as userEmail',
@@ -61,7 +61,14 @@ const getBlogById = async (slug) => {
   }
 
   try {
-    const blog = await knex('blogs').where({ slug });
+    const blog = await knex('blogs')
+      .select(
+        'blogs.*',
+
+        'users.full_name as userFullName',
+      )
+      .join('users', 'blogs.user_id', '=', 'users.id')
+      .where({ slug });
     if (blog.length === 0) {
       throw new Error(`incorrect entry with the id of ${slug}`, 404);
     }

@@ -179,6 +179,15 @@ export const Navigation = () => {
                       Authors
                     </NavLink>
                   </li>
+                  <li>
+                    <NavLink
+                      to="/blog"
+                      onClick={toggleHamburger}
+                      className="nav-link"
+                    >
+                      Blog
+                    </NavLink>
+                  </li>
                   {/* <li>
                     <NavLink
                       to="/tags"
@@ -316,6 +325,11 @@ export const Navigation = () => {
             <li className="hide-on-tablet">
               <NavLink to="/authors" className="nav-link">
                 Authors
+              </NavLink>
+            </li>
+            <li>
+              <NavLink to="/blog" className="nav-link">
+                Blog
               </NavLink>
             </li>
             {/* <li className="hide-on-tablet">
