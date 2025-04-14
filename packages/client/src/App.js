@@ -22,6 +22,7 @@ import { Footer } from './components/Footer/Footer.component';
 import { UserProvider } from './userContext';
 import { AllAuthors } from './containers/AllAuthors/AllAuthors.Container';
 import { Blog } from './containers/Blog/Blog.Container';
+import { BlogView } from './containers/BlogView/BlogView.container';
 
 function App() {
   return (
@@ -35,6 +36,7 @@ function App() {
             <Route path="/test" element={<Prompts />} />
             <Route path="/categories" element={<Categories />} />
             <Route path="/blog" element={<Blog />} />
+            <Route exact path="/blogs/:slug" element={<BlogView />} />
             <Route exact path="/quotes/:id" element={<QuoteView />} />
             <Route
               exact

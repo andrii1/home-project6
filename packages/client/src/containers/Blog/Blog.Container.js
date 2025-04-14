@@ -7,6 +7,8 @@ import { CardCategories } from '../../components/CardCategories/CardCategories.c
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { Button } from '../../components/Button/Button.component';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import Markdown from 'markdown-to-jsx';
 
 export const Blog = () => {
   const [searchTerms, setSearchTerms] = useState();
@@ -23,81 +25,78 @@ export const Blog = () => {
     fetchBlogs();
   }, []);
 
-  const filteredApps = useMemo(() => {
-    // if (showAppsBy === 'topics') {
-    //   const topicsAndApps = apps.reduce((acc, d) => {
-    //     const found = acc.find((a) => a.topicId === d.topic_id);
-    //     /* const value = { name: d.name, val: d.value }; */
-    //     const value = {
-    //       id: d.id,
-    //       title: d.title,
-    //     }; // the element in data property
-    //     if (!found) {
-    //       /* acc.push(...value); */
-    //       acc.push({
-    //         topicId: d.topic_id,
-    //         topicTitle: d.topicTitle,
-    //         apps: [value],
-    //       }); // not found, so need to add data property
-    //     } else {
-    //       /* acc.push({ name: d.name, data: [{ value: d.value }, { count: d.count }] }); */
-    //       found.apps.push(value); // if found, that means data property exists, so just push new element to found.data.
-    //     }
-    //     return acc;
-    //   }, []);
-    //   return topicsAndApps
-    //     .map((item) => {
-    //       return {
-    //         ...item,
-    //         apps: item.apps.sort((a, b) => a.title.localeCompare(b.title)),
-    //       };
-    //     })
-    //     .sort((a, b) => a.topicTitle.localeCompare(b.topicTitle));
-    // }
-    const obj = authors
-      ?.sort((a, b) => a.fullName?.localeCompare(b.fullName))
-      .reduce((acc, c) => {
-        const letter = c?.fullName[0];
-        acc[letter] = (acc[letter] || []).concat({
-          id: c.id,
-          title: c.fullName,
-        });
-        return acc;
-      }, {});
+  const getDateFromTimestamp = (timestamp) => {
+    const date = new Date(timestamp.replace(' ', 'T'));
 
-    return Object.entries(obj).map(([letter, appTitles]) => {
-      return { letter, appTitles };
-    });
-  }, [authors]);
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    const formattedDate = date.toLocaleDateString('en-US', options);
+    return formattedDate;
+  };
 
-  const cardItems = filteredApps.map((item) => {
-    if (Object.keys(item).includes('letter'))
-      return (
-        <CardCategories
-          title={item.letter}
-          topics={item.appTitles}
-          slug="app"
-        />
-      );
-    return (
-      <CardCategories
-        title={item.fullName}
-        url={item.id}
-        topics={item.apps}
-        slug="app"
-      />
-    );
-  });
+  // const filteredApps = useMemo(() => {
+  //   // if (showAppsBy === 'topics') {
+  //   //   const topicsAndApps = apps.reduce((acc, d) => {
+  //   //     const found = acc.find((a) => a.topicId === d.topic_id);
+  //   //     /* const value = { name: d.name, val: d.value }; */
+  //   //     const value = {
+  //   //       id: d.id,
+  //   //       title: d.title,
+  //   //     }; // the element in data property
+  //   //     if (!found) {
+  //   //       /* acc.push(...value); */
+  //   //       acc.push({
+  //   //         topicId: d.topic_id,
+  //   //         topicTitle: d.topicTitle,
+  //   //         apps: [value],
+  //   //       }); // not found, so need to add data property
+  //   //     } else {
+  //   //       /* acc.push({ name: d.name, data: [{ value: d.value }, { count: d.count }] }); */
+  //   //       found.apps.push(value); // if found, that means data property exists, so just push new element to found.data.
+  //   //     }
+  //   //     return acc;
+  //   //   }, []);
+  //   //   return topicsAndApps
+  //   //     .map((item) => {
+  //   //       return {
+  //   //         ...item,
+  //   //         apps: item.apps.sort((a, b) => a.title.localeCompare(b.title)),
+  //   //       };
+  //   //     })
+  //   //     .sort((a, b) => a.topicTitle.localeCompare(b.topicTitle));
+  //   // }
+  //   const obj = authors
+  //     ?.sort((a, b) => a.fullName?.localeCompare(b.fullName))
+  //     .reduce((acc, c) => {
+  //       const letter = c?.fullName[0];
+  //       acc[letter] = (acc[letter] || []).concat({
+  //         id: c.id,
+  //         title: c.fullName,
+  //       });
+  //       return acc;
+  //     }, {});
+
+  //   return Object.entries(obj).map(([letter, appTitles]) => {
+  //     return { letter, appTitles };
+  //   });
+  // }, [authors]);
+
+  const cardItems = blogs.map((blog) => (
+    <div className="card-blog">
+      <h2>{blog.title}</h2>
+      <div className="blog-preview">{`${blog.content.slice(0, 200)}...`}</div>
+      <div className="date">{getDateFromTimestamp(blog.created_at)}</div>
+    </div>
+  ));
 
   return (
     <main>
       <Helmet>
-        <title>Find quotes by authors - motivately</title>
-        <meta name="description" content="Find best quotes" />
+        <title>Blog - motivately</title>
+        <meta name="description" content="motivately blog" />
       </Helmet>
       {/* <div className="hero"></div> */}
       <div className="hero">
-        <h1 className="hero-header">All authors</h1>
+        <h1 className="hero-header">Blog</h1>
       </div>
       {/* <div className="container-apps-sort">
         <Link
@@ -113,7 +112,7 @@ export const Blog = () => {
           By topics
         </Link>
       </div> */}
-      <section className="container-cards">{cardItems}</section>
+      <section className="container-cards-blog">{cardItems}</section>
     </main>
   );
 };

@@ -11,8 +11,7 @@ const getBlogs = async () => {
     const blogs = knex('blogs')
       .select(
         'blogs.*',
-        'user.id as userId',
-        'user.email as userEmail',
+        'users.email as userEmail',
         'users.full_name as userFullName',
       )
       .join('users', 'blogs.user_id', '=', 'users.id');
@@ -66,7 +65,7 @@ const createBlog = async (token, body) => {
       content: body.content,
       slug: body.slug,
       cover_image_url: body.cover_image_url,
-      published: body.published,
+      status: body.status,
       created_at: body.created_at,
       updated_at: body.updated_at,
       meta_description: body.meta_description,

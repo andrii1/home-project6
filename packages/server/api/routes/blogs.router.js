@@ -90,8 +90,9 @@ router.get('/:id', (req, res, next) => {
  *        description: Unexpected error.
  */
 router.post('/', (req, res) => {
+  const { token } = req.headers;
   blogsController
-    .createBlog(req.body)
+    .createBlog(token, req.body)
     .then((result) => res.json(result))
     .catch((error) => {
       // eslint-disable-next-line no-console
