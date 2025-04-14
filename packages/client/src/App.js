@@ -22,7 +22,7 @@ import { Footer } from './components/Footer/Footer.component';
 import { UserProvider } from './userContext';
 import { AllAuthors } from './containers/AllAuthors/AllAuthors.Container';
 import { Blog } from './containers/Blog/Blog.Container';
-import { BlogView } from './containers/BlogView/BlogView.container';
+import { BlogView } from './containers/BlogView/BlogView.Container';
 
 function App() {
   return (

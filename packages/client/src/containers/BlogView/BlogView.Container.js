@@ -38,7 +38,7 @@ import appImage from '../../assets/images/app-placeholder.svg';
 import { faHeart } from '@fortawesome/free-regular-svg-icons';
 
 import { apiURL } from '../../apiURL';
-import './QuoteView.styles.css';
+
 import { useUserContext } from '../../userContext';
 
 const defaultColors = [

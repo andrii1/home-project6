@@ -6,6 +6,39 @@ const knex = require('../../config/db');
 const HttpError = require('../lib/utils/http-error');
 const moment = require('moment-timezone');
 
+// Helper: generate a clean, 200-character slug
+function generateSlug(title) {
+  return title
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9\s-]/g, '') // remove special characters
+    .replace(/\s+/g, '-') // replace spaces with hyphens
+    .replace(/-+/g, '-') // remove multiple hyphens
+    .slice(0, 200); // limit to 200 chars
+}
+
+// Helper: ensure the slug is unique by checking the DB
+async function ensureUniqueSlug(baseSlug) {
+  let slug = baseSlug;
+  let counter = 1;
+
+  // eslint-disable-next-line no-await-in-loop
+  while (await slugExists(slug)) {
+    const suffix = `-${counter}`;
+    const maxBaseLength = 200 - suffix.length;
+    slug = `${baseSlug.slice(0, maxBaseLength)}${suffix}`;
+    counter += 1;
+  }
+
+  return slug;
+}
+
+// Helper: check if a slug already exists in the database
+async function slugExists(slug) {
+  const existing = await knex('blogs').where({ slug }).first();
+  return !!existing;
+}
+
 const getBlogs = async () => {
   try {
     const blogs = knex('blogs')
@@ -22,17 +55,17 @@ const getBlogs = async () => {
   }
 };
 
-const getBlogById = async (id) => {
-  if (!id) {
+const getBlogById = async (slug) => {
+  if (!slug) {
     throw new HttpError('Id should be a number', 400);
   }
 
   try {
-    const exampleResources = await knex('blogs').where({ id });
-    if (exampleResources.length === 0) {
-      throw new Error(`incorrect entry with the id of ${id}`, 404);
+    const blog = await knex('blogs').where({ slug });
+    if (blog.length === 0) {
+      throw new Error(`incorrect entry with the id of ${slug}`, 404);
     }
-    return exampleResources;
+    return blog;
   } catch (error) {
     return error.message;
   }
@@ -60,10 +93,14 @@ const createBlog = async (token, body) => {
     if (!user) {
       throw new HttpError('User not found', 401);
     }
+
+    const baseSlug = generateSlug(body.title);
+    const uniqueSlug = await ensureUniqueSlug(baseSlug);
+
     await knex('blogs').insert({
       title: body.title,
       content: body.content,
-      slug: body.slug,
+      slug: uniqueSlug,
       cover_image_url: body.cover_image_url,
       status: body.status,
       created_at: body.created_at,
