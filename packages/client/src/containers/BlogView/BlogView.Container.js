@@ -52,6 +52,7 @@ export const BlogView = () => {
   const { user } = useUserContext();
   const { slugParam } = useParams();
   const [blog, setBlog] = useState({});
+  const [similarBlogs, setSimilarBlogs] = useState([]);
 
   useEffect(() => {
     async function fetchSingleBlog(blogSlug) {
@@ -65,7 +66,14 @@ export const BlogView = () => {
 
   const readTime = getEstimatedReadTime(blog?.content);
 
-  console.log(slugParam);
+  const cardItems = similarBlogs.map((item) => (
+    <Link to={`../blog/${item.slug}`} className="card-blog">
+      <h2>{item.title}</h2>
+      <div className="blog-preview">{`${item.content.slice(0, 200)}...`}</div>
+      <div className="date">{getDateFromTimestamp(item.created_at)}</div>
+    </Link>
+  ));
+
   console.log(blog);
 
   return (
@@ -153,6 +161,12 @@ export const BlogView = () => {
             </footer>
           </article>
         </main>
+        {similarBlogs.length > 0 && (
+          <div className="container-alternatives">
+            <h3>🔎 Similar to {blog.title}</h3>
+            <div className="container-cards small-cards">{cardItems}</div>
+          </div>
+        )}
       </div>
     </>
   );
