@@ -18,3 +18,13 @@ container-single-blog h1 {
   font-size: 2.5rem;
   font-weight: 900;
 }
+
+.container-single-blog footer {
+  margin-top: 2rem;
+}
+
+.container-single-blog .icons-apps-page {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
