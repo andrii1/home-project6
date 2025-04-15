@@ -90,6 +90,34 @@ export const BlogView = () => {
           <article>
             <p>{readTime} min read</p>
             <Markdown>{blog.content}</Markdown>
+            <div className="images-blog-container">
+              <div>
+                <Link to={`../quotes/3`} target="_blank">
+                  <img
+                    src="https://motivately1.s3.amazonaws.com/quotes/3.png"
+                    alt="text"
+                    className="image-single-blog"
+                  />
+                </Link>
+                <p>
+                  "You just gotta keep going and fighting for everything, and
+                  one day you'll get to where you want. - Naomi Osaka"
+                </p>
+              </div>
+              <div>
+                <Link to={`../quotes/3`} target="_blank">
+                  <img
+                    src="https://motivately1.s3.amazonaws.com/quotes/3.png"
+                    alt="text"
+                    className="image-single-blog"
+                  />
+                </Link>
+                <p>
+                  "You just gotta keep going and fighting for everything, and
+                  one day you'll get to where you want. - Naomi Osaka"
+                </p>
+              </div>
+            </div>
             <footer>
               <p>
                 Published{' '}
