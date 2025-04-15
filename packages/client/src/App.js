@@ -36,7 +36,7 @@ function App() {
             <Route path="/test" element={<Prompts />} />
             <Route path="/categories" element={<Categories />} />
             <Route path="/blog" element={<Blog />} />
-            <Route exact path="/blogs/:slugParam" element={<BlogView />} />
+            <Route exact path="/blog/:slugParam" element={<BlogView />} />
             <Route exact path="/quotes/:id" element={<QuoteView />} />
             <Route
               exact
