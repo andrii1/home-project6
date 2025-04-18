@@ -571,8 +571,6 @@ export const QuoteView = () => {
     link.click();
   };
 
-  console.log(ratings, 'ratings', allRatings, 'allratings');
-
   return (
     <>
       <Helmet>
@@ -876,13 +874,14 @@ export const QuoteView = () => {
                   >
                     <p>{quote.authorFullName}</p>
                   </Link>
-
-                  {quote.authorDescription && (
-                    <>
-                      <strong>Bio:</strong>
-                      <Markdown>{quote.authorDescription}</Markdown>
-                    </>
-                  )}
+                </div>
+              )}
+              {quote.authorDescription && (
+                <div className="container-description">
+                  <strong>Bio:</strong>
+                  <p>
+                    <Markdown>{quote.authorDescription}</Markdown>
+                  </p>
                 </div>
               )}
               {/* <strong>Info:</strong> */}

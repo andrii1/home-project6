@@ -5,6 +5,12 @@ const { shouldUseFlatConfig } = require('eslint/use-at-your-own-risk');
 const knex = require('../../config/db');
 const HttpError = require('../lib/utils/http-error');
 const moment = require('moment-timezone');
+// eslint-disable-next-line no-unused-vars
+const OpenAI = require('openai');
+
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY, // make sure this is set in your .env
+});
 
 // Helper: generate a clean, 200-character slug
 function generateSlug(title) {
@@ -104,10 +110,23 @@ const createBlog = async (token, body) => {
     const baseSlug = generateSlug(body.title);
     const uniqueSlug = await ensureUniqueSlug(baseSlug);
 
+    // Generate a short description using OpenAI
+    const prompt = `Write a short, 200 characters maximum, blog summary for blog with title "${body.title}" and content "${body.content}".`;
+
+    const completion = await openai.chat.completions.create({
+      model: 'gpt-4o-mini',
+      messages: [{ role: 'user', content: prompt }],
+      temperature: 0.7,
+      max_tokens: 100,
+    });
+
+    const summary = completion.choices[0].message.content.trim();
+
     await knex('blogs').insert({
       title: body.title,
       content: body.content,
       slug: uniqueSlug,
+      summary,
       cover_image_url: body.cover_image_url,
       status: body.status,
       created_at: body.created_at,
