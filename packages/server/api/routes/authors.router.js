@@ -25,20 +25,13 @@ const authorsController = require('../controllers/authors.controller');
  *        description: Unexpected error.
  */
 router.get('/', (req, res, next) => {
-  if (req.query.category) {
+  try {
     authorsController
-      .getTopicsByCategory(req.query.category)
+      .getAuthors()
       .then((result) => res.json(result))
       .catch(next);
-  } else {
-    try {
-      authorsController
-        .getAuthors()
-        .then((result) => res.json(result))
-        .catch(next);
-    } catch (error) {
-      res.status(404).json({ error: 'Bad Get Request' });
-    }
+  } catch (error) {
+    res.status(404).json({ error: 'Bad Get Request' });
   }
 });
 
@@ -66,5 +59,18 @@ router.get('/', (req, res, next) => {
  *      5XX:
  *        description: Unexpected error.
  */
+
+router.post('/', (req, res) => {
+  const { token } = req.headers;
+  authorsController
+    .createAuthor(token, req.body)
+    .then((result) => res.json(result))
+    .catch((error) => {
+      // eslint-disable-next-line no-console
+      console.log(error);
+
+      res.status(400).send('Bad request').end();
+    });
+});
 
 module.exports = router;

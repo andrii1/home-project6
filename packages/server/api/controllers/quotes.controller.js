@@ -475,26 +475,53 @@ const getQuoteById = async (id) => {
 };
 
 // post
-// const createApps = async (token, body) => {
-//   try {
-//     const userUid = token.split(' ')[1];
-//     const user = (await knex('users').where({ uid: userUid }))[0];
-//     if (!user) {
-//       throw new HttpError('User not found', 401);
-//     }
-//     await knex('apps').insert({
-//       title: body.title,
-//       description: body.description,
-//       topic_id: body.topic_id,
-//       user_id: user.id,
-//     });
-//     return {
-//       successful: true,
-//     };
-//   } catch (error) {
-//     return error.message;
-//   }
-// };
+const createQuote = async (token, body) => {
+  try {
+    const userUid = token.split(' ')[1];
+    const user = (await knex('users').where({ uid: userUid }))[0];
+    if (!user) {
+      throw new HttpError('User not found', 401);
+    }
+
+    const [quoteId] = await knex('quotes').insert({
+      title: body.title,
+      description: body.description,
+      url: body.url,
+      image_url: body.image_url,
+      meta_description: body.meta_description,
+      author_id: body.author_id,
+      user_id: body.user_id,
+    });
+
+    return {
+      successful: true,
+      quoteId,
+    };
+  } catch (error) {
+    return error.message;
+  }
+};
+
+// edit
+const editQuote = async (token, updatedQuoteId, body) => {
+  try {
+    const userUid = token.split(' ')[1];
+    const user = (await knex('users').where({ uid: userUid }))[0];
+    if (!user) {
+      throw new HttpError('User not found', 401);
+    }
+
+    if (!updatedQuoteId) {
+      throw new HttpError('updatedQuoteId should be a number', 400);
+    }
+
+    return knex('quotes').where({ id: updatedQuoteId }).update({
+      image_url: body.image_url,
+    });
+  } catch (error) {
+    return error.message;
+  }
+};
 
 module.exports = {
   getQuotes,
@@ -511,5 +538,6 @@ module.exports = {
   // getAppsByCategory,
   getQuoteById,
   getQuotesAll,
-  // createApps,
+  createQuote,
+  editQuote,
 };

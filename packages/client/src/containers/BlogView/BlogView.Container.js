@@ -89,7 +89,31 @@ export const BlogView = () => {
         <main>
           <article>
             <p>{readTime} min read</p>
-            <Markdown>{blog.content}</Markdown>
+            <Markdown
+              options={{
+                overrides: {
+                  img: {
+                    props: {
+                      className: 'image-single-blog',
+                    },
+                  },
+                  a: {
+                    props: {
+                      target: '_blank',
+                      rel: 'noopener noreferrer',
+                    },
+                  },
+                  p: {
+                    props: {
+                      className: 'quote-title',
+                    },
+                  },
+                },
+              }}
+            >
+              {blog.content}
+            </Markdown>
+
             <div className="images-blog-container">
               <div>
                 <Link to={`../quotes/3`} target="_blank">

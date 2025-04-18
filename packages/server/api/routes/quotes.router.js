@@ -137,7 +137,15 @@ router.get('/', (req, res, next) => {
 router.post('/', (req, res, next) => {
   const { token } = req.headers;
   quotesController
-    .createQuotes(token, req.body)
+    .createQuote(token, req.body)
+    .then((result) => res.json(result))
+    .catch(next);
+});
+
+router.patch('/:id', (req, res, next) => {
+  const { token } = req.headers;
+  quotesController
+    .editQuote(token, req.params.id, req.body)
     .then((result) => res.json(result))
     .catch(next);
 });

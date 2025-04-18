@@ -29,7 +29,7 @@ export const Blog = () => {
   const cardItems = blogs.map((blog) => (
     <Link to={`../blog/${blog.slug}`} className="card-blog">
       <h2>{blog.title}</h2>
-      <div className="blog-preview">{`${blog.content.slice(0, 200)}...`}</div>
+      {/* <div className="blog-preview">{`${blog.content.slice(0, 200)}...`}</div> */}
       <div className="date">{getDateFromTimestamp(blog.created_at)}</div>
     </Link>
   ));
