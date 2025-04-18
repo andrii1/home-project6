@@ -3,8 +3,14 @@ Can be deleted as soon as the first real controller is added. */
 
 const knex = require('../../config/db');
 const HttpError = require('../lib/utils/http-error');
+// eslint-disable-next-line import/no-extraneous-dependencies
+const OpenAI = require('openai');
 
-/* Get all topics */
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY, // make sure this is set in your .env
+});
+
+/* Get all authors */
 const getAuthors = async () => {
   try {
     const authors = await knex('authors').select(
@@ -40,8 +46,21 @@ const createAuthor = async (token, body) => {
       };
     }
 
+    // Generate a short description using OpenAI
+    const prompt = `Write a short, engaging 4-5 sentence biography for an author named "${body.full_name}".`;
+
+    const completion = await openai.chat.completions.create({
+      model: 'gpt-3.5-turbo',
+      messages: [{ role: 'user', content: prompt }],
+      temperature: 0.7,
+      max_tokens: 100,
+    });
+
+    const description = completion.choices[0].message.content.trim();
+
     const [authorId] = await knex('authors').insert({
       full_name: body.full_name,
+      description,
     });
 
     return {
@@ -55,17 +74,17 @@ const createAuthor = async (token, body) => {
 };
 
 // Get topics by Category
-const getTopicsByCategory = async (category) => {
-  try {
-    const topics = await knex('topics').where({ category_id: category });
-    return topics;
-  } catch (error) {
-    return error.message;
-  }
-};
+// const getTopicsByCategory = async (category) => {
+//   try {
+//     const topics = await knex('topics').where({ category_id: category });
+//     return topics;
+//   } catch (error) {
+//     return error.message;
+//   }
+// };
 
 module.exports = {
   getAuthors,
   createAuthor,
-  getTopicsByCategory,
+  //getTopicsByCategory,
 };

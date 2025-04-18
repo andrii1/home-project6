@@ -23,6 +23,7 @@
     "moment-timezone": "^0.5.35",
     "morgan": "~1.9.1",
     "mysql2": "^2.3.3",
+    "openai": "^4.95.1",
     "pg": "^8.10.0",
     "stripe": "^13.3.0",
     "swagger-jsdoc": "^6.2.1",
