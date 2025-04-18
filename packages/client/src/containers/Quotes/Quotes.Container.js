@@ -24,6 +24,7 @@ import {
   faBookmark as faBookmarkSolid,
   faBookOpen,
 } from '@fortawesome/free-solid-svg-icons';
+import { SimpleToggle } from '../../components/SimpleToggle/SimpleToggle.component';
 
 export const Quotes = () => {
   const { user } = useUserContext();
@@ -69,11 +70,18 @@ export const Quotes = () => {
     { title: 'Android app available', checked: false },
     { title: 'Social media contacts', checked: false },
   ]);
+  const [quoteTheme, setQuoteTheme] = useState('dark');
 
   const toggleModal = () => {
     setOpenModal(false);
     document.body.style.overflow = 'visible';
   };
+
+  const toggleTheme = () => {
+    setQuoteTheme((prev) => (prev === 'light' ? 'dark' : 'light'));
+  };
+
+  console.log(quoteTheme);
 
   // first fetch
   useEffect(() => {
@@ -639,6 +647,7 @@ export const Quotes = () => {
           label="Filters"
           icon={<FontAwesomeIcon className="filter-icon" icon={faFilter} />}
         />
+        <SimpleToggle toggle={toggleTheme} theme={quoteTheme} />
         {/* <Button
           secondary
           onClick={() => setListView(!listView)}

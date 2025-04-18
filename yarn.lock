@@ -9661,6 +9661,7 @@ __metadata:
     bootstrap: ^5.2.3
     file-saver: ^2.0.5
     firebase: ^9.21.0
+    lucide-react: ^0.501.0
     markdown-to-jsx: ^7.7.4
     prop-types: ^15.8.1
     react: ^18.0.0
@@ -16794,6 +16795,15 @@ __metadata:
   version: 7.18.3
   resolution: "lru-cache@npm:7.18.3"
   checksum: e550d772384709deea3f141af34b6d4fa392e2e418c1498c078de0ee63670f1f46f5eee746e8ef7e69e1c895af0d4224e62ee33e66a543a14763b0f2e74c1356
+  languageName: node
+  linkType: hard
+
+"lucide-react@npm:^0.501.0":
+  version: 0.501.0
+  resolution: "lucide-react@npm:0.501.0"
+  peerDependencies:
+    react: ^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0
+  checksum: 634845d8ebc8988b91370ef456ec2dd0cc11a90ec17f52efae0275ba9dd53fd329d9a5a900c46c4c0f46c800974fea2db9e79ae13035dbf0e480d230f9208878
   languageName: node
   linkType: hard
 

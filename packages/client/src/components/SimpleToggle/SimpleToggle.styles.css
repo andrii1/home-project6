@@ -1,0 +1,29 @@
+.theme-toggle-btn {
+  border-radius: 50%;
+  /* padding: 8px; */
+  cursor: pointer;
+  transition: background 0.3s ease;
+  height: 2.25rem;
+  width: 2.25rem;
+  padding: 0;
+}
+/*
+.theme-toggle-btn:hover {
+  background: #f0f0f0;
+}
+ */
+
+.icon {
+  width: 16px;
+  height: 16px;
+  transition: transform 0.3s ease;
+  margin-left: 0rem !important;
+}
+
+.sun {
+  color: #f59e0b; /* amber */
+}
+
+.moon {
+  color: #1f2937; /* gray-800 */
+}
