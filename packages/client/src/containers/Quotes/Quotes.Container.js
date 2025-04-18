@@ -31,7 +31,7 @@ export const Quotes = () => {
   const { authorIdParam, tagIdParam, searchParam } = useParams();
   const [searchTerms, setSearchTerms] = useState();
   const [search, setSearch] = useState('');
-  const [sortOrder, setSortOrder] = useState();
+  const [sortOrder, setSortOrder] = useState('Recent');
   const [resultsHome, setResultsHome] = useState([]);
   const [authors, setAuthors] = useState([]);
   const [openModal, setOpenModal] = useState(false);
@@ -467,6 +467,18 @@ export const Quotes = () => {
     );
   });
 
+  // let sortOptions;
+  // if (
+  //   !appIdParam &&
+  //   !categoryIdParam &&
+  //   !searchTermIdParam &&
+  //   !topicIdParam
+  // ) {
+  //   sortOptions = ['Recent', 'Trending', 'A-Z', 'Z-A'];
+  // } else {
+  //   sortOptions = ['Recent', 'A-Z', 'Z-A'];
+  // }
+
   useEffect(() => {
     let column;
     let direction;
@@ -613,7 +625,8 @@ export const Quotes = () => {
           icon={<FontAwesomeIcon className="filter-icon" icon={faBookOpen} />}
         />
         <DropDownView
-          label="Sort"
+          selectedOptionValue={sortOrder}
+          className="no-line-height"
           options={sortOptions}
           onSelect={(option) => setSortOrder(option)}
           showFilterIcon={false}
