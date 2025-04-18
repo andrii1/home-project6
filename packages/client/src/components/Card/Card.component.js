@@ -33,6 +33,7 @@ export const Card = ({
   addFavorite,
   deleteBookmark,
   bookmarkOnClick,
+  theme,
 }) => {
   const { user } = useUserContext();
   if (smallCard) {
@@ -62,7 +63,9 @@ export const Card = ({
   return (
     <div
       key={id}
-      className={`${listCard ? 'card-list' : 'card-category'} ${className}`}
+      className={`${
+        listCard ? 'card-list' : 'card-category'
+      } ${theme} ${className}`}
     >
       {/* <Link
         to={`/apps/${id}`}
@@ -98,7 +101,11 @@ export const Card = ({
             onKeyDown={deleteBookmark}
             className="button-bookmark"
           >
-            <FontAwesomeIcon icon={faHeartSolid} size="lg" />
+            <FontAwesomeIcon
+              color={theme === 'dark' && '#b5838d'}
+              icon={faHeartSolid}
+              size="lg"
+            />
           </button>
         ) : user ? (
           <button
@@ -107,7 +114,11 @@ export const Card = ({
             onKeyDown={addFavorite}
             className="button-bookmark"
           >
-            <FontAwesomeIcon icon={faHeart} size="lg" />
+            <FontAwesomeIcon
+              color={theme === 'dark' && '#b5838d'}
+              icon={faHeart}
+              size="lg"
+            />
           </button>
         ) : (
           <button
@@ -116,12 +127,21 @@ export const Card = ({
             onKeyDown={addFavorite}
             className="button-bookmark"
           >
-            <FontAwesomeIcon icon={faHeart} size="lg" />
+            <FontAwesomeIcon
+              color={theme === 'dark' && '#b5838d'}
+              icon={faHeart}
+              size="lg"
+            />
           </button>
         )}
         {authorId !== 1 && (
           <Link to={`/quotes/author/${authorId}`}>
-            <Button secondary label={author} size="small" />
+            <Button
+              className={theme === 'dark' && 'dark'}
+              secondary
+              label={author}
+              size="small"
+            />
           </Link>
         )}
       </div>
@@ -188,6 +208,7 @@ Card.propTypes = {
   addFavorite: PropTypes.func,
   deleteBookmark: PropTypes.func,
   bookmarkOnClick: PropTypes.func,
+  theme: PropTypes.oneOf(['light', 'dark']),
 };
 
 Card.defaultProps = {
@@ -206,4 +227,5 @@ Card.defaultProps = {
   addFavorite: undefined,
   deleteBookmark: undefined,
   bookmarkOnClick: undefined,
+  theme: 'dark',
 };

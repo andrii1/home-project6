@@ -723,6 +723,7 @@ export const Quotes = () => {
                       setOpenModal(true);
                       setModalTitle('Sign up to add bookmarks');
                     }}
+                    theme={quoteTheme}
                   />
                 );
               })}

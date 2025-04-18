@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import './SimpleToggle.styles.css';
+// eslint-disable-next-line import/no-extraneous-dependencies
 import { Sun, Moon } from 'lucide-react';
 import { Button } from '../Button/Button.component';
 
