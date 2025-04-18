@@ -15,6 +15,7 @@ import { useUserContext } from '../../userContext';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import Masonry from 'react-masonry-css';
 import { capitalize } from '../../utils/capitalize';
+import { useRatings } from '../../utils/hooks/useRatings';
 
 import {
   faSearch,
@@ -38,8 +39,6 @@ export const Quotes = () => {
   const [openModal, setOpenModal] = useState(false);
   const [modalTitle, setModalTitle] = useState('');
   const [categories, setCategories] = useState([]);
-  const [allRatings, setAllRatings] = useState([]);
-  const [ratings, setRatings] = useState([]);
   const [filteredTopics, setFilteredTopics] = useState([]);
   const [filteredPricingPreview, setFilteredPricingPreview] = useState([]);
   const [filteredDetailsPreview, setFilteredDetailsPreview] = useState([]);
@@ -73,6 +72,7 @@ export const Quotes = () => {
     { title: 'Social media contacts', checked: false },
   ]);
   const [quoteTheme, setQuoteTheme] = useState('dark');
+  const { ratings, allRatings, addRating, deleteRating } = useRatings(user);
 
   const toggleModal = () => {
     setOpenModal(false);
@@ -596,68 +596,6 @@ export const Quotes = () => {
     };
 
     deleteFavorites();
-  };
-
-  const fetchAllRatings = useCallback(async () => {
-    const url = `${apiURL()}/ratings`;
-    const response = await fetch(url);
-    const ratingsData = await response.json();
-    setAllRatings(ratingsData);
-  }, []);
-
-  useEffect(() => {
-    fetchAllRatings();
-  }, [fetchAllRatings]);
-
-  const fetchRatings = useCallback(async () => {
-    const url = `${apiURL()}/ratings`;
-    const response = await fetch(url, {
-      headers: {
-        token: `token ${user?.uid}`,
-      },
-    });
-    const ratingsData = await response.json();
-
-    if (Array.isArray(ratingsData)) {
-      setRatings(ratingsData);
-    } else {
-      setRatings([]);
-    }
-  }, [user]);
-
-  useEffect(() => {
-    fetchRatings();
-  }, [fetchRatings]);
-
-  const addRating = async (quoteId) => {
-    const response = await fetch(`${apiURL()}/ratings`, {
-      method: 'POST',
-      headers: {
-        token: `token ${user?.uid}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        quote_id: quoteId,
-      }),
-    });
-    if (response.ok) {
-      fetchRatings();
-      fetchAllRatings();
-    }
-  };
-
-  const deleteRating = async (quoteId) => {
-    const response = await fetch(`${apiURL()}/ratings/${quoteId}`, {
-      method: 'DELETE',
-      headers: {
-        token: `token ${user?.uid}`,
-        'Content-Type': 'application/json',
-      },
-    });
-    if (response.ok) {
-      fetchRatings();
-      fetchAllRatings();
-    }
   };
 
   const breakpoints = {

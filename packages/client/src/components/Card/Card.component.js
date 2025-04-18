@@ -1,3 +1,4 @@
+/* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable no-nested-ternary */
 /* eslint-disable jsx-a11y/control-has-associated-label */
 import React from 'react';
@@ -12,6 +13,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { faHeart } from '@fortawesome/free-regular-svg-icons';
 import { faCaretUp } from '@fortawesome/free-solid-svg-icons';
+import { ArrowBigUp } from 'lucide-react';
 import appImage from '../../assets/images/app-placeholder.svg';
 // import appImage from '../../../public/assets/images/small-screenshot.png';
 import { useUserContext } from '../../userContext';
@@ -101,29 +103,44 @@ export const Card = ({
       </div>
       <div className="topics-bookmark">
         <div className="container-rating">
-          Rating
           {user && isRatingAuthor ? (
             <button
               type="button"
-              className="button-rating"
+              className="button-rating-new"
               onClick={deleteRating}
             >
-              <FontAwesomeIcon icon={faCaretUp} />
-              {ratingNumber}
+              <ArrowBigUp color={theme === 'dark' ? '#b5838d' : '#333'} />
+              <span
+                className={theme === 'dark' ? 'rating-dark' : 'rating-white'}
+              >
+                {ratingNumber}
+              </span>
             </button>
           ) : user ? (
-            <button type="button" className="button-rating" onClick={addRating}>
-              <FontAwesomeIcon icon={faCaretUp} />
-              {ratingNumber}
+            <button
+              type="button"
+              className="button-rating-new"
+              onClick={addRating}
+            >
+              <ArrowBigUp color={theme === 'dark' ? '#b5838d' : '#333'} />
+              <span
+                className={theme === 'dark' ? 'rating-dark' : 'rating-white'}
+              >
+                {ratingNumber}
+              </span>
             </button>
           ) : (
             <button
               type="button"
-              className="button-rating"
+              className="button-rating-new"
               onClick={ratingOnClick}
             >
-              <FontAwesomeIcon icon={faCaretUp} />
-              {ratingNumber}
+              <ArrowBigUp color={theme === 'dark' ? '#b5838d' : '#333'} />
+              <span
+                className={theme === 'dark' ? 'rating-dark' : 'rating-white'}
+              >
+                {ratingNumber}
+              </span>
             </button>
           )}
         </div>
