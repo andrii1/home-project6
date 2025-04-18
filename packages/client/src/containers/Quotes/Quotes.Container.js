@@ -38,6 +38,8 @@ export const Quotes = () => {
   const [openModal, setOpenModal] = useState(false);
   const [modalTitle, setModalTitle] = useState('');
   const [categories, setCategories] = useState([]);
+  const [allRatings, setAllRatings] = useState([]);
+  const [ratings, setRatings] = useState([]);
   const [filteredTopics, setFilteredTopics] = useState([]);
   const [filteredPricingPreview, setFilteredPricingPreview] = useState([]);
   const [filteredDetailsPreview, setFilteredDetailsPreview] = useState([]);
@@ -596,6 +598,68 @@ export const Quotes = () => {
     deleteFavorites();
   };
 
+  const fetchAllRatings = useCallback(async () => {
+    const url = `${apiURL()}/ratings`;
+    const response = await fetch(url);
+    const ratingsData = await response.json();
+    setAllRatings(ratingsData);
+  }, []);
+
+  useEffect(() => {
+    fetchAllRatings();
+  }, [fetchAllRatings]);
+
+  const fetchRatings = useCallback(async () => {
+    const url = `${apiURL()}/ratings`;
+    const response = await fetch(url, {
+      headers: {
+        token: `token ${user?.uid}`,
+      },
+    });
+    const ratingsData = await response.json();
+
+    if (Array.isArray(ratingsData)) {
+      setRatings(ratingsData);
+    } else {
+      setRatings([]);
+    }
+  }, [user]);
+
+  useEffect(() => {
+    fetchRatings();
+  }, [fetchRatings]);
+
+  const addRating = async (quoteId) => {
+    const response = await fetch(`${apiURL()}/ratings`, {
+      method: 'POST',
+      headers: {
+        token: `token ${user?.uid}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        quote_id: quoteId,
+      }),
+    });
+    if (response.ok) {
+      fetchRatings();
+      fetchAllRatings();
+    }
+  };
+
+  const deleteRating = async (quoteId) => {
+    const response = await fetch(`${apiURL()}/ratings/${quoteId}`, {
+      method: 'DELETE',
+      headers: {
+        token: `token ${user?.uid}`,
+        'Content-Type': 'application/json',
+      },
+    });
+    if (response.ok) {
+      fetchRatings();
+      fetchAllRatings();
+    }
+  };
+
   const breakpoints = {
     default: 3,
     1100: 3,
@@ -717,12 +781,25 @@ export const Quotes = () => {
                     authorId={app.authorId}
                     pricingType={app.pricing_type}
                     isFavorite={favorites.some((x) => x.id === app.id)}
-                    addFavorite={(event) => addFavorite(app.id)}
+                    addFavorite={() => addFavorite(app.id)}
                     deleteBookmark={() => handleDeleteBookmarks(app.id)}
                     bookmarkOnClick={() => {
                       setOpenModal(true);
                       setModalTitle('Sign up to add bookmarks');
                     }}
+                    isRatingAuthor={ratings.some(
+                      (rating) => rating.id === app.id,
+                    )}
+                    addRating={() => addRating(app.id)}
+                    deleteRating={() => deleteRating(app.id)}
+                    ratingOnClick={() => {
+                      setOpenModal(true);
+                      setModalTitle('Sign up to add rating');
+                    }}
+                    ratingNumber={
+                      allRatings.filter((rating) => rating.quote_id === app.id)
+                        .length
+                    }
                     theme={quoteTheme}
                   />
                 );

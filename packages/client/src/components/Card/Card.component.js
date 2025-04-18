@@ -11,6 +11,7 @@ import {
   faHeart as faHeartSolid,
 } from '@fortawesome/free-solid-svg-icons';
 import { faHeart } from '@fortawesome/free-regular-svg-icons';
+import { faCaretUp } from '@fortawesome/free-solid-svg-icons';
 import appImage from '../../assets/images/app-placeholder.svg';
 // import appImage from '../../../public/assets/images/small-screenshot.png';
 import { useUserContext } from '../../userContext';
@@ -33,6 +34,11 @@ export const Card = ({
   addFavorite,
   deleteBookmark,
   bookmarkOnClick,
+  isRatingAuthor,
+  addRating,
+  deleteRating,
+  ratingOnClick,
+  ratingNumber,
   theme,
 }) => {
   const { user } = useUserContext();
@@ -94,6 +100,33 @@ export const Card = ({
         </Link>
       </div>
       <div className="topics-bookmark">
+        <div className="container-rating">
+          Rating
+          {user && isRatingAuthor ? (
+            <button
+              type="button"
+              className="button-rating"
+              onClick={deleteRating}
+            >
+              <FontAwesomeIcon icon={faCaretUp} />
+              {ratingNumber}
+            </button>
+          ) : user ? (
+            <button type="button" className="button-rating" onClick={addRating}>
+              <FontAwesomeIcon icon={faCaretUp} />
+              {ratingNumber}
+            </button>
+          ) : (
+            <button
+              type="button"
+              className="button-rating"
+              onClick={ratingOnClick}
+            >
+              <FontAwesomeIcon icon={faCaretUp} />
+              {ratingNumber}
+            </button>
+          )}
+        </div>
         {user && isFavorite ? (
           <button
             type="button"
@@ -208,6 +241,11 @@ Card.propTypes = {
   addFavorite: PropTypes.func,
   deleteBookmark: PropTypes.func,
   bookmarkOnClick: PropTypes.func,
+  isRatingAuthor: PropTypes.func,
+  addRating: PropTypes.func,
+  deleteRating: PropTypes.func,
+  ratingOnClick: PropTypes.func,
+  ratingNumber: PropTypes.string,
   theme: PropTypes.oneOf(['light', 'dark']),
 };
 
@@ -227,5 +265,10 @@ Card.defaultProps = {
   addFavorite: undefined,
   deleteBookmark: undefined,
   bookmarkOnClick: undefined,
+  isRatingAuthor: undefined,
+  addRating: undefined,
+  deleteRating: undefined,
+  ratingOnClick: undefined,
+  ratingNumber: null,
   theme: 'dark',
 };
