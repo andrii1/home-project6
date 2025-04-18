@@ -71,7 +71,9 @@ export const Quotes = () => {
     { title: 'Android app available', checked: false },
     { title: 'Social media contacts', checked: false },
   ]);
-  const [quoteTheme, setQuoteTheme] = useState('dark');
+  const [quoteTheme, setQuoteTheme] = useState(() => {
+    return localStorage.getItem('theme') || 'dark';
+  });
   const { ratings, allRatings, addRating, deleteRating } = useRatings(user);
 
   const toggleModal = () => {

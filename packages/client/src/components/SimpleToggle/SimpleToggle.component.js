@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import './SimpleToggle.styles.css';
 // eslint-disable-next-line import/no-extraneous-dependencies
@@ -10,13 +10,10 @@ import { Button } from '../Button/Button.component';
  */
 
 export const SimpleToggle = ({ className = '', toggle, theme }) => {
-  // const [theme, setTheme] = useState(() => {
-  //   return localStorage.getItem('theme') || initialTheme;
-  // });
-
-  // const toggleTheme = () => {
-  //   setTheme((prev) => (prev === 'light' ? 'dark' : 'light'));
-  // };
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme);
+  }, [theme]);
 
   return (
     <Button
