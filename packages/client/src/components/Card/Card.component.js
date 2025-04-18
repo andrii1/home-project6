@@ -13,7 +13,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { faHeart } from '@fortawesome/free-regular-svg-icons';
 import { faCaretUp } from '@fortawesome/free-solid-svg-icons';
-import { ArrowBigUp } from 'lucide-react';
+import { ArrowBigUp, Heart } from 'lucide-react';
 import appImage from '../../assets/images/app-placeholder.svg';
 // import appImage from '../../../public/assets/images/small-screenshot.png';
 import { useUserContext } from '../../userContext';
@@ -123,6 +123,7 @@ export const Card = ({
               onClick={addRating}
             >
               <ArrowBigUp color={theme === 'dark' ? '#b5838d' : '#333'} />
+
               <span
                 className={theme === 'dark' ? 'rating-dark' : 'rating-white'}
               >
