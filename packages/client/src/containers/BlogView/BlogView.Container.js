@@ -22,8 +22,6 @@ import { getEstimatedReadTime } from '../../utils/getEstimatedReadTime';
 import {
   faEnvelope,
   faLink,
-  faCaretUp,
-  faArrowUpRightFromSquare,
   faHeart as faHeartSolid,
 } from '@fortawesome/free-solid-svg-icons';
 import {
@@ -42,7 +40,6 @@ import {
   PinterestShareCount,
 } from 'react-share';
 import appImage from '../../assets/images/app-placeholder.svg';
-import { faHeart } from '@fortawesome/free-regular-svg-icons';
 
 import { apiURL } from '../../apiURL';
 
@@ -65,6 +62,9 @@ export const BlogView = () => {
   }, [slugParam]);
 
   const readTime = getEstimatedReadTime(blog?.content);
+  const hasImagesContainer = /<div\s+class=["']images-blog-container["']/.test(
+    blog?.content,
+  );
 
   const cardItems = similarBlogs.map((item) => (
     <Link to={`../blog/${item.slug}`} className="card-blog">
@@ -87,30 +87,29 @@ export const BlogView = () => {
         <main>
           <article>
             <p className="read-time">{readTime} min read</p>
-            <Markdown
-              options={{
-                overrides: {
-                  img: {
-                    props: {
-                      className: 'image-single-blog',
+            {hasImagesContainer ? (
+              <Markdown
+                options={{
+                  overrides: {
+                    img: {
+                      props: {
+                        className: 'image-single-blog',
+                      },
+                    },
+                    a: {
+                      props: {
+                        target: '_blank',
+                        rel: 'noopener noreferrer',
+                      },
                     },
                   },
-                  a: {
-                    props: {
-                      target: '_blank',
-                      rel: 'noopener noreferrer',
-                    },
-                  },
-                  p: {
-                    props: {
-                      className: 'quote-title',
-                    },
-                  },
-                },
-              }}
-            >
-              {blog.content}
-            </Markdown>
+                }}
+              >
+                {blog.content}
+              </Markdown>
+            ) : (
+              <Markdown>{blog.content}</Markdown>
+            )}
 
             <div className="images-blog-container">
               <div>
