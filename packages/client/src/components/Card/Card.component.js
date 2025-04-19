@@ -45,7 +45,7 @@ export const Card = ({
   const { user } = useUserContext();
   if (smallCard) {
     return (
-      <Link
+      <div
         className="card-category--small card-image--small"
         // style={{
 
@@ -55,7 +55,7 @@ export const Card = ({
         // }}
       >
         <div className="card-header">
-          <Link to={`/apps/${id}`} target="_blank">
+          <Link to={`/quotes/${id}`} target="_blank">
             <h2>{title}</h2>
           </Link>
         </div>
@@ -63,7 +63,7 @@ export const Card = ({
           {authorId !== 1 && <Badge label={author} size="small" />}
           {/* <Badge label={pricingType} size="small" />
         </div> */}
-      </Link>
+      </div>
     );
   }
 

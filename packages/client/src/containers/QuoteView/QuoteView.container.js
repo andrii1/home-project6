@@ -61,6 +61,7 @@ export const QuoteView = () => {
   const navigate = useNavigate();
   const [quote, setQuote] = useState({});
   const [similarApps, setSimilarApps] = useState([]);
+  const [recentQuotes, setRecentQuotes] = useState([]);
   const [comments, setComments] = useState([]);
   const [error, setError] = useState('');
   const { user } = useUserContext();
@@ -89,21 +90,36 @@ export const QuoteView = () => {
     fetchSingleQuote(id);
   }, [id]);
 
+  // useEffect(() => {
+  //   async function fetchSimilarApps() {
+  //     const response = await fetch(
+  //       `${apiURL()}/quotes?page=0&column=id&direction=desc&filteredAuthors=${
+  //         quote.authorId
+  //       }`,
+  //     );
+  //     const appsResponse = await response.json();
+  //     const similarAppsArray = appsResponse.data.filter(
+  //       (item) => item.id !== quote.id,
+  //     );
+  //     setSimilarApps(similarAppsArray);
+  //   }
+
+  //   fetchSimilarApps();
+  // }, [quote.topic_id, quote.id]);
+
   useEffect(() => {
-    async function fetchSimilarApps() {
+    async function fetchRecentQuotes() {
       const response = await fetch(
-        `${apiURL()}/quotes?page=0&column=id&direction=desc&filteredTopics=${
-          quote.topic_id
-        }`,
+        `${apiURL()}/quotes?page=0&column=id&direction=desc`,
       );
-      const appsResponse = await response.json();
-      const similarAppsArray = appsResponse.data.filter(
+      const data = await response.json();
+      const similarQuotesArray = data.data.filter(
         (item) => item.id !== quote.id,
       );
-      setSimilarApps(similarAppsArray);
+      setRecentQuotes(similarQuotesArray);
     }
 
-    fetchSimilarApps();
+    fetchRecentQuotes();
   }, [quote.topic_id, quote.id]);
 
   const fetchCommentsByAppId = useCallback(async (quoteId) => {
@@ -194,7 +210,7 @@ export const QuoteView = () => {
     return date.toISOString().split('T')[0];
   };
 
-  const cardItems = similarApps.map((item) => {
+  const cardItems = recentQuotes.map((item) => {
     // const relatedTopics = topics
     //   .filter((topic) => topic.categoryId === category.id)
     //   .map((item) => item.id);
@@ -845,9 +861,15 @@ export const QuoteView = () => {
               </div>
             </div>
           )}
-          {similarApps.length > 0 && (
+          {/* {similarApps.length > 0 && (
             <div className="container-alternatives">
               <h3>🔎 Similar to {quote.title}</h3>
+              <div className="container-cards small-cards">{cardItems}</div>
+            </div>
+          )} */}
+          {recentQuotes.length > 0 && (
+            <div className="container-alternatives">
+              <h3>🔎 Recent quotes</h3>
               <div className="container-cards small-cards">{cardItems}</div>
             </div>
           )}
