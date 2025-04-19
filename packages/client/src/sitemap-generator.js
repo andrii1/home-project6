@@ -48,7 +48,7 @@ async function generateSitemap() {
 
     return new Sitemap(router)
       .applyParams(paramsConfig)
-      .build('https://www.appswithai.xyz')
+      .build('https://www.motivately.co')
       .save('./public/sitemap.xml');
   } catch (e) {
     console.log(e);
