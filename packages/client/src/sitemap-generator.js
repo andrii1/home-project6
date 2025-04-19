@@ -5,45 +5,46 @@ require('babel-register')({
 const fetch = require('node-fetch');
 const router = require('./sitemap-routes').default;
 const Sitemap = require('react-router-sitemap').default;
+require('dotenv').config();
+
+const { REACT_APP_PROD_API_PATH } = process.env;
 
 async function generateSitemap() {
   try {
-    /* Prompts */
-    const response = await fetch(`http://localhost:5001/api/apps/`);
-    const promptsResult = await response.json();
-    const prompts = promptsResult.sort((a, b) => a.id - b.id);
+    /* Quotes */
+    const response = await fetch(`${REACT_APP_PROD_API_PATH}/quotes/`);
+    const data = await response.json();
+    const quotes = data.sort((a, b) => a.id - b.id);
     const idMap = [];
 
-    /* Topics */
-    const responseTopics = await fetch(`http://localhost:5001/api/topics`);
-    const topicsResult = await responseTopics.json();
-    const topics = topicsResult.sort((a, b) => a.id - b.id);
-    const idMapTopics = [];
+    /* Authors */
+    const responseAuthors = await fetch(`${REACT_APP_PROD_API_PATH}/authors`);
+    const dataAuthors = await responseAuthors.json();
+    const authors = dataAuthors.sort((a, b) => a.id - b.id);
+    const idMapAuthors = [];
 
-    /* Categories */
-    const responseCategories = await fetch(
-      `http://localhost:5001/api/categories`,
-    );
-    const categoriesResult = await responseCategories.json();
-    const categories = categoriesResult.sort((a, b) => a.id - b.id);
-    const idMapCategories = [];
+    /* Blogs */
+    const responseBlogs = await fetch(`${REACT_APP_PROD_API_PATH}/blogs`);
+    const dataBlogs = await responseBlogs.json();
+    const blogs = dataBlogs.sort((a, b) => a.id - b.id);
+    const idMapBlogs = [];
 
-    prompts.forEach((prompt) => {
-      idMap.push({ id: prompt.id });
+    quotes.forEach((quote) => {
+      idMap.push({ id: quote.id });
     });
 
-    topics.forEach((topic) => {
-      idMapTopics.push({ topicIdParam: topic.id });
+    authors.forEach((author) => {
+      idMapAuthors.push({ authorIdParam: author.id });
     });
 
-    categories.forEach((category) => {
-      idMapCategories.push({ categoryIdParam: category.id });
+    blogs.forEach((blog) => {
+      idMapBlogs.push({ slug: blog.slug });
     });
 
     const paramsConfig = {
-      '/apps/:id': idMap,
-      '/apps/topic/:topicIdParam': idMapTopics,
-      '/apps/category/:categoryIdParam': idMapCategories,
+      '/quotes/:id': idMap,
+      '/quotes/author/:authorIdParam': idMapAuthors,
+      '/blog/:slugParam': idMapBlogs,
     };
 
     return new Sitemap(router)
