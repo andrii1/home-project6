@@ -2,12 +2,15 @@ require('babel-register')({
   presets: ['es2015', 'react'],
 });
 
+// eslint-disable-next-line import/no-extraneous-dependencies
 const fetch = require('node-fetch');
 const router = require('./sitemap-routes').default;
 const Sitemap = require('react-router-sitemap').default;
+// eslint-disable-next-line import/no-extraneous-dependencies
 require('dotenv').config();
 
-const { REACT_APP_PROD_API_PATH } = process.env;
+// eslint-disable-next-line prefer-destructuring
+const REACT_APP_PROD_API_PATH = process.env.REACT_APP_PROD_API_PATH;
 
 async function generateSitemap() {
   try {
