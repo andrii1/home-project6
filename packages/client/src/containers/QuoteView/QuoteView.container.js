@@ -1,3 +1,4 @@
+/* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable no-await-in-loop */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
@@ -9,17 +10,18 @@ import { Button } from '../../components/Button/Button.component';
 import { Badge } from '../../components/Badge/Badge.component';
 import { Card } from '../../components/Card/Card.component';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { ArrowBigUp } from 'lucide-react';
 import Modal from '../../components/Modal/Modal.Component';
 import iconCopy from '../../assets/images/icons8-copy-24.png';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import Markdown from 'markdown-to-jsx';
 import { extractMeaningfulWords } from '../../utils/extractMeaningfulWords';
+import { useRatings } from '../../utils/hooks/useRatings';
 
 import {
   faEnvelope,
   faLink,
   faCaretUp,
-  faArrowUpRightFromSquare,
   faHeart as faHeartSolid,
 } from '@fortawesome/free-solid-svg-icons';
 import {
@@ -39,85 +41,6 @@ import { faHeart } from '@fortawesome/free-regular-svg-icons';
 import { apiURL } from '../../apiURL';
 import './QuoteView.styles.css';
 import { useUserContext } from '../../userContext';
-
-const searches = [
-  { id: 1, title: 'ai tool' },
-  { id: 2, title: 'avatar creator' },
-  {
-    id: 3,
-    title: 'ai music',
-  },
-];
-
-const alternativeApps = [
-  {
-    id: 1,
-    title: '10web',
-    description:
-      'Create a website using AI Website Builder,\nhost it on 10Web Hosting, and optimize it with\nPageSpeed Booster.',
-    rating: null,
-    topic_id: 6,
-    url: 'https://10web.io',
-    pricing_type: 'Paid with free trial',
-    url_x: 'https://twitter.com/10Web_io',
-    url_discord: null,
-    url_app_store: null,
-    url_google_play_store: null,
-    url_chrome_extension: null,
-    url_small_screenshot: 'Free',
-    url_large_screenshot: null,
-    user_id: null,
-    created_at: '2023-10-13T08:43:58.072Z',
-    topicTitle: 'Website builders',
-    category_id: 4,
-    categoryTitle: 'Engineering & Development',
-  },
-  {
-    id: 2,
-    title: 'TLDV',
-    description:
-      'Short for "too long; didn\'t view."\n\nThis AI platform saves you time by taking meeting notes for you.\n\nSit back and relax as tl;dv transcribes and summarizes your calls automatically.',
-    rating: null,
-    topic_id: 17,
-    url: 'https://tldv.io',
-    pricing_type: 'Paid with free plan',
-    url_x: 'https://twitter.com/tldview?lang=en',
-    url_discord: null,
-    url_app_store: null,
-    url_google_play_store: null,
-    url_chrome_extension:
-      'https://chrome.google.com/webstore/detail/record-transcribe-chatgpt/lknmjhcajhfbbglglccadlfdjbaiifig',
-    url_small_screenshot: 'Paid with a free plan',
-    url_large_screenshot: null,
-    user_id: null,
-    created_at: '2023-10-13T08:43:58.083Z',
-    topicTitle: 'Meetings',
-    category_id: 1,
-    categoryTitle: 'Work & Productivity',
-  },
-  {
-    id: 3,
-    title: 'Klap',
-    description:
-      'Turn videos into viral shorts\nGet ready-to-publish TikToks, Reels, Shorts from YouTube videos in a click',
-    rating: null,
-    topic_id: 7,
-    url: 'https://klap.app',
-    pricing_type: 'Paid',
-    url_x: 'https://twitter.com/tldview?lang=en',
-    url_discord: null,
-    url_app_store: null,
-    url_google_play_store: null,
-    url_chrome_extension: null,
-    url_small_screenshot: 'Paid with a free trial',
-    url_large_screenshot: null,
-    user_id: null,
-    created_at: '2023-10-13T08:43:58.088Z',
-    topicTitle: 'Video',
-    category_id: 2,
-    categoryTitle: 'Marketing & Sales',
-  },
-];
 
 const defaultColors = [
   '#252525',
@@ -144,8 +67,6 @@ export const QuoteView = () => {
   const [validForm, setValidForm] = useState(false);
   const [invalidForm, setInvalidForm] = useState(false);
   const [comment, setComment] = useState('');
-  const [allRatings, setAllRatings] = useState([]);
-  const [ratings, setRatings] = useState([]);
   const [openConfirmationModal, setOpenConfirmationModal] = useState(false);
   const [color, setColor] = useState('#252525');
   const [colorPickerSelected, setColorPickerSelected] = useState(false);
@@ -156,6 +77,7 @@ export const QuoteView = () => {
   const [selectedImage, setSelectedImage] = useState('');
   const [topicsFromQuotes, setTopicsFromQuotes] = useState([]);
   const canvasRef = useRef(null);
+  const { ratings, allRatings, addRating, deleteRating } = useRatings(user);
 
   useEffect(() => {
     async function fetchSingleQuote(quoteId) {
@@ -348,67 +270,6 @@ export const QuoteView = () => {
     document.body.style.overflow = 'visible';
   };
 
-  const fetchAllRatings = useCallback(async () => {
-    const url = `${apiURL()}/ratings`;
-    const response = await fetch(url);
-    const ratingsData = await response.json();
-    setAllRatings(ratingsData);
-  }, []);
-
-  useEffect(() => {
-    fetchAllRatings();
-  }, [fetchAllRatings]);
-
-  const fetchRatings = useCallback(async () => {
-    const url = `${apiURL()}/ratings`;
-    const response = await fetch(url, {
-      headers: {
-        token: `token ${user?.uid}`,
-      },
-    });
-    const ratingsData = await response.json();
-
-    if (Array.isArray(ratingsData)) {
-      setRatings(ratingsData);
-    } else {
-      setRatings([]);
-    }
-  }, [user]);
-
-  useEffect(() => {
-    fetchRatings();
-  }, [fetchRatings]);
-
-  const addRating = async (quoteId) => {
-    const response = await fetch(`${apiURL()}/ratings`, {
-      method: 'POST',
-      headers: {
-        token: `token ${user?.uid}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        quote_id: quoteId,
-      }),
-    });
-    if (response.ok) {
-      fetchRatings();
-      fetchAllRatings();
-    }
-  };
-
-  const deleteRating = async (quoteId) => {
-    const response = await fetch(`${apiURL()}/ratings/${quoteId}`, {
-      method: 'DELETE',
-      headers: {
-        token: `token ${user?.uid}`,
-        'Content-Type': 'application/json',
-      },
-    });
-    if (response.ok) {
-      fetchRatings();
-      fetchAllRatings();
-    }
-  };
   const handleChangeColor = (colorParam) => {
     setSelectedImage('');
     setColorPickerSelected(false);
@@ -739,14 +600,14 @@ export const QuoteView = () => {
               )}"`}</h1>
               <div className="container-bookmark">
                 <div className="container-rating">
-                  Rating
                   {user && ratings.some((rating) => rating.id === quote.id) ? (
                     <button
                       type="button"
-                      className="button-rating"
+                      className="button-rating-new"
                       onClick={(event) => deleteRating(quote.id)}
                     >
-                      <FontAwesomeIcon icon={faCaretUp} />
+                      Rating
+                      <ArrowBigUp />
                       {
                         allRatings.filter(
                           (rating) => rating.quote_id === quote.id,
@@ -756,10 +617,11 @@ export const QuoteView = () => {
                   ) : user ? (
                     <button
                       type="button"
-                      className="button-rating"
+                      className="button-rating-new"
                       onClick={(event) => addRating(quote.id)}
                     >
-                      <FontAwesomeIcon icon={faCaretUp} />
+                      Rating
+                      <ArrowBigUp />
                       {
                         allRatings.filter(
                           (rating) => rating.quote_id === quote.id,
@@ -769,13 +631,14 @@ export const QuoteView = () => {
                   ) : (
                     <button
                       type="button"
-                      className="button-rating"
+                      className="button-rating-new"
                       onClick={() => {
                         setOpenModal(true);
                         setModalTitle('Sign up to vote');
                       }}
                     >
-                      <FontAwesomeIcon icon={faCaretUp} />
+                      Rating
+                      <ArrowBigUp />
                       {
                         allRatings.filter(
                           (rating) => rating.quote_id === quote.id,

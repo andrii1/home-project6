@@ -12,8 +12,7 @@ import {
   faHeart as faHeartSolid,
 } from '@fortawesome/free-solid-svg-icons';
 import { faHeart } from '@fortawesome/free-regular-svg-icons';
-import { faCaretUp } from '@fortawesome/free-solid-svg-icons';
-import { ArrowBigUp, Heart } from 'lucide-react';
+import { ArrowBigUp } from 'lucide-react';
 import appImage from '../../assets/images/app-placeholder.svg';
 // import appImage from '../../../public/assets/images/small-screenshot.png';
 import { useUserContext } from '../../userContext';

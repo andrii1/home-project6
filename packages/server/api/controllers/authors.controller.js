@@ -47,7 +47,7 @@ const createAuthor = async (token, body) => {
     }
 
     // Generate a short description using OpenAI
-    const prompt = `Write a short, engaging 4-5 sentence biography for an author named "${body.full_name}".`;
+    const prompt = `Write a short, engaging 5-6 sentences bio, with markdown for markdown-to-jsx if needed, for an author named "${body.full_name}".`;
 
     const completion = await openai.chat.completions.create({
       model: 'gpt-4o-mini',

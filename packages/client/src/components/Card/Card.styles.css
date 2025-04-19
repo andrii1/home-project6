@@ -183,6 +183,7 @@
 }
 
 .button-rating-new {
+  gap: 0.125rem;
   display: flex;
   align-items: center;
   background: none;
