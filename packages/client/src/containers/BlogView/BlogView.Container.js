@@ -111,7 +111,7 @@ export const BlogView = () => {
               <Markdown>{blog.content}</Markdown>
             )}
 
-            <div className="images-blog-container">
+            {/* <div className="images-blog-container">
               <div>
                 <Link to={`../quotes/3`} target="_blank">
                   <img
@@ -138,7 +138,7 @@ export const BlogView = () => {
                   one day you'll get to where you want. - Naomi Osaka"
                 </p>
               </div>
-            </div>
+            </div> */}
             <footer>
               <p className="published">
                 Published{' '}
