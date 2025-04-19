@@ -41,7 +41,7 @@ async function generateSitemap() {
     });
 
     blogs.forEach((blog) => {
-      idMapBlogs.push({ slug: blog.slug });
+      idMapBlogs.push({ slugParam: blog.slug });
     });
 
     const paramsConfig = {

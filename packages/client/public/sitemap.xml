@@ -125,7 +125,6 @@
 <url> <loc>https://www.motivately.co/quotes/129</loc> </url>
 <url> <loc>https://www.motivately.co/quotes/130</loc> </url>
 <url> <loc>https://www.motivately.co/quotes/131</loc> </url>
-<url> <loc>https://www.motivately.co/quotes/tag/:tagIdParam</loc> </url>
 <url> <loc>https://www.motivately.co/quotes/author/1</loc> </url>
 <url> <loc>https://www.motivately.co/quotes/author/2</loc> </url>
 <url> <loc>https://www.motivately.co/quotes/author/3</loc> </url>
@@ -143,12 +142,12 @@
 <url> <loc>https://www.motivately.co/quotes/author/23</loc> </url>
 <url> <loc>https://www.motivately.co/quotes/author/24</loc> </url>
 <url> <loc>https://www.motivately.co/blog</loc> </url>
-<url> <loc>https://www.motivately.co/blog/you-didnt-love-her-greys-anatomyParam</loc> </url>
-<url> <loc>https://www.motivately.co/blog/naomi-osaka-opening-minds-to-mental-health-issues-of-pro-athletesParam</loc> </url>
-<url> <loc>https://www.motivately.co/blog/barney-fife-quotesParam</loc> </url>
-<url> <loc>https://www.motivately.co/blog/so-true-quotes-ultimate-listParam</loc> </url>
-<url> <loc>https://www.motivately.co/blog/amazing-so-true-quotes-great-collectionParam</loc> </url>
-<url> <loc>https://www.motivately.co/blog/so-true-quotes-listParam</loc> </url>
+<url> <loc>https://www.motivately.co/blog/you-didnt-love-her-greys-anatomy</loc> </url>
+<url> <loc>https://www.motivately.co/blog/naomi-osaka-opening-minds-to-mental-health-issues-of-pro-athletes</loc> </url>
+<url> <loc>https://www.motivately.co/blog/barney-fife-quotes</loc> </url>
+<url> <loc>https://www.motivately.co/blog/so-true-quotes-ultimate-list</loc> </url>
+<url> <loc>https://www.motivately.co/blog/amazing-so-true-quotes-great-collection</loc> </url>
+<url> <loc>https://www.motivately.co/blog/so-true-quotes-list</loc> </url>
 <url> <loc>https://www.motivately.co/faq</loc> </url>
 <url> <loc>https://www.motivately.co/login</loc> </url>
 <url> <loc>https://www.motivately.co/signup</loc> </url>
