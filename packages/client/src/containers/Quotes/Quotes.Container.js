@@ -85,8 +85,6 @@ export const Quotes = () => {
     setQuoteTheme((prev) => (prev === 'light' ? 'dark' : 'light'));
   };
 
-  console.log(quoteTheme);
-
   // first fetch
   useEffect(() => {
     setIsLoading(true);

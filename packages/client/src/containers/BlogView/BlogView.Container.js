@@ -74,8 +74,6 @@ export const BlogView = () => {
     </Link>
   ));
 
-  console.log(blog);
-
   return (
     <>
       <Helmet>
