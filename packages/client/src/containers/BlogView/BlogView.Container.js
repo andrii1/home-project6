@@ -86,7 +86,7 @@ export const BlogView = () => {
         </header>
         <main>
           <article>
-            <p>{readTime} min read</p>
+            <p className="read-time">{readTime} min read</p>
             <Markdown
               options={{
                 overrides: {
@@ -141,7 +141,7 @@ export const BlogView = () => {
               </div>
             </div>
             <footer>
-              <p>
+              <p className="published">
                 Published{' '}
                 <time dateTime={blog?.created_at}>
                   {getDateFromTimestamp(blog?.created_at)}
