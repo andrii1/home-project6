@@ -64,8 +64,6 @@ export const useRatings = (user) => {
   return {
     ratings,
     allRatings,
-    fetchRatings,
-    fetchAllRatings,
     addRating,
     deleteRating,
   };
