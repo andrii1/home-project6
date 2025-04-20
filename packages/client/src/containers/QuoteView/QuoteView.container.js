@@ -22,7 +22,6 @@ import { useFavorites } from '../../utils/hooks/useFavorites';
 import {
   faEnvelope,
   faLink,
-  faCaretUp,
   faHeart as faHeartSolid,
 } from '@fortawesome/free-solid-svg-icons';
 import {

@@ -39,11 +39,10 @@ import {
   FacebookShareCount,
   PinterestShareCount,
 } from 'react-share';
-import appImage from '../../assets/images/app-placeholder.svg';
 
 import { apiURL } from '../../apiURL';
-
 import { useUserContext } from '../../userContext';
+import { FavoritesBar } from '../../components/FavoritesBar/FavoritesBar.component';
 
 export const BlogView = () => {
   const { user } = useUserContext();
@@ -111,11 +110,25 @@ export const BlogView = () => {
               <Markdown>{blog.content}</Markdown>
             )}
 
-            {/* <div className="images-blog-container">
+            <div className="images-blog-container">
               <div>
                 <Link to={`../quotes/3`} target="_blank">
                   <img
-                    src="https://motivately1.s3.amazonaws.com/quotes/3.png"
+                    src="https://motivately1.s3.amazonaws.com/quotes/04f4f32d-f27b-4bf8-bd2a-5eb162385899.png"
+                    alt="text"
+                    className="image-single-blog"
+                  />
+                </Link>
+                <FavoritesBar quoteId={3} />
+                <p>
+                  "You just gotta keep going and fighting for everything, and
+                  one day you'll get to where you want. - Naomi Osaka"
+                </p>
+              </div>
+              <div>
+                <Link to={`../quotes/3`} target="_blank">
+                  <img
+                    src="https://motivately1.s3.amazonaws.com/quotes/04f4f32d-f27b-4bf8-bd2a-5eb162385899.png"
                     alt="text"
                     className="image-single-blog"
                   />
@@ -125,20 +138,7 @@ export const BlogView = () => {
                   one day you'll get to where you want. - Naomi Osaka"
                 </p>
               </div>
-              <div>
-                <Link to={`../quotes/3`} target="_blank">
-                  <img
-                    src="https://motivately1.s3.amazonaws.com/quotes/3.png"
-                    alt="text"
-                    className="image-single-blog"
-                  />
-                </Link>
-                <p>
-                  "You just gotta keep going and fighting for everything, and
-                  one day you'll get to where you want. - Naomi Osaka"
-                </p>
-              </div>
-            </div> */}
+            </div>
             <footer>
               <p className="published">
                 Published{' '}

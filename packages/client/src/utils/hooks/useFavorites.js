@@ -3,6 +3,8 @@ import { apiURL } from '../../apiURL';
 
 export const useFavorites = (user) => {
   const [favorites, setFavorites] = useState([]);
+  console.log(favorites);
+  console.log(user);
 
   const fetchFavorites = useCallback(async () => {
     const url = `${apiURL()}/favorites`;
