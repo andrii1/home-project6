@@ -491,7 +491,9 @@ export const QuoteView = () => {
                         backgroundImage: `url(https://picsum.photos/id/${image}/130/100)`,
                         backgroundRepeat: 'no-repeat',
                         backgroundSize: 'cover',
-                        height: '100px',
+                        backgroundPosition: 'center',
+                        height: '80px',
+
                         // border: '1px',
                         boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', // Optional styling for shadow
                       }}

@@ -203,6 +203,12 @@
     align-items: flex-start !important;
   }
 }
+
+@media only screen and (max-width: 992px) {
+  .quote-image-input {
+    height: 60px !important;
+  }
+}
 /* Colors */
 .color-group {
   display: flex;
