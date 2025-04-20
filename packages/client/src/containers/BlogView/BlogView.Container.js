@@ -73,6 +73,16 @@ export const BlogView = () => {
     </Link>
   ));
 
+  const markdown = `
+# Sample Quote
+
+Here is a quote:
+
+<FavoritesBar quoteId={3} />
+
+End of test.
+`;
+
   return (
     <>
       <Helmet>

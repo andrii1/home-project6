@@ -28,11 +28,15 @@ export const FavoritesBar = ({ quoteId, className }) => {
     document.body.style.overflow = 'visible';
   };
 
+  const numberOfRatings = allRatings.filter(
+    (rating) => rating.quote_id === Number(quoteId),
+  ).length;
+
   return (
     <>
       <div className="container-bookmark">
         <div className="container-rating">
-          {user && ratings.some((rating) => rating.id === quoteId) ? (
+          {user && ratings.some((rating) => rating.id === Number(quoteId)) ? (
             <button
               type="button"
               className="button-rating-new"
@@ -40,10 +44,7 @@ export const FavoritesBar = ({ quoteId, className }) => {
             >
               Rating
               <ArrowBigUp />
-              {
-                allRatings.filter((rating) => rating.quote_id === quoteId)
-                  .length
-              }
+              {numberOfRatings}
             </button>
           ) : user ? (
             <button
@@ -53,10 +54,7 @@ export const FavoritesBar = ({ quoteId, className }) => {
             >
               Rating
               <ArrowBigUp />
-              {
-                allRatings.filter((rating) => rating.quote_id === quoteId)
-                  .length
-              }
+              {numberOfRatings}
             </button>
           ) : (
             <button
@@ -69,15 +67,12 @@ export const FavoritesBar = ({ quoteId, className }) => {
             >
               Rating
               <ArrowBigUp />
-              {
-                allRatings.filter((rating) => rating.quote_id === quoteId)
-                  .length
-              }
+              {numberOfRatings}
             </button>
           )}
         </div>
         <div>
-          {user && favorites.some((x) => x.id === quoteId) ? (
+          {user && favorites.some((x) => x.id === Number(quoteId)) ? (
             <button
               type="button"
               onClick={() => handleDeleteBookmarks(quoteId)}
