@@ -27,7 +27,6 @@ export const FavoritesBar = ({ quoteId, className }) => {
     setOpenModal(false);
     document.body.style.overflow = 'visible';
   };
-  console.log(user, 'c');
 
   return (
     <>
