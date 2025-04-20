@@ -350,7 +350,7 @@ export const QuoteView = () => {
         ctx.fillStyle = fontColor;
         ctx.textAlign = 'center';
         ctx.textBaseline = 'top';
-        ctx.font = 'bold 28px Norwester';
+        ctx.font = '400 28px Norwester';
 
         // Redraw background before drawing centered text
         if (!selectedImage) {
@@ -362,11 +362,11 @@ export const QuoteView = () => {
         const ctx2 = canvas2.getContext('2d');
 
         ctx2.fillStyle = fontColor;
-        ctx2.font = 'bold 28px Norwester';
+        ctx2.font = '400 28px Norwester';
 
         wrapText(ctx2, quoteText, width / 2, centerY, width * 0.9);
         if (quote.authorFullName !== 'Unknown') {
-          ctx2.font = 'bold 14px Norwester';
+          ctx2.font = '400 14px Norwester';
           ctx2.fillText(
             `– ${quote.authorFullName.toUpperCase()}`,
             width / 2,
