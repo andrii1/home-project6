@@ -16,6 +16,7 @@ import { useUserContext } from '../../userContext';
 import Masonry from 'react-masonry-css';
 import { capitalize } from '../../utils/capitalize';
 import { useRatings } from '../../utils/hooks/useRatings';
+import { useFavorites } from '../../utils/hooks/useFavorites';
 
 import {
   faSearch,
@@ -47,7 +48,6 @@ export const Quotes = () => {
   const [filtersSubmitted, setFiltersSubmitted] = useState(false);
   const [showFiltersContainer, setShowFiltersContainer] = useState(false);
   const [showTopicsContainer, setShowTopicsContainer] = useState(false);
-  const [favorites, setFavorites] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [listView, setListView] = useState(false);
   const [page, setPage] = useState(0);
@@ -75,6 +75,7 @@ export const Quotes = () => {
     return localStorage.getItem('theme') || 'dark';
   });
   const { ratings, allRatings, addRating, deleteRating } = useRatings(user);
+  const { favorites, addFavorite, handleDeleteBookmarks } = useFavorites(user);
 
   const toggleModal = () => {
     setOpenModal(false);
@@ -249,6 +250,7 @@ export const Quotes = () => {
     }
     return urlFilters;
   }, [filteredTopics]);
+
   useEffect(() => {
     async function fetchAppsSearch() {
       const responseApps = await fetch(`${apiURL()}/quotes/`);
@@ -545,58 +547,6 @@ export const Quotes = () => {
       {item.title}
     </li>
   ));
-  const fetchFavorites = useCallback(async () => {
-    const url = `${apiURL()}/favorites`;
-    const response = await fetch(url, {
-      headers: {
-        token: `token ${user?.uid}`,
-      },
-    });
-    const favoritesData = await response.json();
-
-    if (Array.isArray(favoritesData)) {
-      setFavorites(favoritesData);
-    } else {
-      setFavorites([]);
-    }
-  }, [user]);
-
-  useEffect(() => {
-    fetchFavorites();
-  }, [fetchFavorites]);
-
-  const addFavorite = async (quoteId) => {
-    const response = await fetch(`${apiURL()}/favorites`, {
-      method: 'POST',
-      headers: {
-        token: `token ${user?.uid}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        quote_id: quoteId,
-      }),
-    });
-    if (response.ok) {
-      fetchFavorites();
-    }
-  };
-
-  const handleDeleteBookmarks = (favoritesId) => {
-    const deleteFavorites = async () => {
-      const response = await fetch(`${apiURL()}/favorites/${favoritesId} `, {
-        method: 'DELETE',
-        headers: {
-          token: `token ${user?.uid}`,
-        },
-      });
-
-      if (response.ok) {
-        fetchFavorites();
-      }
-    };
-
-    deleteFavorites();
-  };
 
   const breakpoints = {
     default: 3,
