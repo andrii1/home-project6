@@ -483,6 +483,19 @@ const createQuote = async (token, body) => {
       throw new HttpError('User not found', 401);
     }
 
+    // Optional: check for existing author
+    const existing = await knex('quotes')
+      .whereRaw('LOWER(title) = ?', [body.title.toLowerCase()])
+      .first();
+
+    if (existing) {
+      return {
+        successful: true,
+        existing: true,
+        quoteId: existing.id,
+      };
+    }
+
     const [quoteId] = await knex('quotes').insert({
       title: body.title,
       description: body.description,
