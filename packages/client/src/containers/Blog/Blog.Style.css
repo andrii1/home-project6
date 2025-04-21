@@ -23,6 +23,7 @@
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 2rem;
+  padding-bottom: 1rem;
 }
 
 .card-blog h2 {

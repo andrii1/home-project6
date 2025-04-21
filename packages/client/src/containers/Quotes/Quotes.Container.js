@@ -19,10 +19,7 @@ import { useRatings } from '../../utils/hooks/useRatings';
 import { useFavorites } from '../../utils/hooks/useFavorites';
 
 import {
-  faSearch,
   faFilter,
-  faList,
-  faGrip,
   faBookmark as faBookmarkSolid,
   faBookOpen,
 } from '@fortawesome/free-solid-svg-icons';
