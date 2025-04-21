@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 
@@ -10,7 +11,6 @@ import { Button } from '../Button/Button.component';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import logo from '../../assets/images/logo.png';
 import {
-  faUser,
   faRightFromBracket,
   faSearch,
   faBars,
@@ -18,6 +18,9 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import Modal from '../Modal/Modal.Component';
 import { ProfileImage } from '../ProfileImage/ProfileImage.Component';
+import { fetchQuotes, fetchAuthors } from '../../utils/http';
+import { useFetch } from '../../utils/hooks/useFetch';
+import { Loading } from '../Loading/Loading.Component';
 
 export const Navigation = () => {
   const { user, name, logout } = useUserContext();
@@ -27,11 +30,18 @@ export const Navigation = () => {
   const [openSearchModal, setOpenSearchModal] = useState(false);
   const [modalTitle, setModalTitle] = useState('');
   const [searchTerms, setSearchTerms] = useState();
-  const [quotes, setQuotes] = useState([]);
-  const [authors, setAuthors] = useState([]);
   const [resultsHome, setResultsHome] = useState([]);
   // const [resultsHomeApps, setResultsHomeApps] = useState([]);
-  const [topics, setTopics] = useState([]);
+  const {
+    isFetching: loadingQuotes,
+    fetchedData: quotes,
+    error: errorQuotes,
+  } = useFetch(fetchQuotes, []);
+  const {
+    isFetching: loadingAuthors,
+    fetchedData: authors,
+    error: errorAuthors,
+  } = useFetch(fetchAuthors, []);
   const toggleModal = () => {
     setOpenModal(false);
     document.body.style.overflow = 'visible';
@@ -40,6 +50,9 @@ export const Navigation = () => {
     setOpenSearchModal(false);
     document.body.style.overflow = 'visible';
   };
+
+  const loading = loadingQuotes || loadingAuthors;
+  const error = errorQuotes || errorAuthors;
   React.useEffect(() => {
     const down = (e) => {
       if (e.key === 'k' && (e.metaKey || e.ctrlKey)) {
@@ -50,40 +63,6 @@ export const Navigation = () => {
 
     document.addEventListener('keydown', down);
     return () => document.removeEventListener('keydown', down);
-  }, []);
-
-  useEffect(() => {
-    // async function fetchCategories() {
-    //   const responseCategories = await fetch(`${apiURL()}/categories/`);
-    //   const responseTopics = await fetch(`${apiURL()}/topics/`);
-    //   const categoriesResponse = await responseCategories.json();
-    //   const topicsResponse = await responseTopics.json();
-    //   setTopics(topicsResponse);
-    //   const combinedArray = categoriesResponse.concat(topicsResponse);
-    //   if (searchTerms) {
-    //     const filteredSearch = combinedArray?.filter((item) =>
-    //       item.title.toLowerCase().includes(searchTerms.toLowerCase()),
-    //     );
-    //     setResultsHome(filteredSearch);
-    //   } else {
-    //     setResultsHome(categoriesResponse);
-    //   }
-    // }
-
-    async function fetchQuotes() {
-      const response = await fetch(`${apiURL()}/quotes/`);
-      const data = await response.json();
-      setQuotes(data);
-    }
-
-    async function fetchAuthors() {
-      const response = await fetch(`${apiURL()}/authors/`);
-      const data = await response.json();
-      setAuthors(data);
-    }
-
-    fetchQuotes();
-    fetchAuthors();
   }, []);
 
   const filterQuotesBySearch = (search) => {
@@ -416,28 +395,31 @@ export const Navigation = () => {
             />
           </label>
         </form>
-        {searchTerms ? (
-          <div className="dropdown-search-modal">
-            <h3>Quotes</h3>
-            <ul>
-              {dropDownResultsQuotes.length > 0 ? (
-                dropDownResultsQuotes
-              ) : (
-                <li>No quotes found :(</li>
-              )}
-            </ul>
-            <h3>Authors</h3>
-            <ul>
-              {dropDownResultsAuthors.length > 0 ? (
-                dropDownResultsAuthors
-              ) : (
-                <li>No authors found :(</li>
-              )}
-            </ul>
-          </div>
-        ) : (
-          ''
-        )}
+        {searchTerms &&
+          (loading ? (
+            <Loading />
+          ) : error ? (
+            <p>Something went wrong</p>
+          ) : (
+            <div className="dropdown-search-modal">
+              <h3>Quotes</h3>
+              <ul>
+                {dropDownResultsQuotes.length > 0 ? (
+                  dropDownResultsQuotes
+                ) : (
+                  <li>No quotes found :(</li>
+                )}
+              </ul>
+              <h3>Authors</h3>
+              <ul>
+                {dropDownResultsAuthors.length > 0 ? (
+                  dropDownResultsAuthors
+                ) : (
+                  <li>No authors found :(</li>
+                )}
+              </ul>
+            </div>
+          ))}
       </Modal>
     </>
   );

@@ -18,6 +18,7 @@ import Markdown from 'markdown-to-jsx';
 import { extractMeaningfulWords } from '../../utils/extractMeaningfulWords';
 import { useRatings } from '../../utils/hooks/useRatings';
 import { useFavorites } from '../../utils/hooks/useFavorites';
+import { Loading } from '../../components/Loading/Loading.Component';
 
 import {
   faEnvelope,
@@ -63,7 +64,7 @@ export const QuoteView = () => {
   const [similarApps, setSimilarApps] = useState([]);
   const [recentQuotes, setRecentQuotes] = useState([]);
   const [comments, setComments] = useState([]);
-  const [error, setError] = useState('');
+
   const { user } = useUserContext();
   const [validForm, setValidForm] = useState(false);
   const [invalidForm, setInvalidForm] = useState(false);
@@ -77,15 +78,19 @@ export const QuoteView = () => {
   const [images, setImages] = useState([]);
   const [selectedImage, setSelectedImage] = useState('');
   const [topicsFromQuotes, setTopicsFromQuotes] = useState([]);
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
   const canvasRef = useRef(null);
   const { ratings, allRatings, addRating, deleteRating } = useRatings(user);
   const { favorites, addFavorite, handleDeleteBookmarks } = useFavorites(user);
 
   useEffect(() => {
     async function fetchSingleQuote(quoteId) {
+      setLoading(true);
       const response = await fetch(`${apiURL()}/quotes/${quoteId}`);
       const appResponse = await response.json();
       setQuote(appResponse[0]);
+      setLoading(false);
     }
 
     fetchSingleQuote(id);
@@ -110,6 +115,7 @@ export const QuoteView = () => {
 
   useEffect(() => {
     async function fetchRecentQuotes() {
+      setLoading(true);
       const response = await fetch(
         `${apiURL()}/quotes?page=0&column=id&direction=desc`,
       );
@@ -118,15 +124,18 @@ export const QuoteView = () => {
         (item) => item.id !== quote.id,
       );
       setRecentQuotes(similarQuotesArray);
+      setLoading(false);
     }
 
     fetchRecentQuotes();
   }, [quote.topic_id, quote.id]);
 
   const fetchCommentsByAppId = useCallback(async (quoteId) => {
+    setLoading(true);
     const response = await fetch(`${apiURL()}/comments?quoteId=${quoteId}`);
     const commentResponse = await response.json();
     setComments(commentResponse);
+    setLoading(false);
   }, []);
 
   useEffect(() => {
@@ -141,6 +150,7 @@ export const QuoteView = () => {
     const words = extractMeaningfulWords(quote?.title);
 
     async function fetchData() {
+      setLoading(true);
       const results = [];
 
       for (const word of words) {
@@ -159,6 +169,7 @@ export const QuoteView = () => {
       }
 
       setTopicsFromQuotes(results);
+      setLoading(false);
     }
 
     fetchData();
@@ -252,6 +263,7 @@ export const QuoteView = () => {
 
   useEffect(() => {
     const fetchImage = async () => {
+      setLoading(true);
       let count = 0;
       const fetchedImages = [];
 
@@ -273,7 +285,7 @@ export const QuoteView = () => {
       }
 
       setImages(fetchedImages); // Update state with 5 valid images
-      // setLoading(false); // Set loading to false once 5 images are fetched
+      setLoading(false); // Set loading to false once 5 images are fetched
     };
 
     fetchImage();
@@ -396,10 +408,41 @@ export const QuoteView = () => {
     link.click();
   };
 
+  // if (loading) {
+  //   return (
+  //     <>
+  //       <Helmet>
+  //         <title>Loading...</title>
+  //         <meta name="description" content="Fetching deal details" />
+  //       </Helmet>
+  //       <main className="loading-container">
+  //         <Loading />
+  //       </main>
+  //     </>
+  //   );
+  // }
+
+  if (error) {
+    return (
+      <>
+        <Helmet>
+          <title>Error</title>
+          <meta name="description" content="Something went wrong" />
+        </Helmet>
+        <main className="error-container">
+          <h2>{error.message || 'Something went wrong'}</h2>
+        </main>
+      </>
+    );
+  }
+
   return (
     <>
       <Helmet>
-        <title>{`${String(quote.title).substring(0, 50)} - motivately`}</title>
+        <title>
+          {`${String(quote?.title).substring(0, 50)} - motivately` ||
+            'motivately'}
+        </title>
         <meta name="description" content="Best quotes - motivately" />
       </Helmet>
       <main>
