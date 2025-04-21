@@ -41,3 +41,13 @@ export const fetchBlogs = async () => {
   }
   return data;
 };
+
+export const fetchSingleBlog = async (blogSlug) => {
+  const response = await fetch(`${apiURL()}/blogs/${blogSlug}`);
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || 'Failed to fetch');
+  }
+  return data[0];
+};

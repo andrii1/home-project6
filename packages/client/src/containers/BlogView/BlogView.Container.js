@@ -43,18 +43,33 @@ import {
 import { apiURL } from '../../apiURL';
 import { useUserContext } from '../../userContext';
 import { FavoritesBar } from '../../components/FavoritesBar/FavoritesBar.component';
+import { LoadingContainer } from '../LoadingContainer/LoadingContainer.Container';
+import { ErrorContainer } from '../ErrorContainer/ErrorContainer.Container';
 
 export const BlogView = () => {
   const { user } = useUserContext();
   const { slugParam } = useParams();
   const [blog, setBlog] = useState({});
+  const [loading, setLoading] = useState();
+  const [error, setError] = useState();
   const [similarBlogs, setSimilarBlogs] = useState([]);
 
   useEffect(() => {
     async function fetchSingleBlog(blogSlug) {
-      const response = await fetch(`${apiURL()}/blogs/${blogSlug}`);
-      const data = await response.json();
-      setBlog(data[0]);
+      setLoading(true);
+      try {
+        const response = await fetch(`${apiURL()}/blogs/${blogSlug}`);
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.message || 'Failed to fetch');
+        }
+        setBlog(data[0]);
+        setError(null);
+      } catch (e) {
+        setError({ message: e.message || 'Failed to fetch data.' });
+      }
+      setLoading(false);
     }
 
     fetchSingleBlog(slugParam);
@@ -82,6 +97,13 @@ Here is a quote:
 
 End of test.
 `;
+  if (loading) {
+    return <LoadingContainer />;
+  }
+
+  if (error) {
+    return <ErrorContainer error={error} />;
+  }
 
   return (
     <>

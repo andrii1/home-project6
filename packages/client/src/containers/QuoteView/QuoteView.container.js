@@ -19,6 +19,7 @@ import { extractMeaningfulWords } from '../../utils/extractMeaningfulWords';
 import { useRatings } from '../../utils/hooks/useRatings';
 import { useFavorites } from '../../utils/hooks/useFavorites';
 import { Loading } from '../../components/Loading/Loading.Component';
+import { ErrorContainer } from '../ErrorContainer/ErrorContainer.Container';
 
 import {
   faEnvelope,
@@ -423,17 +424,7 @@ export const QuoteView = () => {
   // }
 
   if (error) {
-    return (
-      <>
-        <Helmet>
-          <title>Error</title>
-          <meta name="description" content="Something went wrong" />
-        </Helmet>
-        <main className="error-container">
-          <h2>{error.message || 'Something went wrong'}</h2>
-        </main>
-      </>
-    );
+    return <ErrorContainer error={error} />;
   }
 
   return (
