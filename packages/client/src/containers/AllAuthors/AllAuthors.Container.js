@@ -7,21 +7,20 @@ import { CardCategories } from '../../components/CardCategories/CardCategories.c
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { Button } from '../../components/Button/Button.component';
+import { fetchAuthors } from '../../utils/http';
+import { useFetch } from '../../utils/hooks/useFetch';
+import { LoadingContainer } from '../LoadingContainer/LoadingContainer.Container';
+import { ErrorContainer } from '../ErrorContainer/ErrorContainer.Container';
 
 export const AllAuthors = () => {
   const [searchTerms, setSearchTerms] = useState();
   const [resultsHome, setResultsHome] = useState([]);
-  const [authors, setAuthors] = useState([]);
   const [showAppsBy, setShowAppsBy] = useState('alphabet');
-
-  useEffect(() => {
-    async function fetchAuthors() {
-      const response = await fetch(`${apiURL()}/authors/`);
-      const appsResponse = await response.json();
-      setAuthors(appsResponse);
-    }
-    fetchAuthors();
-  }, []);
+  const {
+    isFetching: loading,
+    fetchedData: authors,
+    error,
+  } = useFetch(fetchAuthors, []);
 
   const filteredApps = useMemo(() => {
     // if (showAppsBy === 'topics') {
@@ -88,6 +87,14 @@ export const AllAuthors = () => {
       />
     );
   });
+
+  if (loading) {
+    return <LoadingContainer />;
+  }
+
+  if (error) {
+    return <ErrorContainer error={error} />;
+  }
 
   return (
     <main>
