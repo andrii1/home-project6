@@ -29,4 +29,17 @@ router.get('/', (req, res, next) => {
   }
 });
 
+router.post('/', (req, res) => {
+  const { token } = req.headers;
+  tagsController
+    .createTag(token, req.body)
+    .then((result) => res.json(result))
+    .catch((error) => {
+      // eslint-disable-next-line no-console
+      console.log(error);
+
+      res.status(400).send('Bad request').end();
+    });
+});
+
 module.exports = router;
