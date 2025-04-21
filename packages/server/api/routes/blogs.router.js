@@ -25,10 +25,17 @@ const blogsController = require('../controllers/blogs.controller');
  *        description: Unexpected error.
  */
 router.get('/', (req, res, next) => {
-  blogsController
-    .getBlogs()
-    .then((result) => res.json(result))
-    .catch(next);
+  if (req.query.page) {
+    blogsController
+      .getBlogsPagination(req.query.page, req.query.column, req.query.direction)
+      .then((result) => res.json(result))
+      .catch(next);
+  } else {
+    blogsController
+      .getBlogs()
+      .then((result) => res.json(result))
+      .catch(next);
+  }
 });
 
 /**

@@ -5,6 +5,7 @@ const { shouldUseFlatConfig } = require('eslint/use-at-your-own-risk');
 const knex = require('../../config/db');
 const HttpError = require('../lib/utils/http-error');
 const moment = require('moment-timezone');
+const getOppositeOrderDirection = require('../lib/utils/getOppositeOrderDirection');
 // eslint-disable-next-line no-unused-vars
 const OpenAI = require('openai');
 
@@ -56,6 +57,27 @@ const getBlogs = async () => {
       .join('users', 'blogs.user_id', '=', 'users.id');
 
     return blogs;
+  } catch (error) {
+    return error.message;
+  }
+};
+
+const getBlogsPagination = async (page, column, direction) => {
+  const lastItemDirection = getOppositeOrderDirection(direction);
+  try {
+    const getModel = () => knex('blogs');
+    const lastItem = await getModel()
+      .orderBy(column, lastItemDirection)
+      .limit(1);
+    const data = await getModel()
+      .orderBy(column, direction)
+      .offset(page * 10)
+      .limit(10)
+      .select();
+    return {
+      lastItem: lastItem[0],
+      data,
+    };
   } catch (error) {
     return error.message;
   }
@@ -145,6 +167,7 @@ const createBlog = async (token, body) => {
 
 module.exports = {
   getBlogs,
+  getBlogsPagination,
   getBlogById,
   // deleteExampleResource,
   createBlog,
