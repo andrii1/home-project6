@@ -2,6 +2,7 @@
 Can be deleted as soon as the first real controller is added. */
 
 const knex = require('../../config/db');
+const HttpError = require('../lib/utils/http-error');
 
 /* Get all topics */
 const getTags = async () => {
@@ -27,7 +28,43 @@ const getTagsByQuote = async (quote) => {
   }
 };
 
+const createTag = async (token, body) => {
+  try {
+    const userUid = token.split(' ')[1];
+    const user = (await knex('users').where({ uid: userUid }))[0];
+    if (!user) {
+      throw new HttpError('User not found', 401);
+    }
+
+    // Optional: check for existing author
+    const existing = await knex('tags')
+      .whereRaw('LOWER(title) = ?', [body.title.toLowerCase()])
+      .first();
+
+    if (existing) {
+      return {
+        successful: true,
+        existing: true,
+        tagId: existing.id,
+      };
+    }
+
+    const [tagId] = await knex('tags').insert({
+      title: body.title,
+    });
+
+    return {
+      successful: true,
+      tagId,
+      tagTitle: body.title,
+    };
+  } catch (error) {
+    return error.message;
+  }
+};
+
 module.exports = {
   getTags,
   getTagsByQuote,
+  createTag,
 };
