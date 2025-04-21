@@ -515,6 +515,28 @@ const createQuote = async (token, body) => {
   }
 };
 
+// add quotes to tag
+const addQuoteToTag = async (token, body, tag) => {
+  try {
+    const userUid = token.split(' ')[1];
+    const user = (await knex('users').where({ uid: userUid }))[0];
+    if (!user) {
+      throw new HttpError('User not found', 401);
+    }
+
+    await knex('tagsQuotes').insert({
+      quote_id: body.quote_id,
+      tag_id: tag,
+    });
+
+    return {
+      successful: true,
+    };
+  } catch (error) {
+    return error.message;
+  }
+};
+
 // edit
 const editQuote = async (token, updatedQuoteId, body) => {
   try {
@@ -552,5 +574,6 @@ module.exports = {
   getQuoteById,
   getQuotesAll,
   createQuote,
+  addQuoteToTag,
   editQuote,
 };

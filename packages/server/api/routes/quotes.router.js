@@ -136,10 +136,17 @@ router.get('/', (req, res, next) => {
 
 router.post('/', (req, res, next) => {
   const { token } = req.headers;
-  quotesController
-    .createQuote(token, req.body)
-    .then((result) => res.json(result))
-    .catch(next);
+  if (req.query.tag) {
+    quotesController
+      .addQuoteToTag(token, req.body, req.query.tag)
+      .then((result) => res.json(result))
+      .catch(next);
+  } else {
+    quotesController
+      .createQuote(token, req.body)
+      .then((result) => res.json(result))
+      .catch(next);
+  }
 });
 
 router.patch('/:id', (req, res, next) => {

@@ -50,7 +50,7 @@ const createTag = async (token, body) => {
     }
 
     const [tagId] = await knex('tags').insert({
-      title: body.title,
+      title: body.title.toLowerCase(),
     });
 
     return {
