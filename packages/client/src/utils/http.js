@@ -31,3 +31,13 @@ export const fetchAuthors = async () => {
   }
   return data;
 };
+
+export const fetchBlogs = async () => {
+  const response = await fetch(`${apiURL()}/blogs/`);
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || 'Failed to fetch');
+  }
+  return data;
+};

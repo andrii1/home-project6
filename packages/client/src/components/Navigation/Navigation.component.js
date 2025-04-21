@@ -18,7 +18,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import Modal from '../Modal/Modal.Component';
 import { ProfileImage } from '../ProfileImage/ProfileImage.Component';
-import { fetchQuotes, fetchAuthors } from '../../utils/http';
+import { fetchQuotes, fetchAuthors, fetchBlogs } from '../../utils/http';
 import { useFetch } from '../../utils/hooks/useFetch';
 import { Loading } from '../Loading/Loading.Component';
 
@@ -42,6 +42,12 @@ export const Navigation = () => {
     fetchedData: authors,
     error: errorAuthors,
   } = useFetch(fetchAuthors, []);
+  const {
+    isFetching: loadingBlogs,
+    fetchedData: blogs,
+    error: errorBlogs,
+  } = useFetch(fetchBlogs, []);
+
   const toggleModal = () => {
     setOpenModal(false);
     document.body.style.overflow = 'visible';
@@ -86,8 +92,18 @@ export const Navigation = () => {
     return authors;
   };
 
+  const filterBlogsBySearch = (search) => {
+    if (search) {
+      return blogs.filter((item) =>
+        item.content.toLowerCase().includes(searchTerms.toLowerCase()),
+      );
+    }
+    return authors;
+  };
+
   const resultsHomeQuotes = filterQuotesBySearch(searchTerms);
   const resultsHomeAuthors = filterAuthorsBySearch(searchTerms);
+  const resultsHomeBlogs = filterBlogsBySearch(searchTerms);
 
   const handleSearch = (event) => {
     setSearchTerms(event.target.value);
@@ -121,6 +137,15 @@ export const Navigation = () => {
   const dropDownResultsQuotes = resultsHomeQuotes?.map((result) => (
     <Link
       to={`/quotes/${result.id}`}
+      /* state={{ frontPageItem: relatedTopics }} */
+      onClick={() => toggleSearchModal()}
+    >
+      <li key={result.id}>{result.title}</li>
+    </Link>
+  ));
+  const dropDownResultsBlogs = resultsHomeBlogs?.map((result) => (
+    <Link
+      to={`/blog/${result.slug}`}
       /* state={{ frontPageItem: relatedTopics }} */
       onClick={() => toggleSearchModal()}
     >
@@ -416,6 +441,14 @@ export const Navigation = () => {
                   dropDownResultsAuthors
                 ) : (
                   <li>No authors found :(</li>
+                )}
+              </ul>
+              <h3>Blogs</h3>
+              <ul>
+                {dropDownResultsBlogs.length > 0 ? (
+                  dropDownResultsBlogs
+                ) : (
+                  <li>No blogs found :(</li>
                 )}
               </ul>
             </div>
