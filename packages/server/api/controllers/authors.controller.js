@@ -59,6 +59,7 @@ const createAuthor = async (token, body) => {
         successful: true,
         existing: true,
         authorId: existing.id,
+        authorFullName: body.full_name,
       };
     }
 
