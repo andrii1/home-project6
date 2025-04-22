@@ -14,6 +14,22 @@ const getTags = async () => {
   }
 };
 
+const getTagById = async (id) => {
+  if (!id) {
+    throw new HttpError('Id should be a number', 400);
+  }
+
+  try {
+    const tags = await knex('tags').where({ id });
+    if (tags.length === 0) {
+      throw new Error(`incorrect entry with the id of ${id}`, 404);
+    }
+    return tags;
+  } catch (error) {
+    return error.message;
+  }
+};
+
 // Get topics by Category
 const getTagsByQuote = async (quote) => {
   try {
@@ -65,6 +81,7 @@ const createTag = async (token, body) => {
 
 module.exports = {
   getTags,
+  getTagById,
   getTagsByQuote,
   createTag,
 };

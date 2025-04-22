@@ -25,6 +25,22 @@ const getAuthors = async () => {
   }
 };
 
+const getAuthorById = async (id) => {
+  if (!id) {
+    throw new HttpError('Id should be a number', 400);
+  }
+
+  try {
+    const authors = await knex('authors').where({ id });
+    if (authors.length === 0) {
+      throw new Error(`incorrect entry with the id of ${id}`, 404);
+    }
+    return authors;
+  } catch (error) {
+    return error.message;
+  }
+};
+
 const createAuthor = async (token, body) => {
   try {
     const userUid = token.split(' ')[1];
@@ -85,6 +101,7 @@ const createAuthor = async (token, body) => {
 
 module.exports = {
   getAuthors,
+  getAuthorById,
   createAuthor,
   //getTopicsByCategory,
 };

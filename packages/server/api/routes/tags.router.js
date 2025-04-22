@@ -29,6 +29,13 @@ router.get('/', (req, res, next) => {
   }
 });
 
+router.get('/:id', (req, res, next) => {
+  tagsController
+    .getTagById(req.params.id)
+    .then((result) => res.json(result))
+    .catch(next);
+});
+
 router.post('/', (req, res) => {
   const { token } = req.headers;
   tagsController

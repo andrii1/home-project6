@@ -17,6 +17,8 @@ import Masonry from 'react-masonry-css';
 import { capitalize } from '../../utils/capitalize';
 import { useRatings } from '../../utils/hooks/useRatings';
 import { useFavorites } from '../../utils/hooks/useFavorites';
+import { fetchAuthors, fetchTags } from '../../utils/http';
+import { useFetch } from '../../utils/hooks/useFetch';
 
 import {
   faFilter,
@@ -33,7 +35,6 @@ export const Quotes = () => {
   const [search, setSearch] = useState('');
   const [sortOrder, setSortOrder] = useState('Recent');
   const [resultsHome, setResultsHome] = useState([]);
-  const [authors, setAuthors] = useState([]);
   const [openModal, setOpenModal] = useState(false);
   const [modalTitle, setModalTitle] = useState('');
   const [categories, setCategories] = useState([]);
@@ -73,6 +74,8 @@ export const Quotes = () => {
   });
   const { ratings, allRatings, addRating, deleteRating } = useRatings(user);
   const { favorites, addFavorite, handleDeleteBookmarks } = useFavorites(user);
+  const { fetchedData: authors } = useFetch(fetchAuthors, []);
+  const { fetchedData: tags } = useFetch(fetchTags, []);
 
   const toggleModal = () => {
     setOpenModal(false);
@@ -349,23 +352,6 @@ export const Quotes = () => {
   //   }
   // }, [handleObserver]);
 
-  useEffect(() => {
-    async function fetchAuthors() {
-      const response = await fetch(`${apiURL()}/authors/`);
-      const data = await response.json();
-      setAuthors(data);
-    }
-
-    // async function fetchCategories() {
-    //   const response = await fetch(`${apiURL()}/categories/`);
-    //   const categoriesResponse = await response.json();
-    //   setCategories(categoriesResponse);
-    // }
-
-    // fetchApps();
-    fetchAuthors();
-  }, []);
-
   const handleSearch = (event) => {
     setSearchTerms(event.target.value);
   };
@@ -504,20 +490,44 @@ export const Quotes = () => {
 
     setOrderBy({ column, direction });
   }, [sortOrder]);
-  let pageTitle;
-  if (authorIdParam) {
-    pageTitle = `${authors
-      .filter((author) => author.id === parseInt(authorIdParam, 10))
-      .map((item) => item.fullName)} quotes - motivately`;
-  } else if (tagIdParam) {
-    pageTitle = `${categories
-      .filter((category) => category.id === parseInt(tagIdParam, 10))
-      .map((item) => item.title)} quotes - motivately`;
-  } else if (searchParam) {
-    pageTitle = `${capitalize(searchParam)} quotes - motivately`;
-  } else {
-    pageTitle = 'motivately - best quotes';
-  }
+
+  const getPageMeta = () => {
+    if (authorIdParam) {
+      const authorName = authors.find(
+        (author) => author.id === parseInt(authorIdParam, 10),
+      );
+      const fullName = authorName?.fullName || 'Unknown author';
+      return {
+        pageTitle: `${fullName} quotes - motivately`,
+        pageDescription: `Discover the best quotes by ${fullName} to inspire and motivate you.`,
+      };
+    }
+
+    if (tagIdParam) {
+      const tagTitle = tags.find((tag) => tag.id === parseInt(tagIdParam, 10));
+      const title = tagTitle?.title || 'this topic';
+      return {
+        pageTitle: `${title} quotes - motivately`,
+        pageDescription: `Explore inspirational quotes on ${title} and boost your day with positivity.`,
+      };
+    }
+
+    if (searchParam) {
+      const capitalizedSearch = capitalize(searchParam);
+      return {
+        pageTitle: `${capitalizedSearch} quotes - motivately`,
+        pageDescription: `Search results for "${capitalizedSearch}" — powerful quotes to motivate and uplift.`,
+      };
+    }
+
+    return {
+      pageTitle: 'motivately - best quotes',
+      pageDescription:
+        'Motivately brings you the best motivational quotes to inspire greatness every day.',
+    };
+  };
+
+  const { pageTitle, pageDescription } = getPageMeta();
 
   const sortOptions = ['Recent', 'A-Z', 'Z-A'];
 
@@ -556,7 +566,7 @@ export const Quotes = () => {
     <main>
       <Helmet>
         <title>{pageTitle}</title>
-        <meta name="description" content="Find best quotes" />
+        <meta name="description" content={pageDescription} />
       </Helmet>
       {/* <div className="hero"></div> */}
       <div className="hero">
