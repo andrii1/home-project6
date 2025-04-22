@@ -77,6 +77,7 @@ export const QuoteView = () => {
   const [fontColorPickerSelected, setFontColorPickerSelected] = useState(false);
   const [imageDataUrl, setImageDataUrl] = useState('');
   const [images, setImages] = useState([]);
+  const [tags, setTags] = useState([]);
   const [selectedImage, setSelectedImage] = useState('');
   const [topicsFromQuotes, setTopicsFromQuotes] = useState([]);
   const [error, setError] = useState(null);
@@ -94,7 +95,16 @@ export const QuoteView = () => {
       setLoading(false);
     }
 
+    async function fetchTagsForAQuote(quoteId) {
+      setLoading(true);
+      const response = await fetch(`${apiURL()}/tags/?quote=${quoteId}`);
+      const data = await response.json();
+      setTags(data);
+      setLoading(false);
+    }
+
     fetchSingleQuote(id);
+    fetchTagsForAQuote(id);
   }, [id]);
 
   // useEffect(() => {
@@ -697,6 +707,25 @@ export const QuoteView = () => {
                           {topic.title}
                         </Link>
                         {index < topicsFromQuotes.length - 1 && ', '}
+                      </>
+                    ))}
+                  </p>
+                </div>
+              )}
+
+              {tags.length > 0 && (
+                <div className="container-description">
+                  <strong>Tags:</strong>
+                  <p>
+                    {tags.map((tag, index) => (
+                      <>
+                        <Link
+                          className="underline"
+                          to={`../quotes/tag/${tag.id}`}
+                        >
+                          {tag.title}
+                        </Link>
+                        {index < tags.length - 1 && ', '}
                       </>
                     ))}
                   </p>

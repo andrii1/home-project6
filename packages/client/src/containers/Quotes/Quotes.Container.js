@@ -89,7 +89,7 @@ export const Quotes = () => {
     const url = `${apiURL()}/quotes?page=0&column=${orderBy.column}&direction=${
       orderBy.direction
     }${authorIdParam !== undefined ? `&filteredAuthors=${authorIdParam}` : ''}${
-      tagIdParam !== undefined ? `&filteredTags=${tagIdParam}` : ''
+      tagIdParam !== undefined ? `&tag=${tagIdParam}` : ''
     }${searchParam !== undefined ? `&search=${searchParam}` : ''}${
       filtersSubmitted && filteredPricing.length > 0
         ? `&filteredPricing=${encodeURIComponent(filteredPricing)}`
@@ -151,7 +151,7 @@ export const Quotes = () => {
       orderBy.column
     }&direction=${orderBy.direction}${
       authorIdParam !== undefined ? `&filteredTopics=${authorIdParam}` : ''
-    }${tagIdParam !== undefined ? `&filteredCategories=${tagIdParam}` : ''}${
+    }${tagIdParam !== undefined ? `&tag=${tagIdParam}` : ''}${
       searchParam !== undefined ? `&search=${searchParam}` : ''
     }${
       filtersSubmitted && filteredPricing.length > 0
