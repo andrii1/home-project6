@@ -500,6 +500,7 @@ export const Quotes = () => {
       return {
         pageTitle: `${fullName} quotes - motivately`,
         pageDescription: `Discover the best quotes by ${fullName} to inspire and motivate you.`,
+        headerTitle: `${fullName} quotes`,
       };
     }
 
@@ -509,6 +510,7 @@ export const Quotes = () => {
       return {
         pageTitle: `${title} quotes - motivately`,
         pageDescription: `Explore inspirational quotes on ${title} and boost your day with positivity.`,
+        headerTitle: `${title} quotes`,
       };
     }
 
@@ -517,6 +519,7 @@ export const Quotes = () => {
       return {
         pageTitle: `${capitalizedSearch} quotes - motivately`,
         pageDescription: `Search results for "${capitalizedSearch}" — powerful quotes to motivate and uplift.`,
+        headerTitle: `${capitalizedSearch} quotes`,
       };
     }
 
@@ -524,10 +527,11 @@ export const Quotes = () => {
       pageTitle: 'motivately - best quotes',
       pageDescription:
         'Motivately brings you the best motivational quotes to inspire greatness every day.',
+      headerTitle: 'Browse best quotes',
     };
   };
 
-  const { pageTitle, pageDescription } = getPageMeta();
+  const { pageTitle, pageDescription, headerTitle } = getPageMeta();
 
   const sortOptions = ['Recent', 'A-Z', 'Z-A'];
 
@@ -570,7 +574,7 @@ export const Quotes = () => {
       </Helmet>
       {/* <div className="hero"></div> */}
       <div className="hero">
-        <h1 className="hero-header">Browse best quotes</h1>
+        <h1 className="hero-header">{headerTitle}</h1>
       </div>
       <section className={`container-topics ${showTopicsContainer && 'show'}`}>
         <Link to="/">
