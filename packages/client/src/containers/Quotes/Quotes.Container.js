@@ -507,10 +507,11 @@ export const Quotes = () => {
     if (tagIdParam) {
       const tagTitle = tags.find((tag) => tag.id === parseInt(tagIdParam, 10));
       const title = tagTitle?.title || 'this topic';
+      const capitalizedTitle = capitalize(title);
       return {
-        pageTitle: `${title} quotes - motivately`,
+        pageTitle: `${capitalizedTitle} quotes - motivately`,
         pageDescription: `Explore inspirational quotes on ${title} and boost your day with positivity.`,
-        headerTitle: `${title} quotes`,
+        headerTitle: `${capitalizedTitle} quotes`,
       };
     }
 
@@ -518,7 +519,7 @@ export const Quotes = () => {
       const capitalizedSearch = capitalize(searchParam);
       return {
         pageTitle: `${capitalizedSearch} quotes - motivately`,
-        pageDescription: `Search results for "${capitalizedSearch}" — powerful quotes to motivate and uplift.`,
+        pageDescription: `Search results for "${searchParam}" — powerful quotes to motivate and uplift.`,
         headerTitle: `${capitalizedSearch} quotes`,
       };
     }
