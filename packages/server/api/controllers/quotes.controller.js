@@ -3,6 +3,11 @@ Can be deleted as soon as the first real controller is added. */
 
 const knex = require('../../config/db');
 const HttpError = require('../lib/utils/http-error');
+const OpenAI = require('openai');
+
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY, // make sure this is set in your .env
+});
 
 const getOppositeOrderDirection = (direction) => {
   let lastItemDirection;
@@ -496,6 +501,33 @@ const createQuote = async (token, body) => {
       };
     }
 
+    // Generate a short description using OpenAI
+    const prompt = `Create a tag for this quote: "${body.title}".`;
+
+    const completion = await openai.chat.completions.create({
+      model: 'gpt-4o-mini',
+      messages: [{ role: 'user', content: prompt }],
+      temperature: 0.7,
+      max_tokens: 100,
+    });
+
+    const tag = completion.choices[0].message.content.trim();
+
+    const existingTag = await knex('tags')
+      .whereRaw('LOWER(title) = ?', [tag.toLowerCase()])
+      .first();
+
+    let tagId;
+
+    if (existingTag) {
+      tagId = existingTag.id;
+    } else {
+      const newTag = await knex('tags').insert({
+        title: tag,
+      });
+      tagId = newTag.id;
+    }
+
     const [quoteId] = await knex('quotes').insert({
       title: body.title,
       description: body.description,
@@ -506,9 +538,15 @@ const createQuote = async (token, body) => {
       user_id: body.user_id,
     });
 
+    const [insertedQuoteToTag] = await knex('tagsQuotes').insert({
+      quote_id: quoteId,
+      tag_id: tagId,
+    });
+
     return {
       successful: true,
       quoteId,
+      insertedQuoteToTag,
     };
   } catch (error) {
     return error.message;
