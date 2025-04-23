@@ -523,7 +523,7 @@ const createQuote = async (token, body) => {
       tagId = existingTag.id;
     } else {
       const [newTag] = await knex('tags').insert({
-        title: tag,
+        title: tag.toLowerCase(),
       });
       tagId = newTag;
     }
