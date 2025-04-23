@@ -565,7 +565,6 @@ export const Quotes = () => {
     700: 2,
     500: 1,
   };
-  console.log('apps', apps);
 
   return (
     <main>
