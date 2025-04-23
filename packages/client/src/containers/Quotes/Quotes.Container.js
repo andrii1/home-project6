@@ -153,7 +153,7 @@ export const Quotes = () => {
     const url = `${apiURL()}/quotes?page=${page}&column=${
       orderBy.column
     }&direction=${orderBy.direction}${
-      authorIdParam !== undefined ? `&filteredTopics=${authorIdParam}` : ''
+      authorIdParam !== undefined ? `&filteredAuthors=${authorIdParam}` : ''
     }${tagIdParam !== undefined ? `&tag=${tagIdParam}` : ''}${
       searchParam !== undefined ? `&search=${searchParam}` : ''
     }${
@@ -565,6 +565,7 @@ export const Quotes = () => {
     700: 2,
     500: 1,
   };
+  console.log('apps', apps);
 
   return (
     <main>
