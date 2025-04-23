@@ -502,7 +502,7 @@ const createQuote = async (token, body) => {
     }
 
     // Generate a short description using OpenAI
-    const prompt = `Create a tag for this quote: "${body.title}".`;
+    const prompt = `Create a tag for this quote: "${body.title}". Tag should be without hashtag, ideally one word, which describes the quote, but can be from more words if needed in context.`;
 
     const completion = await openai.chat.completions.create({
       model: 'gpt-4o-mini',
@@ -522,10 +522,10 @@ const createQuote = async (token, body) => {
     if (existingTag) {
       tagId = existingTag.id;
     } else {
-      const newTag = await knex('tags').insert({
+      const [newTag] = await knex('tags').insert({
         title: tag,
       });
-      tagId = newTag.id;
+      tagId = newTag;
     }
 
     const [quoteId] = await knex('quotes').insert({
