@@ -19,8 +19,12 @@ main {
   margin: 1rem 0 2rem 0;
 }
 
-.hero h1 {
-  margin-bottom: 0.3rem;
+header {
+  margin: 2rem auto;
+}
+
+header h1 {
+  margin: 0rem;
 }
 
 .hero form {
@@ -59,6 +63,10 @@ main {
 @media only screen and (max-width: 768px) {
   .container-cards.grid {
     grid-template-columns: repeat(1, 1fr);
+  }
+  header {
+    width: 90%;
+    margin: 2rem auto;
   }
 }
 

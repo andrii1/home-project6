@@ -47,7 +47,7 @@ export const Quotes = () => {
   const [filteredDetails, setFilteredDetails] = useState([]);
   const [filtersSubmitted, setFiltersSubmitted] = useState(false);
   const [showFiltersContainer, setShowFiltersContainer] = useState(false);
-  const [showTopicsContainer, setShowTopicsContainer] = useState(false);
+  const [showAuthorsContainer, setShowAuthorsContainer] = useState(false);
   const [showTagsContainer, setShowTagsContainer] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [listView, setListView] = useState(false);
@@ -611,9 +611,9 @@ export const Quotes = () => {
         <meta name="description" content={pageDescription} />
       </Helmet>
       {/* <div className="hero"></div> */}
-      <div className="hero">
-        <h1 className="hero-header">{headerTitle}</h1>
-      </div>
+      <header>
+        <h1>{headerTitle}</h1>
+      </header>
       <div className="tabs-group">{tabsGroup}</div>
       {activeTab === 'Authors' && (
         <section className="container-topics-desktop">
@@ -643,14 +643,20 @@ export const Quotes = () => {
         <Button
           secondary
           className="button-topics"
-          onClick={(event) => setShowTopicsContainer(!showTopicsContainer)}
+          onClick={(event) => {
+            setShowAuthorsContainer(!showAuthorsContainer);
+            setShowTagsContainer(false);
+          }}
           backgroundColor="#ffe5d9"
           label="Authors"
         />
         <Button
           secondary
           className="button-topics"
-          onClick={(event) => setShowTagsContainer(!showTagsContainer)}
+          onClick={(event) => {
+            setShowTagsContainer(!showTagsContainer);
+            setShowAuthorsContainer(false);
+          }}
           backgroundColor="#ffe5d9"
           label="Tags"
         />
@@ -682,7 +688,7 @@ export const Quotes = () => {
         </Button> */}
       </section>
       <section
-        className={`container-topics-mobile ${showTopicsContainer && 'show'}`}
+        className={`container-topics-mobile ${showAuthorsContainer && 'show'}`}
       >
         <Link to="/">
           <Button
