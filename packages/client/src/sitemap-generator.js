@@ -26,6 +26,12 @@ async function generateSitemap() {
     const authors = dataAuthors.sort((a, b) => a.id - b.id);
     const idMapAuthors = [];
 
+    /* Tags */
+    const responseTags = await fetch(`${REACT_APP_PROD_API_PATH}/tags`);
+    const dataTags = await responseTags.json();
+    const tags = dataTags.sort((a, b) => a.id - b.id);
+    const idMapTags = [];
+
     /* Blogs */
     const responseBlogs = await fetch(`${REACT_APP_PROD_API_PATH}/blogs`);
     const dataBlogs = await responseBlogs.json();
@@ -40,6 +46,10 @@ async function generateSitemap() {
       idMapAuthors.push({ authorIdParam: author.id });
     });
 
+    tags.forEach((tag) => {
+      idMapTags.push({ tagIdParam: tag.id });
+    });
+
     blogs.forEach((blog) => {
       idMapBlogs.push({ slugParam: blog.slug });
     });
@@ -47,6 +57,7 @@ async function generateSitemap() {
     const paramsConfig = {
       '/quotes/:id': idMap,
       '/quotes/author/:authorIdParam': idMapAuthors,
+      '/quotes/tag/:tagIdParam': idMapTags,
       '/blog/:slugParam': idMapBlogs,
     };
 

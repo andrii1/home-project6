@@ -75,8 +75,6 @@ const createAuthor = async (token, body) => {
 
     const description = completion.choices[0].message.content.trim();
 
-    console.log('Generated Description:', description);
-
     const [authorId] = await knex('authors').insert({
       full_name: body.full_name,
       description,
