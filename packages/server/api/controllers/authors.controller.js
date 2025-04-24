@@ -64,7 +64,7 @@ const createAuthor = async (token, body) => {
     }
 
     // Generate a short description using OpenAI
-    const prompt = `Write a short, engaging 5-6 sentences bio, with markdown for markdown-to-jsx if needed, for an author named "${body.full_name}".`;
+    const prompt = `Write a short, engaging 3-4 sentences bio, with markdown for markdown-to-jsx if needed, for an author named "${body.full_name}". Do not include "markdown" in the beginning.`;
 
     const completion = await openai.chat.completions.create({
       model: 'gpt-4o-mini',
@@ -74,6 +74,8 @@ const createAuthor = async (token, body) => {
     });
 
     const description = completion.choices[0].message.content.trim();
+
+    console.log('Generated Description:', description);
 
     const [authorId] = await knex('authors').insert({
       full_name: body.full_name,
