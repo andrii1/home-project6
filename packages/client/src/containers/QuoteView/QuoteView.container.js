@@ -314,14 +314,20 @@ export const QuoteView = () => {
     if (Object.keys(quote).length === 0) return;
 
     document.fonts.load('28px Norwester').then(() => {
+      const quoteText = getQuoteWithoutAuthor(quote.title).toUpperCase();
       const canvas = canvasRef.current;
       const ctx = canvas.getContext('2d');
-
+      const wordCount = quoteText.trim().split(/\s+/).length;
       const drawText = () => {
         ctx.fillStyle = fontColor;
         ctx.textAlign = 'center';
         ctx.textBaseline = 'top';
-        ctx.font = '400 28px Norwester';
+        if (wordCount < 30) {
+          ctx.font = "400 28px 'Norwester'";
+        } else {
+          ctx.font = "400 14px 'Norwester'";
+        }
+        // ctx.font = '400 28px Norwester';
 
         // Redraw background before drawing centered text
         if (!selectedImage) {
@@ -333,6 +339,11 @@ export const QuoteView = () => {
         const ctx2 = canvas2.getContext('2d');
 
         ctx2.fillStyle = fontColor;
+        if (wordCount < 30) {
+          ctx2.font = "400 28px 'Norwester'";
+        } else {
+          ctx2.font = "400 14px 'Norwester'";
+        }
         ctx2.font = '400 28px Norwester';
 
         wrapText(ctx2, quoteText, width / 2, centerY, width * 0.9);
@@ -378,7 +389,7 @@ export const QuoteView = () => {
         return lines.length;
       };
 
-      const quoteText = getQuoteWithoutAuthor(quote.title).toUpperCase();
+      // const quoteText = getQuoteWithoutAuthor(quote.title).toUpperCase();
 
       const linesCount = wrapText(
         ctx,
