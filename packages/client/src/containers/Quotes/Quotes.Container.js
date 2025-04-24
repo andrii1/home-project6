@@ -27,6 +27,8 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { SimpleToggle } from '../../components/SimpleToggle/SimpleToggle.component';
 
+const tabs = ['Authors', 'Tags'];
+
 export const Quotes = () => {
   const { user } = useUserContext();
   const location = useLocation();
@@ -51,6 +53,7 @@ export const Quotes = () => {
   const [page, setPage] = useState(0);
   const [counter, setCounter] = useState(0);
   const [apps, setApps] = useState({});
+  const [activeTab, setActiveTab] = useState('Authors');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [orderBy, setOrderBy] = useState({
@@ -462,6 +465,25 @@ export const Quotes = () => {
     );
   });
 
+  const tagsList = tags.map((tag) => {
+    if (tagIdParam) {
+      return (
+        <Link to={`/quotes/tag/${tag.id}`}>
+          <Button
+            primary={tag.id.toString() === tagIdParam.toString() && true}
+            secondary={tag.id !== tagIdParam && true}
+            label={tag.title}
+          />
+        </Link>
+      );
+    }
+    return (
+      <Link to={`/quotes/tag/${tag.id}`}>
+        <Button secondary label={tag.title} />
+      </Link>
+    );
+  });
+
   // let sortOptions;
   // if (
   //   !appIdParam &&
@@ -567,6 +589,20 @@ export const Quotes = () => {
     500: 1,
   };
 
+  const tabsGroup = tabs.map((tab) => {
+    return (
+      <Button
+        tertiary={activeTab === tab}
+        secondary={activeTab !== tab}
+        label={tab}
+        className="tab"
+        onClick={() => {
+          setActiveTab(tab);
+        }}
+      />
+    );
+  });
+
   return (
     <main>
       <Helmet>
@@ -577,16 +613,31 @@ export const Quotes = () => {
       <div className="hero">
         <h1 className="hero-header">{headerTitle}</h1>
       </div>
-      <section className="container-topics-desktop">
-        <Link to="/">
-          <Button
-            primary={!authorIdParam}
-            secondary={authorIdParam}
-            label="All authors"
-          />
-        </Link>
-        {authorsList}
-      </section>
+      <div className="tabs-group">{tabsGroup}</div>
+      {activeTab === 'Authors' && (
+        <section className="container-topics-desktop">
+          <Link to="/">
+            <Button
+              primary={!authorIdParam}
+              secondary={authorIdParam}
+              label="All authors"
+            />
+          </Link>
+          {authorsList}
+        </section>
+      )}
+      {activeTab === 'Tags' && (
+        <section className="container-topics-desktop">
+          <Link to="/">
+            <Button
+              primary={!tagIdParam}
+              secondary={tagIdParam}
+              label="All tags"
+            />
+          </Link>
+          {tagsList}
+        </section>
+      )}
       <section className="container-filters">
         <Button
           secondary

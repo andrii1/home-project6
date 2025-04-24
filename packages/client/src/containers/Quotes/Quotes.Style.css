@@ -154,12 +154,24 @@ main {
   /* padding-right: 2rem; */
   margin: 2rem 0rem;
 }
+
+.tabs-group {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
 @media only screen and (max-width: 768px) {
   .container-filters {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
     padding: 0;
+  }
+
+  .tabs-group {
+    display: none !important;
   }
 }
 .container-scroll {
