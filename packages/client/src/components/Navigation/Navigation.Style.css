@@ -201,6 +201,7 @@ ul li,
   .search-icon.mobile {
     position: relative;
     padding: 0rem;
+    padding-bottom: 0.3rem;
   }
 
   /* mobile search */

@@ -16,6 +16,7 @@ import {
   faBars,
   faXmark,
 } from '@fortawesome/free-solid-svg-icons';
+import { House } from 'lucide-react';
 import Modal from '../Modal/Modal.Component';
 import { ProfileImage } from '../ProfileImage/ProfileImage.Component';
 import { fetchQuotes, fetchAuthors, fetchBlogs } from '../../utils/http';
@@ -219,6 +220,11 @@ export const Navigation = () => {
               {/* <li>
               <FontAwesomeIcon className="search-icon" icon={faSearch} />
             </li> */}
+              <li>
+                <Link to="../../">
+                  <House size={32} />
+                </Link>
+              </li>
               <li>
                 <form className="search-form-mobile">
                   <label>
