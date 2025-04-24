@@ -109,11 +109,16 @@ main {
   padding: 1rem;
 }
 
-.container-topics {
+.container-topics-desktop,
+.container-topics-mobile {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   gap: 0.5rem;
+}
+
+.container-topics-mobile {
+  display: none;
 }
 
 .button-topics {
@@ -121,12 +126,18 @@ main {
 }
 
 @media only screen and (max-width: 768px) {
-  .container-topics {
+  .container-topics-mobile {
     display: none;
   }
-  .container-topics.show {
+  .container-topics-mobile.show {
     display: flex;
     animation: slide-in 500ms;
+    width: 90%;
+    margin: 0 auto 2rem auto;
+  }
+
+  .container-topics-desktop {
+    display: none;
   }
 
   .button-topics {

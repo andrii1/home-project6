@@ -577,7 +577,7 @@ export const Quotes = () => {
       <div className="hero">
         <h1 className="hero-header">{headerTitle}</h1>
       </div>
-      <section className={`container-topics ${showTopicsContainer && 'show'}`}>
+      <section className="container-topics-desktop">
         <Link to="/">
           <Button
             primary={!authorIdParam}
@@ -593,8 +593,7 @@ export const Quotes = () => {
           className="button-topics"
           onClick={(event) => setShowTopicsContainer(!showTopicsContainer)}
           backgroundColor="#ffe5d9"
-          label="Topics"
-          icon={<FontAwesomeIcon className="filter-icon" icon={faBookOpen} />}
+          label="Authors"
         />
         <DropDownView
           selectedOptionValue={sortOrder}
@@ -604,13 +603,13 @@ export const Quotes = () => {
           showFilterIcon={false}
         />
 
-        <Button
+        {/* <Button
           secondary
           onClick={(event) => setShowFiltersContainer(!showFiltersContainer)}
           backgroundColor="#ffe5d9"
           label="Filters"
           icon={<FontAwesomeIcon className="filter-icon" icon={faFilter} />}
-        />
+        /> */}
         <SimpleToggle toggle={toggleTheme} theme={quoteTheme} />
         {/* <Button
           secondary
@@ -622,6 +621,18 @@ export const Quotes = () => {
             <FontAwesomeIcon icon={faList} />
           </div>
         </Button> */}
+      </section>
+      <section
+        className={`container-topics-mobile ${showTopicsContainer && 'show'}`}
+      >
+        <Link to="/">
+          <Button
+            primary={!authorIdParam}
+            secondary={authorIdParam}
+            label="All authors"
+          />
+        </Link>
+        {authorsList}
       </section>
       <section
         className={`container-details-section ${
