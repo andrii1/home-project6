@@ -48,6 +48,7 @@ export const Quotes = () => {
   const [filtersSubmitted, setFiltersSubmitted] = useState(false);
   const [showFiltersContainer, setShowFiltersContainer] = useState(false);
   const [showTopicsContainer, setShowTopicsContainer] = useState(false);
+  const [showTagsContainer, setShowTagsContainer] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [listView, setListView] = useState(false);
   const [page, setPage] = useState(0);
@@ -472,14 +473,14 @@ export const Quotes = () => {
           <Button
             primary={tag.id.toString() === tagIdParam.toString() && true}
             secondary={tag.id !== tagIdParam && true}
-            label={tag.title}
+            label={capitalize(tag.title)}
           />
         </Link>
       );
     }
     return (
       <Link to={`/quotes/tag/${tag.id}`}>
-        <Button secondary label={tag.title} />
+        <Button secondary label={capitalize(tag.title)} />
       </Link>
     );
   });
@@ -646,6 +647,13 @@ export const Quotes = () => {
           backgroundColor="#ffe5d9"
           label="Authors"
         />
+        <Button
+          secondary
+          className="button-topics"
+          onClick={(event) => setShowTagsContainer(!showTagsContainer)}
+          backgroundColor="#ffe5d9"
+          label="Tags"
+        />
         <DropDownView
           selectedOptionValue={sortOrder}
           className="no-line-height"
@@ -684,6 +692,18 @@ export const Quotes = () => {
           />
         </Link>
         {authorsList}
+      </section>
+      <section
+        className={`container-topics-mobile ${showTagsContainer && 'show'}`}
+      >
+        <Link to="/">
+          <Button
+            primary={!tagIdParam}
+            secondary={tagIdParam}
+            label="All tags"
+          />
+        </Link>
+        {tagsList}
       </section>
       <section
         className={`container-details-section ${
