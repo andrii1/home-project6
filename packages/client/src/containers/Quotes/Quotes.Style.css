@@ -151,7 +151,7 @@ main {
   justify-content: right;
   align-items: center;
   gap: 0.5rem;
-  padding-right: 2rem;
+  /* padding-right: 2rem; */
   margin: 2rem 0rem;
 }
 @media only screen and (max-width: 768px) {
@@ -235,7 +235,18 @@ main {
   gap: 0.2rem;
   align-items: center;
 }
+@media only screen and (min-width: 993px) and (max-width: 1350px) {
+  .container-cards {
+    width: 90%;
+    margin: 2rem auto;
+  }
 
+  .container-filters {
+    padding-right: 0rem;
+    margin: 2rem auto;
+    width: 90%;
+  }
+}
 @media only screen and (max-width: 992px) {
   .hero {
     display: none;
