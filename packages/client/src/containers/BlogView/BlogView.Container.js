@@ -109,7 +109,7 @@ End of test.
     <>
       <Helmet>
         <title>{blog.title}</title>
-        <meta name="description" content="motivately blog" />
+        <meta name="description" content={blog.summary || 'motivately blog'} />
       </Helmet>
       <div className="container-single-blog">
         <header>

@@ -502,7 +502,7 @@ const createQuote = async (token, body) => {
     }
 
     // Generate a short description using OpenAI
-    const prompt = `Create a tag for this quote: "${body.title}". Tag should be without hashtag, ideally one word, which describes the quote, but can be from more words if needed in context.`;
+    const prompt = `Create 1-3 tags for this quote: "${body.title}". Each tag should be without hashtag, ideally one word, which describes the quote, but can be from more words if needed in context. Tags should be separated by comma.`;
 
     const completion = await openai.chat.completions.create({
       model: 'gpt-4o-mini',
@@ -511,22 +511,23 @@ const createQuote = async (token, body) => {
       max_tokens: 100,
     });
 
-    const tag = completion.choices[0].message.content.trim();
+    const tagsString = completion.choices[0].message.content.trim();
 
-    const existingTag = await knex('tags')
-      .whereRaw('LOWER(title) = ?', [tag.toLowerCase()])
-      .first();
+    const tagsArray = tagsString.split(',').map((tag) => tag.trim());
 
-    let tagId;
+    const tagIds = await Promise.all(
+      tagsArray.map(async (tag) => {
+        const existingTag = await knex('tags')
+          .whereRaw('LOWER(title) = ?', [tag.toLowerCase()])
+          .first();
 
-    if (existingTag) {
-      tagId = existingTag.id;
-    } else {
-      const [newTag] = await knex('tags').insert({
-        title: tag,
-      });
-      tagId = newTag;
-    }
+        if (existingTag) {
+          return existingTag.id;
+        }
+        const [tagId] = await knex('tags').insert({ title: tag }); // just use the ID
+        return tagId;
+      }),
+    );
 
     const [quoteId] = await knex('quotes').insert({
       title: body.title,
@@ -538,15 +539,19 @@ const createQuote = async (token, body) => {
       user_id: body.user_id,
     });
 
-    const [insertedQuoteToTag] = await knex('tagsQuotes').insert({
-      quote_id: quoteId,
-      tag_id: tagId,
-    });
+    const insertedQuoteToTags = await Promise.all(
+      tagIds.map((tagId) =>
+        knex('tagsQuotes').insert({
+          quote_id: quoteId,
+          tag_id: tagId,
+        }),
+      ),
+    );
 
     return {
       successful: true,
       quoteId,
-      insertedQuoteToTag,
+      insertedQuoteToTags,
     };
   } catch (error) {
     return error.message;
