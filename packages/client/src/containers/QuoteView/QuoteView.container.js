@@ -732,7 +732,7 @@ export const QuoteView = () => {
                       <>
                         <Link
                           className="underline"
-                          to={`../quotes/tag/${tag.id}`}
+                          to={`../quotes/tag/${tag.slug}`}
                         >
                           {tag.title.toLowerCase()}
                         </Link>
