@@ -4,6 +4,7 @@ Can be deleted as soon as the first real controller is added. */
 const { shouldUseFlatConfig } = require('eslint/use-at-your-own-risk');
 const knex = require('../../config/db');
 const HttpError = require('../lib/utils/http-error');
+const generateSlug = require('../lib/utils/generateSlug');
 const moment = require('moment-timezone');
 const getOppositeOrderDirection = require('../lib/utils/getOppositeOrderDirection');
 // eslint-disable-next-line no-unused-vars
@@ -12,17 +13,6 @@ const OpenAI = require('openai');
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY, // make sure this is set in your .env
 });
-
-// Helper: generate a clean, 200-character slug
-function generateSlug(title) {
-  return title
-    .toLowerCase()
-    .trim()
-    .replace(/[^a-z0-9\s-]/g, '') // remove special characters
-    .replace(/\s+/g, '-') // replace spaces with hyphens
-    .replace(/-+/g, '-') // remove multiple hyphens
-    .slice(0, 200); // limit to 200 chars
-}
 
 // Helper: ensure the slug is unique by checking the DB
 async function ensureUniqueSlug(baseSlug) {

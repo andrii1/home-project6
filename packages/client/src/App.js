@@ -43,7 +43,11 @@ function App() {
               path="/quotes/author/:authorIdParam"
               element={<Quotes />}
             />
-            <Route exact path="/quotes/tag/:tagIdParam" element={<Quotes />} />
+            <Route
+              exact
+              path="/quotes/tag/:tagSlugParam"
+              element={<Quotes />}
+            />
             <Route
               exact
               path="/quotes/search/:searchParam"

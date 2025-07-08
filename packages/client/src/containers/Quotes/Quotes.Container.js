@@ -32,7 +32,7 @@ const tabs = ['Authors', 'Tags'];
 export const Quotes = () => {
   const { user } = useUserContext();
   const location = useLocation();
-  const { authorIdParam, tagIdParam, searchParam } = useParams();
+  const { authorIdParam, tagSlugParam, searchParam } = useParams();
   const [searchTerms, setSearchTerms] = useState();
   const [search, setSearch] = useState('');
   const [sortOrder, setSortOrder] = useState('Recent');
@@ -96,7 +96,7 @@ export const Quotes = () => {
     const url = `${apiURL()}/quotes?page=0&column=${orderBy.column}&direction=${
       orderBy.direction
     }${authorIdParam !== undefined ? `&filteredAuthors=${authorIdParam}` : ''}${
-      tagIdParam !== undefined ? `&tag=${tagIdParam}` : ''
+      tagSlugParam !== undefined ? `&tag=${tagSlugParam}` : ''
     }${searchParam !== undefined ? `&search=${searchParam}` : ''}${
       filtersSubmitted && filteredPricing.length > 0
         ? `&filteredPricing=${encodeURIComponent(filteredPricing)}`
@@ -140,7 +140,7 @@ export const Quotes = () => {
 
     fetchData();
   }, [
-    tagIdParam,
+    tagSlugParam,
     authorIdParam,
     orderBy.column,
     orderBy.direction,
@@ -158,7 +158,7 @@ export const Quotes = () => {
       orderBy.column
     }&direction=${orderBy.direction}${
       authorIdParam !== undefined ? `&filteredAuthors=${authorIdParam}` : ''
-    }${tagIdParam !== undefined ? `&tag=${tagIdParam}` : ''}${
+    }${tagSlugParam !== undefined ? `&tag=${tagSlugParam}` : ''}${
       searchParam !== undefined ? `&search=${searchParam}` : ''
     }${
       filtersSubmitted && filteredPricing.length > 0
@@ -467,19 +467,19 @@ export const Quotes = () => {
   });
 
   const tagsList = tags.map((tag) => {
-    if (tagIdParam) {
+    if (tagSlugParam) {
       return (
-        <Link to={`/quotes/tag/${tag.id}`}>
+        <Link to={`/quotes/tag/${tag.slug}`}>
           <Button
-            primary={tag.id.toString() === tagIdParam.toString() && true}
-            secondary={tag.id !== tagIdParam && true}
+            primary={tag.slug.toString() === tagSlugParam.toString() && true}
+            secondary={tag.slug !== tagSlugParam && true}
             label={capitalize(tag.title)}
           />
         </Link>
       );
     }
     return (
-      <Link to={`/quotes/tag/${tag.id}`}>
+      <Link to={`/quotes/tag/${tag.slug}`}>
         <Button secondary label={capitalize(tag.title)} />
       </Link>
     );
@@ -527,8 +527,8 @@ export const Quotes = () => {
       };
     }
 
-    if (tagIdParam) {
-      const tagTitle = tags.find((tag) => tag.id === parseInt(tagIdParam, 10));
+    if (tagSlugParam) {
+      const tagTitle = tags.find((tag) => tag.slug === tagSlugParam);
       const title = tagTitle?.title || 'this topic';
       const capitalizedTitle = capitalize(title);
       return {
@@ -631,8 +631,8 @@ export const Quotes = () => {
         <section className="container-topics-desktop">
           <Link to="/">
             <Button
-              primary={!tagIdParam}
-              secondary={tagIdParam}
+              primary={!tagSlugParam}
+              secondary={tagSlugParam}
               label="All tags"
             />
           </Link>
@@ -704,8 +704,8 @@ export const Quotes = () => {
       >
         <Link to="/">
           <Button
-            primary={!tagIdParam}
-            secondary={tagIdParam}
+            primary={!tagSlugParam}
+            secondary={tagSlugParam}
             label="All tags"
           />
         </Link>

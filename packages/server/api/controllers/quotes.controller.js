@@ -4,6 +4,7 @@ Can be deleted as soon as the first real controller is added. */
 const knex = require('../../config/db');
 const HttpError = require('../lib/utils/http-error');
 const OpenAI = require('openai');
+const generateSlug = require('../lib/utils/generateSlug');
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY, // make sure this is set in your .env
@@ -18,6 +19,28 @@ const getOppositeOrderDirection = (direction) => {
   }
   return lastItemDirection;
 };
+
+// Helper: ensure the slug is unique by checking the DB
+async function ensureUniqueSlug(baseSlug) {
+  let slug = baseSlug;
+  let counter = 1;
+
+  // eslint-disable-next-line no-await-in-loop
+  while (await slugExists(slug)) {
+    const suffix = `-${counter}`;
+    const maxBaseLength = 200 - suffix.length;
+    slug = `${baseSlug.slice(0, maxBaseLength)}${suffix}`;
+    counter += 1;
+  }
+
+  return slug;
+}
+
+// Helper: check if a slug already exists in the database
+async function slugExists(slug) {
+  const existing = await knex('tags').where({ slug }).first();
+  return !!existing;
+}
 
 const getQuotesAll = async () => {
   try {
@@ -354,12 +377,13 @@ const getQuotesByTag = async (page, column, direction, tag) => {
           'authors.full_name as authorFullName',
           'authors.id as authorId',
           'tags.id as tagId',
+          'tags.slug as tagSlug',
           'tags.title as tagTitle',
         )
         .join('authors', 'quotes.author_id', '=', 'authors.id')
         .join('tagsQuotes', 'tagsQuotes.quote_id', '=', 'quotes.id')
         .join('tags', 'tags.id', '=', 'tagsQuotes.tag_id')
-        .where('tags.id', '=', `${tag}`);
+        .where('tags.slug', '=', `${tag}`);
     const lastItem = await getModel()
       .orderBy(column, lastItemDirection)
       .limit(1);
@@ -526,7 +550,12 @@ const createQuote = async (token, body) => {
         if (existingTag) {
           return existingTag.id;
         }
-        const [tagId] = await knex('tags').insert({ title: tag }); // just use the ID
+        const baseSlug = generateSlug(tag);
+        const uniqueSlug = await ensureUniqueSlug(baseSlug);
+        const [tagId] = await knex('tags').insert({
+          title: tag,
+          slug: uniqueSlug,
+        }); // just use the ID
         return tagId;
       }),
     );
