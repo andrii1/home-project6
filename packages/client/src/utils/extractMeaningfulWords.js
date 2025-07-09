@@ -41,6 +41,7 @@ export const extractMeaningfulWords = (quote) => {
     'might',
     'must',
     'shall',
+    'it',
   ]);
 
   const words = quote
