@@ -21,7 +21,7 @@ function cleanOpenAIJsonReply(reply) {
 async function scrapeQuotesChatGpt() {
   // Generate a short description using OpenAI
 
-  const prompt = `Create 10 quotes in this format [
+  const prompt = `Create 50 quotes in this format [
   "Do what you can, with what you have, where you are. - Theodore Roosevelt",
   "You are never too old to set another goal or to dream a new dream. - C.S. Lewis",
   "Everything you can imagine is real. - Pablo Picasso",

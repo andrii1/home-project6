@@ -8,7 +8,7 @@ const url = 'https://thequoteshub.com/api/';
 
 async function scrapeQuotesSite() {
   const quotes = [];
-  for (let i = 0; i < 10; i += 1) {
+  for (let i = 0; i < 50; i += 1) {
     try {
       const response = await fetch(url);
       const data = await response.json();
