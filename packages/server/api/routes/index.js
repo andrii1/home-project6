@@ -1,5 +1,10 @@
 const express = require('express');
 
+if (typeof fetch === 'undefined') {
+  global.fetch = (...args) =>
+    import('node-fetch').then(({ default: fetch }) => fetch(...args));
+}
+
 const router = express.Router();
 
 const exampleResources = require('./exampleResources.router');
