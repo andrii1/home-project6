@@ -446,44 +446,50 @@ export const Quotes = () => {
     </Link>
   ));
 
-  const authorsList = authors.map((author) => {
-    if (authorIdParam) {
+  const authorsList = authors
+    .sort((a, b) => a.fullName?.localeCompare(b.fullName))
+    .map((author) => {
+      if (authorIdParam) {
+        return (
+          <Link to={`/quotes/author/${author.id}`}>
+            <Button
+              primary={
+                author.id.toString() === authorIdParam.toString() && true
+              }
+              secondary={author.id !== authorIdParam && true}
+              label={author.fullName}
+            />
+          </Link>
+        );
+      }
+
       return (
         <Link to={`/quotes/author/${author.id}`}>
-          <Button
-            primary={author.id.toString() === authorIdParam.toString() && true}
-            secondary={author.id !== authorIdParam && true}
-            label={author.fullName}
-          />
+          <Button secondary label={author.fullName} />
         </Link>
       );
-    }
+    });
 
-    return (
-      <Link to={`/quotes/author/${author.id}`}>
-        <Button secondary label={author.fullName} />
-      </Link>
-    );
-  });
-
-  const tagsList = tags.map((tag) => {
-    if (tagSlugParam) {
+  const tagsList = tags
+    .sort((a, b) => a.title?.localeCompare(b.title))
+    .map((tag) => {
+      if (tagSlugParam) {
+        return (
+          <Link to={`/quotes/tag/${tag.slug}`}>
+            <Button
+              primary={tag.slug.toString() === tagSlugParam.toString() && true}
+              secondary={tag.slug !== tagSlugParam && true}
+              label={capitalize(tag.title)}
+            />
+          </Link>
+        );
+      }
       return (
         <Link to={`/quotes/tag/${tag.slug}`}>
-          <Button
-            primary={tag.slug.toString() === tagSlugParam.toString() && true}
-            secondary={tag.slug !== tagSlugParam && true}
-            label={capitalize(tag.title)}
-          />
+          <Button secondary label={capitalize(tag.title)} />
         </Link>
       );
-    }
-    return (
-      <Link to={`/quotes/tag/${tag.slug}`}>
-        <Button secondary label={capitalize(tag.title)} />
-      </Link>
-    );
-  });
+    });
 
   // let sortOptions;
   // if (
