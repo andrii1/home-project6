@@ -56,7 +56,7 @@ export const AllAuthors = () => {
     const obj = authors
       ?.sort((a, b) => a.fullName?.localeCompare(b.fullName))
       .reduce((acc, c) => {
-        const letter = c?.fullName[0];
+        const letter = c?.fullName[0]?.toUpperCase();
         acc[letter] = (acc[letter] || []).concat({
           id: c.id,
           title: c.fullName,

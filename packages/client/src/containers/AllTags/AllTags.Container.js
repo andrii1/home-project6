@@ -26,7 +26,7 @@ export const AllTags = () => {
     const obj = tags
       ?.sort((a, b) => a.title?.localeCompare(b.title))
       .reduce((acc, c) => {
-        const letter = c?.title[0];
+        const letter = c?.title[0]?.toUpperCase();
         acc[letter] = (acc[letter] || []).concat({
           id: c.id,
           title: c.title,

@@ -702,9 +702,6 @@ export const Quotes = () => {
     sortOptions = ['Recent', 'A-Z', 'Z-A'];
   }
 
-  console.log(sortOptions);
-  console.log(quotesTrending);
-
   const pricingList = pricingOptionsChecked.map((item) => (
     <li key={item}>
       <input
