@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import React, { useEffect, useState, useCallback, useRef } from 'react';
 import { Link, useParams, useLocation } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
@@ -700,6 +701,9 @@ export const Quotes = () => {
   } else {
     sortOptions = ['Recent', 'A-Z', 'Z-A'];
   }
+
+  console.log(sortOptions);
+  console.log(quotesTrending);
 
   const pricingList = pricingOptionsChecked.map((item) => (
     <li key={item}>
