@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { Button } from '../Button/Button.component';
+import { capitalize } from '../../utils/capitalize';
 
 import './CardCategories.styles.css';
 
@@ -13,7 +14,7 @@ export const CardCategories = ({ title, topics, slug, itemKey }) => {
       <div className="topics-div">
         {topics.map((topic) => (
           <Link to={`/quotes/${slug}/${topic[itemKey]}`}>
-            <Button secondary label={topic.title} />
+            <Button secondary label={capitalize(topic.title)} />
           </Link>
         ))}
       </div>
