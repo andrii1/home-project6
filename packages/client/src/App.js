@@ -21,6 +21,7 @@ import { Navigation } from './components/Navigation/Navigation.component';
 import { Footer } from './components/Footer/Footer.component';
 import { UserProvider } from './userContext';
 import { AllAuthors } from './containers/AllAuthors/AllAuthors.Container';
+import { AllTags } from './containers/AllTags/AllTags.Container';
 import { Blog } from './containers/Blog/Blog.Container';
 import { BlogView } from './containers/BlogView/BlogView.Container';
 
@@ -59,6 +60,7 @@ function App() {
               element={<Apps />}
             /> */}
             <Route path="/authors" element={<AllAuthors />} />
+            <Route path="/tags" element={<AllTags />} />
             <Route exact path="/faq" element={<Faq />} />
             <Route exact path="/quotes/new" element={<Submit />} />
             <Route exact path="/success" element={<StripeSuccess />} />

@@ -75,16 +75,12 @@ export const AllAuthors = () => {
         <CardCategories
           title={item.letter}
           topics={item.appTitles}
-          slug="app"
+          slug="author"
+          itemKey="id"
         />
       );
     return (
-      <CardCategories
-        title={item.fullName}
-        url={item.id}
-        topics={item.apps}
-        slug="app"
-      />
+      <CardCategories title={item.fullName} topics={item.apps} slug="author" />
     );
   });
 

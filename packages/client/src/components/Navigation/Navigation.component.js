@@ -186,6 +186,15 @@ export const Navigation = () => {
                   </li>
                   <li>
                     <NavLink
+                      to="/tags"
+                      onClick={toggleHamburger}
+                      className="nav-link"
+                    >
+                      Tags
+                    </NavLink>
+                  </li>
+                  <li>
+                    <NavLink
                       to="/blog"
                       onClick={toggleHamburger}
                       className="nav-link"
@@ -335,6 +344,11 @@ export const Navigation = () => {
             <li className="hide-on-tablet">
               <NavLink to="/authors" className="nav-link">
                 Authors
+              </NavLink>
+            </li>
+            <li className="hide-on-tablet">
+              <NavLink to="/tags" className="nav-link">
+                Tags
               </NavLink>
             </li>
             <li>

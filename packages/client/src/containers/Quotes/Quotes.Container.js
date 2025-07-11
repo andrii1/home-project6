@@ -205,8 +205,6 @@ export const Quotes = () => {
     orderByTrending,
   ]);
 
-  console.log('trending', quotesTrending);
-
   const fetchApps = async () => {
     setIsLoading(true);
     setError(null);

@@ -5,14 +5,14 @@ import { Button } from '../Button/Button.component';
 
 import './CardCategories.styles.css';
 
-export const CardCategories = ({ title, url, topics }) => {
+export const CardCategories = ({ title, topics, slug, itemKey }) => {
   return (
     <div className="card-category-new">
       <h2>{title}</h2>
 
       <div className="topics-div">
         {topics.map((topic) => (
-          <Link to={`/quotes/author/${topic.id}`}>
+          <Link to={`/quotes/${slug}/${topic[itemKey]}`}>
             <Button secondary label={topic.title} />
           </Link>
         ))}
@@ -23,12 +23,14 @@ export const CardCategories = ({ title, url, topics }) => {
 
 CardCategories.propTypes = {
   title: PropTypes.string,
-  url: PropTypes.shape,
+  itemKey: PropTypes.string,
+  slug: PropTypes.string,
   topics: PropTypes.shape,
 };
 
 CardCategories.defaultProps = {
   title: null,
-  url: null,
+  itemKey: null,
+  slug: null,
   topics: null,
 };
