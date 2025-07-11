@@ -80,8 +80,11 @@ export const Quotes = () => {
   const { favorites, addFavorite, handleDeleteBookmarks } = useFavorites(user);
   const { fetchedData: authors } = useFetch(fetchAuthors, []);
   const { fetchedData: tags } = useFetch(fetchTags, []);
-  const [trendingAuthors, setTrendingAuthors] = useState([]);
-  const [trendingTags, setTrendingTags] = useState([]);
+  const [authorsTrending, setAuthorsTrending] = useState([]);
+  const [tagsTrending, setTagsTrending] = useState([]);
+  const [quotesTrending, setQuotesTrending] = useState([]);
+  const { pathname } = location;
+  const [orderByTrending, setOrderByTrending] = useState(false);
 
   const toggleModal = () => {
     setOpenModal(false);
@@ -140,7 +143,55 @@ export const Quotes = () => {
       setIsLoading(false);
     }
 
-    fetchData();
+    async function fetchDataTrending() {
+      const response = await fetch(`${apiURL()}/quotes`);
+      const allQuotes = await response.json();
+      const responseAnalytics = await fetch(`${apiURL()}/analytics`);
+      const quotesAnalytics = await responseAnalytics.json();
+
+      const quotesWithAnalytics = allQuotes
+        .map((quote) => ({
+          ...quote,
+          activeUsers: quotesAnalytics?.some(
+            (e) => e.quoteId.toString() === quote.id.toString(),
+          )
+            ? quotesAnalytics
+                .filter(
+                  (item) => item.dealId.toString() === quote.id.toString(),
+                )
+                .map((item) => item.activeUsers)
+                .toString()
+            : null,
+        }))
+        .filter((item) => item.activeUsers)
+        .sort((a, b) => {
+          return b.activeUsers - a.activeUsers;
+        });
+      const lastItem = quotesWithAnalytics.slice(-1)[0];
+
+      setQuotesTrending({ quotes: quotesWithAnalytics, lastItem });
+
+      const quotesWithPage = quotesWithAnalytics.slice(0, 10);
+
+      let hasMore = true;
+      if (quotesWithPage.some((item) => item.id === lastItem.id)) {
+        hasMore = false;
+      }
+
+      setApps({
+        data: quotesWithPage,
+        lastItem,
+        hasMore,
+      });
+      setPage((prevPage) => prevPage + 1);
+      setLoading(false);
+    }
+
+    if (pathname === '/' && orderByTrending) {
+      fetchDataTrending();
+    } else {
+      fetchData();
+    }
   }, [
     tagSlugParam,
     authorIdParam,
@@ -150,7 +201,11 @@ export const Quotes = () => {
     filteredPricing,
     filtersSubmitted,
     searchParam,
+    pathname,
+    orderByTrending,
   ]);
+
+  console.log('trending', quotesTrending);
 
   const fetchApps = async () => {
     setIsLoading(true);
@@ -207,6 +262,31 @@ export const Quotes = () => {
     });
 
     setPage((prev) => prev + 1);
+  };
+
+  const fetchAppsTrending = async () => {
+    setLoading(true);
+    setError(null);
+
+    const quotesWithPage = quotesTrending.quotes.slice(
+      page * 10,
+      page * 10 + 10,
+    );
+    const { lastItem } = quotesTrending;
+
+    let hasMore = true;
+    if (quotesWithPage.some((item) => item.id === lastItem.id)) {
+      hasMore = false;
+    }
+
+    setApps((prevItems) => {
+      return {
+        data: [...prevItems.data, ...quotesWithPage],
+        lastItem,
+        hasMore,
+      };
+    });
+    setPage((prevPage) => prevPage + 1);
   };
 
   // const fetchApps = useCallback(async () => {
@@ -304,7 +384,7 @@ export const Quotes = () => {
         .sort((a, b) => {
           return b.activeUsers - a.activeUsers;
         });
-      setTrendingAuthors(result);
+      setAuthorsTrending(result);
     }
 
     fetchTrendingAuthors();
@@ -331,7 +411,7 @@ export const Quotes = () => {
         .sort((a, b) => {
           return b.activeUsers - a.activeUsers;
         });
-      setTrendingTags(result);
+      setTagsTrending(result);
     }
 
     fetchTrendingTags();
@@ -504,7 +584,7 @@ export const Quotes = () => {
     </Link>
   ));
 
-  const authorsList = trendingAuthors
+  const authorsList = authorsTrending
     .sort((a, b) => a.fullName?.localeCompare(b.fullName))
     .map((author) => {
       if (authorIdParam) {
@@ -528,7 +608,7 @@ export const Quotes = () => {
       );
     });
 
-  const tagsList = trendingTags
+  const tagsList = tagsTrending
     .sort((a, b) => a.title?.localeCompare(b.title))
     .map((tag) => {
       if (tagSlugParam) {
@@ -549,33 +629,28 @@ export const Quotes = () => {
       );
     });
 
-  // let sortOptions;
-  // if (
-  //   !appIdParam &&
-  //   !categoryIdParam &&
-  //   !searchTermIdParam &&
-  //   !topicIdParam
-  // ) {
-  //   sortOptions = ['Recent', 'Trending', 'A-Z', 'Z-A'];
-  // } else {
-  //   sortOptions = ['Recent', 'A-Z', 'Z-A'];
-  // }
-
   useEffect(() => {
     let column;
     let direction;
-    if (sortOrder === 'A-Z') {
+    if (sortOrder === 'Trending') {
+      setOrderByTrending(true);
+      setOrderBy({ column: 'id', direction: 'desc' });
+    } else if (sortOrder === 'A-Z') {
       column = 'title';
       direction = 'asc';
+      setOrderByTrending(false);
+      setOrderBy({ column, direction });
     } else if (sortOrder === 'Z-A') {
       column = 'title';
       direction = 'desc';
-    } else {
+      setOrderByTrending(false);
+      setOrderBy({ column, direction });
+    } else if (sortOrder === 'Recent') {
       column = 'id';
       direction = 'desc';
+      setOrderByTrending(false);
+      setOrderBy({ column, direction });
     }
-
-    setOrderBy({ column, direction });
   }, [sortOrder]);
 
   const getPageMeta = () => {
@@ -621,7 +696,12 @@ export const Quotes = () => {
 
   const { pageTitle, pageDescription, headerTitle } = getPageMeta();
 
-  const sortOptions = ['Recent', 'A-Z', 'Z-A'];
+  let sortOptions;
+  if (!authorIdParam && !tagSlugParam && !searchParam) {
+    sortOptions = ['Recent', 'Trending', 'A-Z', 'Z-A'];
+  } else {
+    sortOptions = ['Recent', 'A-Z', 'Z-A'];
+  }
 
   const pricingList = pricingOptionsChecked.map((item) => (
     <li key={item}>
@@ -815,7 +895,7 @@ export const Quotes = () => {
         <section className="container-scroll">
           <InfiniteScroll
             dataLength={apps.data.length}
-            next={fetchApps}
+            next={orderByTrending ? fetchAppsTrending : fetchApps}
             hasMore={apps.hasMore} // Replace with a condition based on your data source
             loader={<p>Loading...</p>}
             endMessage={<p>No more data to load.</p>}
