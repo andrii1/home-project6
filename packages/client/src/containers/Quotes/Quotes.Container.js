@@ -158,7 +158,7 @@ export const Quotes = () => {
           )
             ? quotesAnalytics
                 .filter(
-                  (item) => item.dealId.toString() === quote.id.toString(),
+                  (item) => item.quoteId.toString() === quote.id.toString(),
                 )
                 .map((item) => item.activeUsers)
                 .toString()
@@ -767,7 +767,7 @@ export const Quotes = () => {
             <Button
               primary={!authorIdParam}
               secondary={authorIdParam}
-              label="Trending authors"
+              label="All authors"
             />
           </Link>
           {authorsList}
@@ -782,7 +782,7 @@ export const Quotes = () => {
             <Button
               primary={!tagSlugParam}
               secondary={tagSlugParam}
-              label="Trending tags"
+              label="All tags"
             />
           </Link>
 
