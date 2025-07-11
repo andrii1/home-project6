@@ -21,6 +21,7 @@ const keywords = require('./keywords.router');
 const searches = require('./searches.router');
 const tags = require('./tags.router');
 const blogs = require('./blogs.router');
+const analytics = require('./analytics.router');
 
 /* GET home page. */
 // router.get('/', function(req, res, next) {
@@ -64,5 +65,6 @@ router.use('/keywords', keywords);
 router.use('/searches', searches);
 router.use('/tags', tags);
 router.use('/blogs', blogs);
+router.use('/analytics', analytics);
 
 module.exports = router;

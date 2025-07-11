@@ -10,6 +10,7 @@
     "lint": "eslint --ext .js,.jsx,.ts,.tsx ."
   },
   "dependencies": {
+    "@google-analytics/data": "^5.2.0",
     "app-root-path": "^3.0.0",
     "chalk": "^5.0.1",
     "cloudinary": "^1.41.0",
@@ -30,6 +31,7 @@
     "stripe": "^13.3.0",
     "swagger-jsdoc": "^6.2.1",
     "swagger-ui-express": "^4.3.0",
+    "undici": "^7.11.0",
     "winston": "^3.7.2"
   },
   "devDependencies": {

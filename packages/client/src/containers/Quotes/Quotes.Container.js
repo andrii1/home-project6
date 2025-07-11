@@ -80,6 +80,8 @@ export const Quotes = () => {
   const { favorites, addFavorite, handleDeleteBookmarks } = useFavorites(user);
   const { fetchedData: authors } = useFetch(fetchAuthors, []);
   const { fetchedData: tags } = useFetch(fetchTags, []);
+  const [trendingAuthors, setTrendingAuthors] = useState([]);
+  const [trendingTags, setTrendingTags] = useState([]);
 
   const toggleModal = () => {
     setOpenModal(false);
@@ -279,6 +281,62 @@ export const Quotes = () => {
     fetchAppsSearch();
   }, [searchTerms]);
 
+  useEffect(() => {
+    async function fetchTrendingAuthors() {
+      const response = await fetch(`${apiURL()}/analytics?authors=true`);
+      const dataAuthorsAnalytics = await response.json();
+
+      const result = authors
+        .map((author) => ({
+          ...author,
+          activeUsers: dataAuthorsAnalytics?.some(
+            (e) => e.authorId.toString() === author.id.toString(),
+          )
+            ? dataAuthorsAnalytics
+                .filter(
+                  (item) => item.authorId.toString() === author.id.toString(),
+                )
+                .map((item) => item.activeUsers)
+                .toString()
+            : null,
+        }))
+        .filter((item) => item.activeUsers)
+        .sort((a, b) => {
+          return b.activeUsers - a.activeUsers;
+        });
+      setTrendingAuthors(result);
+    }
+
+    fetchTrendingAuthors();
+  }, [authors]);
+
+  useEffect(() => {
+    async function fetchTrendingTags() {
+      const response = await fetch(`${apiURL()}/analytics?tags=true`);
+      const dataTagsAnalytics = await response.json();
+
+      const result = tags
+        .map((tag) => ({
+          ...tag,
+          activeUsers: dataTagsAnalytics?.some(
+            (e) => e.tagId.toString() === tag.id.toString(),
+          )
+            ? dataTagsAnalytics
+                .filter((item) => item.tagId.toString() === tag.id.toString())
+                .map((item) => item.activeUsers)
+                .toString()
+            : null,
+        }))
+        .filter((item) => item.activeUsers)
+        .sort((a, b) => {
+          return b.activeUsers - a.activeUsers;
+        });
+      setTrendingTags(result);
+    }
+
+    fetchTrendingTags();
+  }, [tags]);
+
   // const fetchApps = useCallback(async () => {
   //   // const urlFilters = await setupUrlFilters();
   //   let url;
@@ -446,7 +504,7 @@ export const Quotes = () => {
     </Link>
   ));
 
-  const authorsList = authors
+  const authorsList = trendingAuthors
     .sort((a, b) => a.fullName?.localeCompare(b.fullName))
     .map((author) => {
       if (authorIdParam) {
@@ -470,7 +528,7 @@ export const Quotes = () => {
       );
     });
 
-  const tagsList = tags
+  const tagsList = trendingTags
     .sort((a, b) => a.title?.localeCompare(b.title))
     .map((tag) => {
       if (tagSlugParam) {
@@ -627,10 +685,13 @@ export const Quotes = () => {
             <Button
               primary={!authorIdParam}
               secondary={authorIdParam}
-              label="All authors"
+              label="Trending authors"
             />
           </Link>
           {authorsList}
+          <Link to="/authors">
+            <Button tertiary label="See all authors..." />
+          </Link>
         </section>
       )}
       {activeTab === 'Tags' && (
@@ -639,10 +700,14 @@ export const Quotes = () => {
             <Button
               primary={!tagSlugParam}
               secondary={tagSlugParam}
-              label="All tags"
+              label="Trending tags"
             />
           </Link>
+
           {tagsList}
+          <Link to="/tags">
+            <Button tertiary label="See all tags..." />
+          </Link>
         </section>
       )}
       <section className="container-filters">
