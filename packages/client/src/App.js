@@ -26,6 +26,7 @@ import { Blog } from './containers/Blog/Blog.Container';
 import { BlogView } from './containers/BlogView/BlogView.Container';
 import { RandomQuote } from './containers/RandomQuote/RandomQuote.Container';
 import { QuoteOfTheDay } from './containers/DayQuote/DayQuote.Container';
+import { TopTenQuotes } from './containers/TopTenQuotes/TopTenQuotes.Container';
 
 function App() {
   return (
@@ -74,6 +75,7 @@ function App() {
             <Route exact path="/dashboard" element={<Dashboard />} />
             <Route exact path="/random" element={<RandomQuote />} />
             <Route exact path="/day" element={<QuoteOfTheDay />} />
+            <Route exact path="/top" element={<TopTenQuotes />} />
             <Route path="*" element={<PageNotFound />} />
           </Routes>
           <Footer />

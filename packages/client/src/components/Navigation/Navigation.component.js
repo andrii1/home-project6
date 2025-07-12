@@ -202,6 +202,33 @@ export const Navigation = () => {
                       Blog
                     </NavLink>
                   </li>
+                  <li>
+                    <NavLink
+                      to="/top"
+                      onClick={toggleHamburger}
+                      className="nav-link"
+                    >
+                      Top 10 quotes
+                    </NavLink>
+                  </li>
+                  <li>
+                    <NavLink
+                      to="/random"
+                      onClick={toggleHamburger}
+                      className="nav-link"
+                    >
+                      Random quote
+                    </NavLink>
+                  </li>
+                  <li>
+                    <NavLink
+                      to="/day"
+                      onClick={toggleHamburger}
+                      className="nav-link"
+                    >
+                      Quote of the day
+                    </NavLink>
+                  </li>
                   {/* <li>
                     <NavLink
                       to="/tags"
