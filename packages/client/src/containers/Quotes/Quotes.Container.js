@@ -28,7 +28,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { SimpleToggle } from '../../components/SimpleToggle/SimpleToggle.component';
 
-const tabs = ['Authors', 'Tags'];
+const tabs = ['Authors', 'Tags', 'Searches'];
 
 export const Quotes = () => {
   const { user } = useUserContext();
@@ -50,6 +50,7 @@ export const Quotes = () => {
   const [showFiltersContainer, setShowFiltersContainer] = useState(false);
   const [showAuthorsContainer, setShowAuthorsContainer] = useState(false);
   const [showTagsContainer, setShowTagsContainer] = useState(false);
+  const [showSearchContainer, setShowSearchContainer] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [listView, setListView] = useState(false);
   const [page, setPage] = useState(0);
@@ -83,6 +84,7 @@ export const Quotes = () => {
   const { fetchedData: tags } = useFetch(fetchTags, []);
   const [authorsTrending, setAuthorsTrending] = useState([]);
   const [tagsTrending, setTagsTrending] = useState([]);
+  const [searchTrending, setSearchTrending] = useState([]);
   const [quotesTrending, setQuotesTrending] = useState([]);
   const { pathname } = location;
   const [orderByTrending, setOrderByTrending] = useState(false);
@@ -416,6 +418,20 @@ export const Quotes = () => {
     fetchTrendingTags();
   }, [tags]);
 
+  useEffect(() => {
+    async function fetchTrendingSearch() {
+      const response = await fetch(`${apiURL()}/analytics?search=true`);
+      const dataSearchAnalytics = await response.json();
+
+      const result = dataSearchAnalytics.sort((a, b) => {
+        return b.activeUsers - a.activeUsers;
+      });
+      setSearchTrending(result);
+    }
+
+    fetchTrendingSearch();
+  }, []);
+
   // const fetchApps = useCallback(async () => {
   //   // const urlFilters = await setupUrlFilters();
   //   let url;
@@ -628,6 +644,30 @@ export const Quotes = () => {
       );
     });
 
+  const searchList = searchTrending
+    .sort((a, b) => a.searchId?.localeCompare(b.searchId))
+    .map((searchItem) => {
+      if (searchParam) {
+        return (
+          <Link to={`/quotes/search/${searchItem.searchId}`}>
+            <Button
+              primary={
+                searchItem.searchId.toString() === searchParam.toString() &&
+                true
+              }
+              secondary={searchItem.searchId !== searchParam && true}
+              label={capitalize(searchItem.searchId)}
+            />
+          </Link>
+        );
+      }
+      return (
+        <Link to={`/quotes/search/${searchItem.searchId}`}>
+          <Button secondary label={capitalize(searchItem.searchId)} />
+        </Link>
+      );
+    });
+
   useEffect(() => {
     let column;
     let direction;
@@ -789,6 +829,19 @@ export const Quotes = () => {
           </Link>
         </section>
       )}
+      {activeTab === 'Searches' && (
+        <section className="container-topics-desktop">
+          <Link to="/">
+            <Button
+              primary={!searchParam}
+              secondary={searchParam}
+              label="All searches"
+            />
+          </Link>
+
+          {searchList}
+        </section>
+      )}
       <section className="container-filters">
         <Button
           secondary
@@ -796,6 +849,7 @@ export const Quotes = () => {
           onClick={(event) => {
             setShowAuthorsContainer(!showAuthorsContainer);
             setShowTagsContainer(false);
+            setShowSearchContainer(false);
           }}
           backgroundColor="#ffe5d9"
           label="Authors"
@@ -806,9 +860,21 @@ export const Quotes = () => {
           onClick={(event) => {
             setShowTagsContainer(!showTagsContainer);
             setShowAuthorsContainer(false);
+            setShowSearchContainer(false);
           }}
           backgroundColor="#ffe5d9"
           label="Tags"
+        />
+        <Button
+          secondary
+          className="button-topics"
+          onClick={(event) => {
+            setShowSearchContainer(!showSearchContainer);
+            setShowAuthorsContainer(false);
+            setShowTagsContainer(false);
+          }}
+          backgroundColor="#ffe5d9"
+          label="Searches"
         />
         <DropDownView
           selectedOptionValue={sortOrder}
@@ -848,6 +914,9 @@ export const Quotes = () => {
           />
         </Link>
         {authorsList}
+        <Link to="/authors">
+          <Button tertiary label="See all authors..." />
+        </Link>
       </section>
       <section
         className={`container-topics-mobile ${showTagsContainer && 'show'}`}
@@ -860,6 +929,21 @@ export const Quotes = () => {
           />
         </Link>
         {tagsList}
+        <Link to="/tags">
+          <Button tertiary label="See all tags..." />
+        </Link>
+      </section>
+      <section
+        className={`container-topics-mobile ${showSearchContainer && 'show'}`}
+      >
+        <Link to="/">
+          <Button
+            primary={!searchParam}
+            secondary={searchParam}
+            label="All tags"
+          />
+        </Link>
+        {searchList}
       </section>
       <section
         className={`container-details-section ${

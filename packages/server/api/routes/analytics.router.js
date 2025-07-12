@@ -19,6 +19,11 @@ router.get('/', (req, res, next) => {
       .getTopTagsPages()
       .then((result) => res.json(result))
       .catch(next);
+  } else if (req.query.search) {
+    analyticsController
+      .getTopSearchPages()
+      .then((result) => res.json(result))
+      .catch(next);
   } else {
     analyticsController
       .getTopQuotesPages()

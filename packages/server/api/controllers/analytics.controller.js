@@ -130,12 +130,54 @@ const getTopTagsPages = async () => {
         },
       ],
     });
-    const regex = /\/tags\/\d+$/;
+    const regex = /\/tag\/\d+$/;
     const filteredResponse = response.rows
       .filter((item) => regex.test(item.dimensionValues[0].value))
       .map((item) => {
         return {
-          tagId: item.dimensionValues[0].value.split('tags/')[1],
+          tagId: item.dimensionValues[0].value.split('tag/')[1],
+          url: item.dimensionValues[0].value,
+          activeUsers: item.metricValues[0].value,
+        };
+      });
+
+    return filteredResponse;
+  } catch (error) {
+    return error.message;
+  }
+};
+
+const getTopSearchPages = async () => {
+  try {
+    const [response] = await analyticsDataClient.runReport({
+      // eslint-disable-next-line prefer-template
+      property: 'properties/' + propertyId,
+      dateRanges: [
+        {
+          // Run from today to 31 days ago
+          startDate: dayFormat,
+          endDate: 'today',
+        },
+      ],
+      dimensions: [
+        {
+          // Get the page path
+          name: 'pagePathPlusQueryString',
+        },
+      ],
+      metrics: [
+        {
+          // And tell me how many active users there were for each of those
+          name: 'activeUsers',
+        },
+      ],
+    });
+    const regex = /\/search\/\d+$/;
+    const filteredResponse = response.rows
+      .filter((item) => regex.test(item.dimensionValues[0].value))
+      .map((item) => {
+        return {
+          searchId: item.dimensionValues[0].value.split('search/')[1],
           url: item.dimensionValues[0].value,
           activeUsers: item.metricValues[0].value,
         };
@@ -151,4 +193,5 @@ module.exports = {
   getTopQuotesPages,
   getTopAuthorsPages,
   getTopTagsPages,
+  getTopSearchPages,
 };
