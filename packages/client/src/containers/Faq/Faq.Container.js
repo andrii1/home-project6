@@ -10,7 +10,9 @@ export const Faq = () => {
         <title>FAQ</title>
       </Helmet>
       <main>
-        <h1 className="hero-header">FAQ</h1>
+        <header>
+          <h1>FAQ</h1>
+        </header>
         <h2>How many apps are here?</h2>
         <p>Nearly 200 AI apps, spread over 34 topics and 7 categories.</p>
         <h2>What are the main features?</h2>

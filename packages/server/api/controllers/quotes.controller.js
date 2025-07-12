@@ -58,6 +58,49 @@ const getQuotesAll = async () => {
   }
 };
 
+const getQuotesRandom = async () => {
+  try {
+    const quotes = knex('quotes')
+      .select(
+        'quotes.*',
+        'authors.full_name as authorFullName',
+        'authors.id as authorId',
+      )
+      .join('authors', 'quotes.author_id', '=', 'authors.id')
+      .orderByRaw('RAND()')
+      .first(); // Get a single random result
+
+    return quotes;
+  } catch (error) {
+    return error.message;
+  }
+};
+
+const getDayQuote = async () => {
+  try {
+    const [{ count }] = await knex('quotes').count('id as count');
+    const today = new Date().toISOString().slice(0, 10); // 'YYYY-MM-DD'
+
+    // Convert date to a hashable number
+    const dateHash = today.split('-').join(''); // '20250712'
+    const index = parseInt(dateHash, 10) % count;
+
+    const quote = await knex('quotes')
+      .select(
+        'quotes.*',
+        'authors.full_name as authorFullName',
+        'authors.id as authorId',
+      )
+      .join('authors', 'quotes.author_id', '=', 'authors.id')
+      .limit(1)
+      .offset(index); // Skip to the calculated index
+
+    return quote[0];
+  } catch (error) {
+    return { error: error.message };
+  }
+};
+
 const getQuotes = async (page, column, direction) => {
   const lastItemDirection = getOppositeOrderDirection(direction);
   try {
@@ -656,6 +699,8 @@ const editQuote = async (token, updatedQuoteId, body) => {
 
 module.exports = {
   getQuotes,
+  getQuotesRandom,
+  getDayQuote,
   // getQuotesPagination,
   // getAppsSearch,
   // getAppsByCategories,

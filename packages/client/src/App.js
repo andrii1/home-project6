@@ -24,6 +24,8 @@ import { AllAuthors } from './containers/AllAuthors/AllAuthors.Container';
 import { AllTags } from './containers/AllTags/AllTags.Container';
 import { Blog } from './containers/Blog/Blog.Container';
 import { BlogView } from './containers/BlogView/BlogView.Container';
+import { RandomQuote } from './containers/RandomQuote/RandomQuote.Container';
+import { QuoteOfTheDay } from './containers/DayQuote/DayQuote.Container';
 
 function App() {
   return (
@@ -70,6 +72,8 @@ function App() {
             <Route exact path="/signup" element={<Signup />} />
             <Route exact path="/reset" element={<Reset />} />
             <Route exact path="/dashboard" element={<Dashboard />} />
+            <Route exact path="/random" element={<RandomQuote />} />
+            <Route exact path="/day" element={<QuoteOfTheDay />} />
             <Route path="*" element={<PageNotFound />} />
           </Routes>
           <Footer />

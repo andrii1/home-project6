@@ -134,7 +134,14 @@ router.get('/', (req, res, next) => {
 
 router.get('/random', (req, res, next) => {
   quotesController
-    .getExampleResources()
+    .getQuotesRandom()
+    .then((result) => res.json(result))
+    .catch(next);
+});
+
+router.get('/day-quote', (req, res, next) => {
+  quotesController
+    .getDayQuote()
     .then((result) => res.json(result))
     .catch(next);
 });
