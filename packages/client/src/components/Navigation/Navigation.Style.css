@@ -189,6 +189,7 @@ ul li,
   .container-logged-in {
     flex-direction: column;
     gap: 1.5rem;
+    position: static;
   }
   .navigation-mobile {
     display: block;

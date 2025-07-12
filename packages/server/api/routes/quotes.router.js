@@ -132,7 +132,14 @@ router.get('/', (req, res, next) => {
   }
 });
 
-/* Create Apps */
+router.get('/random', (req, res, next) => {
+  quotesController
+    .getExampleResources()
+    .then((result) => res.json(result))
+    .catch(next);
+});
+
+/* Create Quotes */
 
 router.post('/', (req, res, next) => {
   const { token } = req.headers;
