@@ -4,7 +4,7 @@
 /* eslint-disable no-console */
 /* eslint-disable no-return-await */
 
-const fetch = require('node-fetch');
+// const fetch = require('node-fetch');
 require('dotenv').config();
 
 // Credentials (from .env)

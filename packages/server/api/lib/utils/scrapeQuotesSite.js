@@ -2,7 +2,7 @@
 /* eslint-disable no-await-in-loop */
 /* eslint-disable no-restricted-syntax */
 require('dotenv').config();
-const fetch = require('node-fetch');
+// const fetch = require('node-fetch');
 
 const url = 'https://thequoteshub.com/api/';
 
