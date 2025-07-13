@@ -22,6 +22,7 @@ const searches = require('./searches.router');
 const tags = require('./tags.router');
 const blogs = require('./blogs.router');
 const analytics = require('./analytics.router');
+const generate = require('./generate.router');
 
 /* GET home page. */
 // router.get('/', function(req, res, next) {
@@ -66,5 +67,6 @@ router.use('/searches', searches);
 router.use('/tags', tags);
 router.use('/blogs', blogs);
 router.use('/analytics', analytics);
+router.use('/generate', generate);
 
 module.exports = router;

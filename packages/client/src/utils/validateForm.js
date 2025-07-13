@@ -28,5 +28,9 @@ export const validateForm = (value, type) => {
     error = 'Text must be more than five characters!';
   }
 
+  if (value && type === 'promptGpt' && value.length < 5) {
+    error = 'Text must be more than five characters!';
+  }
+
   return error;
 };

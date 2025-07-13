@@ -21,7 +21,7 @@ export const RandomQuote = () => {
       <Helmet>
         <title>Random quote - motivately</title>
       </Helmet>
-      <main className="container-standard">
+      <main className="standard-container">
         <header>
           <h1>Random quote</h1>
         </header>

@@ -70,7 +70,7 @@ const createAuthor = async (token, body) => {
       model: 'gpt-4o-mini',
       messages: [{ role: 'user', content: prompt }],
       temperature: 0.7,
-      max_tokens: 100,
+      max_tokens: 600,
     });
 
     const description = completion.choices[0].message.content.trim();
