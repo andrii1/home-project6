@@ -77,7 +77,11 @@ function App() {
             <Route exact path="/random" element={<RandomQuote />} />
             <Route exact path="/day" element={<QuoteOfTheDay />} />
             <Route exact path="/top" element={<TopTenQuotes />} />
-            <Route exact path="/quote-generator" element={<QuoteGenerator />} />
+            <Route
+              exact
+              path="/ai-quote-generator"
+              element={<QuoteGenerator />}
+            />
             <Route path="*" element={<PageNotFound />} />
           </Routes>
           <Footer />

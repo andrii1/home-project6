@@ -6,9 +6,13 @@ import { apiURL } from '../../apiURL';
 import useInputValidation from '../../utils/hooks/useInputValidation';
 import { Button } from '../../components/Button/Button.component';
 import TextFormTextarea from '../../components/Input/TextFormTextarea.component';
+import { Sparkles } from 'lucide-react';
 
 export const QuoteGenerator = () => {
-  const [reply, setReply] = useState();
+  const [reply, setReply] = useState('');
+  const [placeholder, setPlaceholder] = useState(
+    '"Write an optimistic quote about resilience in the style of Maya Angelou...',
+  );
   const [prompt, promptError, validatePrompt] = useInputValidation('promptGpt');
   const [validForm, setValidForm] = useState(false);
   const [invalidForm, setInvalidForm] = useState(false);
@@ -33,12 +37,35 @@ export const QuoteGenerator = () => {
       }
 
       const data = await response.json(); // assuming your API returns JSON
-      console.log(data); // log actual quote or response
 
       setReply(data.response); // or `setReply(data.quote)` if API returns `{ quote: "..." }`
     } catch (err) {
-      console.error('Error generating quote:', err);
       setReply({ error: err.message });
+    }
+  };
+
+  const createResponsePlaceholder = async () => {
+    const fullPrompt =
+      'Generate short  one sentence suggestion for creating motivational quotes, based on tone, topic, or author style (e.g., "Write an optimistic quote about resilience in the style of Maya Angelou").';
+    try {
+      const response = await fetch(`${apiURL()}/generate`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          prompt: fullPrompt,
+        }),
+      });
+      if (!response.ok) {
+        throw new Error(`API error: ${response.status}`);
+      }
+
+      const data = await response.json(); // assuming your API returns JSON
+
+      setPlaceholder(data.response); // or `setReply(data.quote)` if API returns `{ quote: "..." }`
+    } catch (err) {
+      setPlaceholder({ error: err.message });
     }
   };
 
@@ -47,31 +74,32 @@ export const QuoteGenerator = () => {
     createResponse(prompt);
   };
 
+  const handlePlaceholder = () => {
+    createResponsePlaceholder();
+  };
+
   return (
     <>
       <Helmet>
-        <title>Quote generator - motivately</title>
+        <title>AI quote generator - motivately</title>
       </Helmet>
       <main className="standard-container">
         <header>
-          <h1>Quote generator</h1>
+          <h1>AI quote generator</h1>
         </header>
 
         <section className="form-box submit-box center">
           <form>
             <TextFormTextarea
               value={prompt}
-              placeholder="Write an optimistic quote about resilience in the style of Maya Angelou..."
+              placeholder={placeholder}
               onChange={validatePrompt}
               error={promptError}
             />
-
-            <Button
-              primary
-              className="btn-add-prompt"
-              onClick={handleSubmit}
-              label="Generate quote"
-            />
+            <div className="submit-group">
+              <Sparkles onClick={handlePlaceholder} />
+              <Button primary onClick={handleSubmit} label="Generate quote" />
+            </div>
             {/* {validForm && (
               <Modal
                 title="Your prompt has been submitted!"

@@ -871,12 +871,23 @@ export const QuoteView = () => {
               ))}
             </div>
           </div> */}
+          <div className="container-details cta">
+            <div>
+              <h2>✨ Create AI quotes for free</h2>
+              <p>Try AI quotes</p>
+            </div>
+            <div>
+              <Link to="/ai-quote-generator">
+                <Button primary label="AI quote generator" />
+              </Link>
+            </div>
+          </div>
 
           {!user && (
             <div className="container-details cta">
               <div>
                 <h2>🔥 Create a free account</h2>
-                <p>Bookmark you favorite AI apps</p>
+                <p>Bookmark you favorite quotes</p>
               </div>
               <div>
                 <Link to="/signup">
