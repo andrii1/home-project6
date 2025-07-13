@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/control-has-associated-label */
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
@@ -6,16 +7,19 @@ import { apiURL } from '../../apiURL';
 import useInputValidation from '../../utils/hooks/useInputValidation';
 import { Button } from '../../components/Button/Button.component';
 import TextFormTextarea from '../../components/Input/TextFormTextarea.component';
-import { Sparkles } from 'lucide-react';
+import { Sparkles, Copy } from 'lucide-react';
+import Toast from '../../components/Toast/Toast.Component';
 
 export const QuoteGenerator = () => {
-  const [reply, setReply] = useState('');
+  const [quote, setQuote] = useState('');
   const [placeholder, setPlaceholder] = useState(
     '"Write an optimistic quote about resilience in the style of Maya Angelou...',
   );
   const [prompt, promptError, validatePrompt] = useInputValidation('promptGpt');
   const [validForm, setValidForm] = useState(false);
   const [invalidForm, setInvalidForm] = useState(false);
+  const [openToast, setOpenToast] = useState(false);
+  const [animation, setAnimation] = useState('');
 
   const createResponse = async (promptParam) => {
     let fullPrompt = 'Generate motivational quote.';
@@ -38,9 +42,9 @@ export const QuoteGenerator = () => {
 
       const data = await response.json(); // assuming your API returns JSON
 
-      setReply(data.response); // or `setReply(data.quote)` if API returns `{ quote: "..." }`
+      setQuote(data.response); // or `setReply(data.quote)` if API returns `{ quote: "..." }`
     } catch (err) {
-      setReply({ error: err.message });
+      setQuote({ error: err.message });
     }
   };
 
@@ -78,6 +82,19 @@ export const QuoteGenerator = () => {
     createResponsePlaceholder();
   };
 
+  const copyToClipboard = (item) => {
+    navigator.clipboard.writeText(item);
+    setOpenToast(true);
+    setAnimation('open-animation');
+
+    setTimeout(() => {
+      setAnimation('close-animation');
+    }, 2000);
+    setTimeout(() => {
+      setOpenToast(false);
+    }, 2500);
+  };
+
   return (
     <>
       <Helmet>
@@ -113,9 +130,21 @@ export const QuoteGenerator = () => {
             {invalidForm && <p className="error-message">Form is not valid</p>}
           </form>
         </section>
-        <section className="result-container">
-          <h3>{reply && reply}</h3>
-        </section>
+        {quote && (
+          <section className="result-container">
+            <h3>{quote}</h3>
+            <button
+              type="button"
+              className="button-copy"
+              onClick={() => copyToClipboard(quote)}
+            >
+              <Copy />
+            </button>
+            <Toast open={openToast} overlayClass={`toast ${animation}`}>
+              <span>Copied to clipboard!</span>
+            </Toast>
+          </section>
+        )}
       </main>
     </>
   );
