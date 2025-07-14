@@ -167,6 +167,23 @@
   gap: 1rem;
 }
 
+.tab-group {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: left;
+  gap: 1rem;
+  /* margin-bottom: 1rem; */
+}
+
+.container-quote .img-ai {
+  width: 100%;
+}
+
+.btn-group-image {
+  display: flex;
+  gap: 1rem;
+}
+
 @media only screen and (max-width: 992px) {
   .container-quoteview {
     width: 90%;

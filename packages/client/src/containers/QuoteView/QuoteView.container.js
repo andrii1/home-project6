@@ -11,7 +11,7 @@ import { Button } from '../../components/Button/Button.component';
 import { Badge } from '../../components/Badge/Badge.component';
 import { Card } from '../../components/Card/Card.component';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { ArrowBigUp, Copy } from 'lucide-react';
+import { ArrowBigUp, Copy, RefreshCcw, Download } from 'lucide-react';
 import Modal from '../../components/Modal/Modal.Component';
 import iconCopy from '../../assets/images/icons8-copy-24.png';
 // eslint-disable-next-line import/no-extraneous-dependencies
@@ -57,12 +57,24 @@ const defaultColors = [
 
 const defaultFontColors = ['#ffffff', '#cccccc', '#000000'];
 
+const tabs = [
+  {
+    label: '🛠️ Custom editor',
+    value: 'custom-editor',
+  },
+  {
+    label: '🪄 AI editor',
+    value: 'ai-editor',
+  },
+];
+
 export const QuoteView = () => {
   const { id } = useParams();
   const [openModal, setOpenModal] = useState(false);
   const [modalTitle, setModalTitle] = useState('');
   const [openToast, setOpenToast] = useState(false);
   const [animation, setAnimation] = useState('');
+  const [tab, setTab] = useState('custom-editor');
 
   const navigate = useNavigate();
   const [quote, setQuote] = useState({});
@@ -89,6 +101,8 @@ export const QuoteView = () => {
   const canvasRef = useRef(null);
   const { ratings, allRatings, addRating, deleteRating } = useRatings(user);
   const { favorites, addFavorite, handleDeleteBookmarks } = useFavorites(user);
+  const [imageLoading, setImageLoading] = useState(false);
+  const [imageUrl, setImageUrl] = useState('');
 
   useEffect(() => {
     async function fetchSingleQuote(quoteId) {
@@ -447,6 +461,56 @@ export const QuoteView = () => {
     link.click();
   };
 
+  const handleDownloadAi = () => {
+    if (!imageUrl) return;
+
+    const link = document.createElement('a');
+    link.href = imageUrl;
+    link.download = 'ai-generated-quote.png'; // you can change this filename
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const createImage = async () => {
+    try {
+      setImageLoading(true);
+      const imagePrompt = `An artistic, high-quality motivational poster image inspired by the quote: "${quote.title}`;
+      const imageRes = await fetch(`${apiURL()}/openai/images`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt: imagePrompt }),
+      });
+
+      if (!imageRes.ok) throw new Error(`Image error: ${imageRes.status}`);
+      const imageData = await imageRes.json();
+      setImageUrl(imageData.imageUrl);
+      setImageLoading(false);
+    } catch (err) {
+      setQuote({ error: err.message });
+    }
+  };
+
+  const handleGenerateAiImage = () => {
+    createImage();
+  };
+
+  const tabsGroup = tabs.map((tabItem) => {
+    return (
+      <Button
+        tertiary={tab === tabItem.value}
+        secondary={tab !== tabItem.value}
+        label={tabItem.label}
+        className="tab"
+        onClick={
+          tabItem.value === 'ai-editor'
+            ? () => setTab('ai-editor')
+            : () => setTab('custom-editor')
+        }
+      />
+    );
+  });
+
   // if (loading) {
   //   return (
   //     <>
@@ -478,116 +542,163 @@ export const QuoteView = () => {
         <section className="container-quoteview">
           <div className="container-quoteview-main">
             <div className="container-quote">
-              {/* <canvas
-                ref={canvasRef}
-                style={{
-                  width: '100%', // makes it fill the container width
-                  height: 'auto', // maintain aspect ratio
-                  display: 'block',
-                }}
-              /> */}
-              <canvas
-                ref={canvasRef}
-                width={500}
-                height={350}
-                style={{ display: 'none' }}
-              />
-              {imageDataUrl && (
-                <img
-                  src={imageDataUrl}
-                  alt="Quote"
-                  style={{ width: '100%', height: 'auto' }}
-                />
+              <div className="tab-group">
+                <div className="tab-group">{tabsGroup}</div>
+              </div>
+              {tab === 'ai-editor' && (
+                <>
+                  <div>
+                    <Button
+                      onClick={handleGenerateAiImage}
+                      primary
+                      label="✨ Create AI image"
+                    />
+                  </div>
+                  {imageLoading ? (
+                    <Loading />
+                  ) : (
+                    imageUrl && (
+                      <>
+                        <img
+                          className="img-ai"
+                          src={imageUrl}
+                          alt="AI-generated quote"
+                        />
+                        <div className="btn-group-image">
+                          <button
+                            type="button"
+                            className="button-copy"
+                            onClick={() => createImage()}
+                          >
+                            <RefreshCcw />
+                          </button>
+                          <button
+                            type="button"
+                            className="button-copy"
+                            onClick={handleDownloadAi}
+                          >
+                            <Download />
+                          </button>
+                        </div>
+                      </>
+                    )
+                  )}
+                </>
               )}
-              <div className="container-color-group">
-                <div className="images-group">
-                  {images.map((image) => (
-                    <div
-                      onClick={() => setSelectedImage(image)}
-                      className={`quote-image-input ${
-                        image === selectedImage && 'selected'
-                      }`}
-                      style={{
-                        backgroundImage: `url(https://picsum.photos/id/${image}/130/100)`,
-                        backgroundRepeat: 'no-repeat',
-                        backgroundSize: 'cover',
-                        backgroundPosition: 'center',
-                        height: '80px',
 
-                        // border: '1px',
-                        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', // Optional styling for shadow
-                      }}
+              {tab === 'custom-editor' && (
+                <>
+                  <canvas
+                    ref={canvasRef}
+                    width={500}
+                    height={350}
+                    style={{ display: 'none' }}
+                  />
+                  {imageDataUrl && (
+                    <img
+                      src={imageDataUrl}
+                      alt="Quote"
+                      style={{ width: '100%', height: 'auto' }}
                     />
-                  ))}
-                </div>
-                <div className="color-group">
-                  <p className="color-group-tab-1">Background</p>
-                  <div className="color-group-tab-2">
-                    {defaultColors.map((item) => (
-                      // eslint-disable-next-line jsx-a11y/control-has-associated-label
-                      <button
-                        type="button"
-                        className={`color-input ${
-                          item === color && 'selected'
-                        }`}
-                        style={{ backgroundColor: item }}
-                        onClick={() => {
-                          handleChangeColor(item);
-                        }}
-                      />
-                    ))}
+                  )}
+                  <div className="container-color-group">
+                    <div className="images-group">
+                      {images.map((image) => (
+                        <div
+                          onClick={() => setSelectedImage(image)}
+                          className={`quote-image-input ${
+                            image === selectedImage && 'selected'
+                          }`}
+                          style={{
+                            backgroundImage: `url(https://picsum.photos/id/${image}/130/100)`,
+                            backgroundRepeat: 'no-repeat',
+                            backgroundSize: 'cover',
+                            backgroundPosition: 'center',
+                            height: '80px',
+
+                            // border: '1px',
+                            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', // Optional styling for shadow
+                          }}
+                        />
+                      ))}
+                    </div>
+                    <div className="color-group">
+                      <p className="color-group-tab-1">Background</p>
+                      <div className="color-group-tab-2">
+                        {defaultColors.map((item) => (
+                          // eslint-disable-next-line jsx-a11y/control-has-associated-label
+                          <button
+                            type="button"
+                            className={`color-input ${
+                              item === color && 'selected'
+                            }`}
+                            style={{ backgroundColor: item }}
+                            onClick={() => {
+                              handleChangeColor(item);
+                            }}
+                          />
+                        ))}
+                      </div>
+                      <div className="color-group-tab-3">
+                        <p>Custom</p>
+                        <input
+                          type="color"
+                          className={`color-picker ${
+                            colorPickerSelected && 'selected'
+                          }`}
+                          onChange={(event) => {
+                            setSelectedImage('');
+                            setColor(event.target.value);
+                            setColorPickerSelected(true);
+                          }}
+                        />
+                      </div>
+                    </div>
+                    <div className="color-group font">
+                      <p className="color-group-tab-1">Font</p>
+                      <div className="color-group-tab-2">
+                        {defaultFontColors.map((item) => (
+                          // eslint-disable-next-line jsx-a11y/control-has-associated-label
+                          <button
+                            type="button"
+                            className={`color-input ${
+                              item === fontColor && 'selected'
+                            }`}
+                            style={{ backgroundColor: item }}
+                            onClick={() => {
+                              handleChangeFontColor(item);
+                            }}
+                          />
+                        ))}
+                      </div>
+                      <div className="color-group-tab-3">
+                        <p>Custom</p>
+                        <input
+                          type="color"
+                          className={`color-picker ${
+                            fontColorPickerSelected && 'selected'
+                          }`}
+                          onChange={(event) => {
+                            setSelectedImage('');
+                            setFontColor(event.target.value);
+                            setFontColorPickerSelected(true);
+                          }}
+                        />
+                      </div>
+                    </div>
                   </div>
-                  <div className="color-group-tab-3">
-                    <p>Custom</p>
-                    <input
-                      type="color"
-                      className={`color-picker ${
-                        colorPickerSelected && 'selected'
-                      }`}
-                      onChange={(event) => {
-                        setSelectedImage('');
-                        setColor(event.target.value);
-                        setColorPickerSelected(true);
-                      }}
-                    />
+                  <div>
+                    <button
+                      type="button"
+                      className="button-copy"
+                      onClick={handleDownload}
+                    >
+                      <Download />
+                    </button>
                   </div>
-                </div>
-                <div className="color-group font">
-                  <p className="color-group-tab-1">Font</p>
-                  <div className="color-group-tab-2">
-                    {defaultFontColors.map((item) => (
-                      // eslint-disable-next-line jsx-a11y/control-has-associated-label
-                      <button
-                        type="button"
-                        className={`color-input ${
-                          item === fontColor && 'selected'
-                        }`}
-                        style={{ backgroundColor: item }}
-                        onClick={() => {
-                          handleChangeFontColor(item);
-                        }}
-                      />
-                    ))}
-                  </div>
-                  <div className="color-group-tab-3">
-                    <p>Custom</p>
-                    <input
-                      type="color"
-                      className={`color-picker ${
-                        fontColorPickerSelected && 'selected'
-                      }`}
-                      onChange={(event) => {
-                        setSelectedImage('');
-                        setFontColor(event.target.value);
-                        setFontColorPickerSelected(true);
-                      }}
-                    />
-                  </div>
-                </div>
-              </div>
-              <div>
-                <Button onClick={handleDownload} primary label="Download" />
-              </div>
+                </>
+              )}
+
               <div className="icons-apps-page">
                 <span>Share it: </span>
                 <button

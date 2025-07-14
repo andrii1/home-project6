@@ -7,7 +7,7 @@ import { apiURL } from '../../apiURL';
 import useInputValidation from '../../utils/hooks/useInputValidation';
 import { Button } from '../../components/Button/Button.component';
 import TextFormTextarea from '../../components/Input/TextFormTextarea.component';
-import { Sparkles, Copy } from 'lucide-react';
+import { Sparkles, Copy, RefreshCcw, Download } from 'lucide-react';
 import Toast from '../../components/Toast/Toast.Component';
 import { Loading } from '../../components/Loading/Loading.Component';
 
@@ -61,7 +61,6 @@ export const QuoteGenerator = () => {
 
         if (!imageRes.ok) throw new Error(`Image error: ${imageRes.status}`);
         const imageData = await imageRes.json();
-        console.log('imageData', imageData);
 
         setImageUrl(imageData.imageUrl);
         setImageLoading(false);
@@ -145,7 +144,16 @@ export const QuoteGenerator = () => {
     }, 2500);
   };
 
-  console.log('loading', imageLoading);
+  const handleDownloadAi = () => {
+    if (!imageUrl) return;
+
+    const link = document.createElement('a');
+    link.href = imageUrl;
+    link.download = 'ai-generated-quote.png'; // you can change this filename
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
 
   return (
     <>
@@ -195,7 +203,7 @@ export const QuoteGenerator = () => {
         ) : (
           quote && (
             <section className="result-container">
-              <h3>{quote}</h3>
+              <h2 className="no-top-margin">{quote}</h2>
               <button
                 type="button"
                 className="button-copy"
@@ -215,12 +223,22 @@ export const QuoteGenerator = () => {
                       src={imageUrl}
                       alt="AI-generated quote"
                     />
-                    <Button
-                      className="btn-regenerate"
-                      primary
-                      onClick={handleRegenerate}
-                      label="Regenerate image"
-                    />
+                    <div className="btn-group-image generator">
+                      <button
+                        type="button"
+                        className="button-copy"
+                        onClick={handleRegenerate}
+                      >
+                        <RefreshCcw />
+                      </button>
+                      <button
+                        type="button"
+                        className="button-copy"
+                        onClick={handleDownloadAi}
+                      >
+                        <Download />
+                      </button>
+                    </div>
                   </>
                 )
               )}
