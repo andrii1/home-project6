@@ -32,11 +32,34 @@ const createChat = async (body) => {
       response: aiReply,
     };
   } catch (err) {
-    console.error('OpenAI error:', err);
     throw new HttpError('Failed to generate response', 500);
+  }
+};
+
+const createImage = async (body) => {
+  const { prompt } = body;
+  if (!prompt) {
+    throw new HttpError('Text is required to generate image', 400);
+  }
+
+  try {
+    const imageResponse = await openai.images.generate({
+      model: 'dall-e-3',
+      prompt,
+      size: '1024x1024',
+      quality: 'standard',
+      n: 1,
+    });
+
+    return {
+      imageUrl: imageResponse.data[0].url,
+    };
+  } catch (err) {
+    throw new HttpError('Failed to generate image', 500);
   }
 };
 
 module.exports = {
   createChat,
+  createImage,
 };

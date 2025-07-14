@@ -620,12 +620,25 @@ const createQuote = async (token, body) => {
     //   tagId = newTag;
     // }
 
+    // Generate a short description using OpenAI
+    const promptAiSummary = `Create a short explanation or emotional analysis of this quote: ${body.title}`;
+
+    const completionAiSummary = await openai.chat.completions.create({
+      model: 'gpt-4o-mini',
+      messages: [{ role: 'user', content: promptAiSummary }],
+      temperature: 0.7,
+      max_tokens: 600,
+    });
+
+    const aiSummary = completionAiSummary.choices[0].message.content.trim();
+
     const [quoteId] = await knex('quotes').insert({
       title: body.title,
       description: body.description,
       url: body.url,
       image_url: body.image_url,
       meta_description: body.meta_description,
+      ai_summary: aiSummary,
       author_id: body.author_id,
       user_id: body.user_id,
     });

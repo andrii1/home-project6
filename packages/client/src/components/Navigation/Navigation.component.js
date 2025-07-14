@@ -204,6 +204,15 @@ export const Navigation = () => {
                   </li>
                   <li>
                     <NavLink
+                      to="/ai-quote-generator"
+                      onClick={toggleHamburger}
+                      className="nav-link"
+                    >
+                      AI quote generator
+                    </NavLink>
+                  </li>
+                  <li>
+                    <NavLink
                       to="/top"
                       onClick={toggleHamburger}
                       className="nav-link"

@@ -9,17 +9,22 @@ import { Button } from '../../components/Button/Button.component';
 import TextFormTextarea from '../../components/Input/TextFormTextarea.component';
 import { Sparkles, Copy } from 'lucide-react';
 import Toast from '../../components/Toast/Toast.Component';
+import { Loading } from '../../components/Loading/Loading.Component';
 
 export const QuoteGenerator = () => {
   const [quote, setQuote] = useState('');
+  const [imageUrl, setImageUrl] = useState('');
+  const [value, setValue] = useState(false);
   const [placeholder, setPlaceholder] = useState(
-    '"Write an optimistic quote about resilience in the style of Maya Angelou...',
+    'Write an optimistic quote about resilience in the style of Maya Angelou...',
   );
   const [prompt, promptError, validatePrompt] = useInputValidation('promptGpt');
   const [validForm, setValidForm] = useState(false);
   const [invalidForm, setInvalidForm] = useState(false);
   const [openToast, setOpenToast] = useState(false);
   const [animation, setAnimation] = useState('');
+  const [imageLoading, setImageLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const createResponse = async (promptParam) => {
     let fullPrompt = 'Generate motivational quote.';
@@ -27,7 +32,8 @@ export const QuoteGenerator = () => {
       fullPrompt += ` Use these guidelines: ${promptParam}`;
     }
     try {
-      const response = await fetch(`${apiURL()}/generate`, {
+      setLoading(true);
+      const response = await fetch(`${apiURL()}/openai/chats`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -43,6 +49,42 @@ export const QuoteGenerator = () => {
       const data = await response.json(); // assuming your API returns JSON
 
       setQuote(data.response); // or `setReply(data.quote)` if API returns `{ quote: "..." }`
+      setLoading(false);
+      if (value) {
+        setImageLoading(true);
+        const imagePrompt = `An artistic, high-quality motivational poster image inspired by the quote: "${data.response}`;
+        const imageRes = await fetch(`${apiURL()}/openai/images`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ prompt: imagePrompt }),
+        });
+
+        if (!imageRes.ok) throw new Error(`Image error: ${imageRes.status}`);
+        const imageData = await imageRes.json();
+        console.log('imageData', imageData);
+
+        setImageUrl(imageData.imageUrl);
+        setImageLoading(false);
+      }
+    } catch (err) {
+      setQuote({ error: err.message });
+    }
+  };
+
+  const createImage = async () => {
+    try {
+      setImageLoading(true);
+      const imagePrompt = `An artistic, high-quality motivational poster image inspired by the quote: "${quote}`;
+      const imageRes = await fetch(`${apiURL()}/openai/images`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt: imagePrompt }),
+      });
+
+      if (!imageRes.ok) throw new Error(`Image error: ${imageRes.status}`);
+      const imageData = await imageRes.json();
+      setImageUrl(imageData.imageUrl);
+      setImageLoading(false);
     } catch (err) {
       setQuote({ error: err.message });
     }
@@ -52,7 +94,7 @@ export const QuoteGenerator = () => {
     const fullPrompt =
       'Generate short  one sentence suggestion for creating motivational quotes, based on tone, topic, or author style (e.g., "Write an optimistic quote about resilience in the style of Maya Angelou").';
     try {
-      const response = await fetch(`${apiURL()}/generate`, {
+      const response = await fetch(`${apiURL()}/openai/chats`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -82,6 +124,14 @@ export const QuoteGenerator = () => {
     createResponsePlaceholder();
   };
 
+  const handleCheckbox = () => {
+    setValue(!value);
+  };
+
+  const handleRegenerate = () => {
+    createImage();
+  };
+
   const copyToClipboard = (item) => {
     navigator.clipboard.writeText(item);
     setOpenToast(true);
@@ -94,6 +144,8 @@ export const QuoteGenerator = () => {
       setOpenToast(false);
     }, 2500);
   };
+
+  console.log('loading', imageLoading);
 
   return (
     <>
@@ -116,6 +168,14 @@ export const QuoteGenerator = () => {
             <div className="submit-group">
               <Sparkles onClick={handlePlaceholder} />
               <Button primary onClick={handleSubmit} label="Generate quote" />
+              <label>
+                <input
+                  type="checkbox"
+                  value={value}
+                  onChange={handleCheckbox}
+                />
+                Image
+              </label>
             </div>
             {/* {validForm && (
               <Modal
@@ -130,20 +190,45 @@ export const QuoteGenerator = () => {
             {invalidForm && <p className="error-message">Form is not valid</p>}
           </form>
         </section>
-        {quote && (
-          <section className="result-container">
-            <h3>{quote}</h3>
-            <button
-              type="button"
-              className="button-copy"
-              onClick={() => copyToClipboard(quote)}
-            >
-              <Copy />
-            </button>
-            <Toast open={openToast} overlayClass={`toast ${animation}`}>
-              <span>Copied to clipboard!</span>
-            </Toast>
-          </section>
+        {loading ? (
+          <Loading />
+        ) : (
+          quote && (
+            <section className="result-container">
+              <h3>{quote}</h3>
+              <button
+                type="button"
+                className="button-copy"
+                onClick={() => copyToClipboard(quote)}
+              >
+                <Copy />
+              </button>
+
+              {imageLoading ? (
+                <Loading />
+              ) : (
+                value &&
+                imageUrl && (
+                  <>
+                    <img
+                      className="img-ai"
+                      src={imageUrl}
+                      alt="AI-generated quote"
+                    />
+                    <Button
+                      className="btn-regenerate"
+                      primary
+                      onClick={handleRegenerate}
+                      label="Regenerate image"
+                    />
+                  </>
+                )
+              )}
+              <Toast open={openToast} overlayClass={`toast ${animation}`}>
+                <span>Copied to clipboard!</span>
+              </Toast>
+            </section>
+          )
         )}
       </main>
     </>

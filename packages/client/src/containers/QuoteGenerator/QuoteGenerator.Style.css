@@ -10,9 +10,25 @@
   flex-direction: column;
 }
 
+.img-ai {
+  width: 50%;
+  margin-top: 1rem;
+}
+
+.btn-regenerate {
+  margin-top: 1rem;
+}
+
 @media only screen and (max-width: 992px) {
   .standard-container .submit-box {
     width: auto;
+  }
+  .img-ai {
+    width: 100%;
+  }
+
+  .result-container {
+    margin-top: 0rem;
   }
 }
 

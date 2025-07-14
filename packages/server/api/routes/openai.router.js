@@ -6,11 +6,23 @@ const express = require('express');
 const router = express.Router({ mergeParams: true });
 
 // controllers
-const generateController = require('../controllers/generate.controller');
+const openaiController = require('../controllers/openai.controller');
 
-router.post('/', (req, res) => {
-  generateController
+router.post('/chats', (req, res) => {
+  openaiController
     .createChat(req.body)
+    .then((result) => res.json(result))
+    .catch((error) => {
+      // eslint-disable-next-line no-console
+      console.log(error);
+
+      res.status(400).send('Bad request').end();
+    });
+});
+
+router.post('/images', (req, res) => {
+  openaiController
+    .createImage(req.body)
     .then((result) => res.json(result))
     .catch((error) => {
       // eslint-disable-next-line no-console

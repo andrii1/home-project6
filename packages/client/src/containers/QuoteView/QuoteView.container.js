@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/control-has-associated-label */
 /* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable no-await-in-loop */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
@@ -10,7 +11,7 @@ import { Button } from '../../components/Button/Button.component';
 import { Badge } from '../../components/Badge/Badge.component';
 import { Card } from '../../components/Card/Card.component';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { ArrowBigUp } from 'lucide-react';
+import { ArrowBigUp, Copy } from 'lucide-react';
 import Modal from '../../components/Modal/Modal.Component';
 import iconCopy from '../../assets/images/icons8-copy-24.png';
 // eslint-disable-next-line import/no-extraneous-dependencies
@@ -20,6 +21,7 @@ import { useRatings } from '../../utils/hooks/useRatings';
 import { useFavorites } from '../../utils/hooks/useFavorites';
 import { Loading } from '../../components/Loading/Loading.Component';
 import { ErrorContainer } from '../ErrorContainer/ErrorContainer.Container';
+import Toast from '../../components/Toast/Toast.Component';
 
 import {
   faEnvelope,
@@ -59,6 +61,8 @@ export const QuoteView = () => {
   const { id } = useParams();
   const [openModal, setOpenModal] = useState(false);
   const [modalTitle, setModalTitle] = useState('');
+  const [openToast, setOpenToast] = useState(false);
+  const [animation, setAnimation] = useState('');
 
   const navigate = useNavigate();
   const [quote, setQuote] = useState({});
@@ -260,6 +264,19 @@ export const QuoteView = () => {
     setSelectedImage('');
     setColorPickerSelected(false);
     setColor(colorParam);
+  };
+
+  const copyToClipboard = (item) => {
+    navigator.clipboard.writeText(item);
+    setOpenToast(true);
+    setAnimation('open-animation');
+
+    setTimeout(() => {
+      setAnimation('close-animation');
+    }, 2000);
+    setTimeout(() => {
+      setOpenToast(false);
+    }, 2500);
   };
 
   const handleChangeFontColor = (colorParam) => {
@@ -576,12 +593,13 @@ export const QuoteView = () => {
                 <button
                   type="button"
                   className="button-copy"
-                  onClick={() => {
-                    navigator.clipboard.writeText(quote.title);
-                  }}
+                  onClick={() => copyToClipboard(quote.title)}
                 >
-                  <img src={iconCopy} alt="copy" className="icon-copy" />
+                  <Copy size={18} />
                 </button>
+                <Toast open={openToast} overlayClass={`toast ${animation}`}>
+                  <span>Copied to clipboard!</span>
+                </Toast>
                 <FontAwesomeIcon
                   icon={faLink}
                   className="button-copy"
@@ -740,6 +758,13 @@ export const QuoteView = () => {
                       </>
                     ))}
                   </p>
+                </div>
+              )}
+
+              {quote.ai_summary && (
+                <div className="container-description">
+                  <strong>✨ AI summary and emotional analysis:</strong>
+                  <p>{quote.ai_summary}</p>
                 </div>
               )}
 
