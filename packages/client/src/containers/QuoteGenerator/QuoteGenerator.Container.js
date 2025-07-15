@@ -73,7 +73,7 @@ export const QuoteGenerator = () => {
   const createImage = async () => {
     try {
       setImageLoading(true);
-      const imagePrompt = `An artistic, high-quality motivational poster image inspired by the quote: "${quote}`;
+      const imagePrompt = `A high-quality inspirational quote poster with the following exact quote in stylish font: ${quote}. Make the text clear, centered, and readable on a minimalist background. Poster-style, clean font.`;
       const imageRes = await fetch(`${apiURL()}/openai/images`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

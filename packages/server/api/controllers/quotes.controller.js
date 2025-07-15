@@ -584,6 +584,10 @@ const createQuote = async (token, body) => {
 
     const tagsArray = tagsString.split(',').map((tag) => tag.trim());
 
+    if (body.tag) {
+      tagsArray.push(body.tag);
+    }
+
     const tagIds = await Promise.all(
       tagsArray.map(async (tag) => {
         const existingTag = await knex('tags')
