@@ -174,7 +174,7 @@ export const QuoteGenerator = () => {
               error={promptError}
             />
             <div className="submit-group">
-              <Sparkles onClick={handlePlaceholder} />
+              <Sparkles color="#000000" onClick={handlePlaceholder} />
               <Button primary onClick={handleSubmit} label="Generate quote" />
               <label>
                 <input
@@ -229,14 +229,14 @@ export const QuoteGenerator = () => {
                         className="button-copy"
                         onClick={handleRegenerate}
                       >
-                        <RefreshCcw />
+                        <RefreshCcw color="#000000" />
                       </button>
                       <button
                         type="button"
                         className="button-copy"
                         onClick={handleDownloadAi}
                       >
-                        <Download />
+                        <Download color="#000000" />
                       </button>
                     </div>
                   </>

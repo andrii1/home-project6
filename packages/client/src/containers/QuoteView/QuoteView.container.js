@@ -570,14 +570,14 @@ export const QuoteView = () => {
                             className="button-copy"
                             onClick={() => createImage()}
                           >
-                            <RefreshCcw />
+                            <RefreshCcw color="#000000" />
                           </button>
                           <button
                             type="button"
                             className="button-copy"
                             onClick={handleDownloadAi}
                           >
-                            <Download />
+                            <Download color="#000000" />
                           </button>
                         </div>
                       </>
@@ -693,7 +693,7 @@ export const QuoteView = () => {
                       className="button-copy"
                       onClick={handleDownload}
                     >
-                      <Download />
+                      <Download color="#000000" />
                     </button>
                   </div>
                 </>
