@@ -209,7 +209,7 @@ export const QuoteGenerator = () => {
                 className="button-copy"
                 onClick={() => copyToClipboard(quote)}
               >
-                <Copy />
+                <Copy color="#000000" />
               </button>
 
               {imageLoading ? (

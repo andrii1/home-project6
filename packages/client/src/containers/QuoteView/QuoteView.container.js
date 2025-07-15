@@ -706,7 +706,7 @@ export const QuoteView = () => {
                   className="button-copy"
                   onClick={() => copyToClipboard(quote.title)}
                 >
-                  <Copy size={18} />
+                  <Copy size={18} color="#000000" />
                 </button>
                 <Toast open={openToast} overlayClass={`toast ${animation}`}>
                   <span>Copied to clipboard!</span>
