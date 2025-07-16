@@ -36,7 +36,7 @@ async function getSearchQueries() {
   const authClient = await auth.getClient();
   google.options({ auth: authClient });
 
-  const siteUrl = 'https://motivately.co/'; // must match exactly how it's registered in GSC
+  const siteUrl = 'https://www.motivately.co/'; // must match exactly how it's registered in GSC
 
   const { startDate, endDate } = getLast7DaysRange();
 
