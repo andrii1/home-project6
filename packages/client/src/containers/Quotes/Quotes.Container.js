@@ -401,10 +401,10 @@ export const Quotes = () => {
         .map((tag) => ({
           ...tag,
           activeUsers: dataTagsAnalytics?.some(
-            (e) => e.tagId.toString() === tag.id.toString(),
+            (e) => e.tagId.toString() === tag.slug.toString(),
           )
             ? dataTagsAnalytics
-                .filter((item) => item.tagId.toString() === tag.id.toString())
+                .filter((item) => item.tagId.toString() === tag.slug.toString())
                 .map((item) => item.activeUsers)
                 .toString()
             : null,
