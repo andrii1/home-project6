@@ -603,74 +603,65 @@ export const Quotes = () => {
     </Link>
   ));
 
-  const authorsList = authorsTrending
-    .sort((a, b) => a.fullName?.localeCompare(b.fullName))
-    .map((author) => {
-      if (authorIdParam) {
-        return (
-          <Link to={`/quotes/author/${author.id}`}>
-            <Button
-              primary={
-                author.id.toString() === authorIdParam.toString() && true
-              }
-              secondary={author.id !== authorIdParam && true}
-              label={author.fullName}
-            />
-          </Link>
-        );
-      }
-
+  const authorsList = authorsTrending.map((author) => {
+    if (authorIdParam) {
       return (
         <Link to={`/quotes/author/${author.id}`}>
-          <Button secondary label={author.fullName} />
+          <Button
+            primary={author.id.toString() === authorIdParam.toString() && true}
+            secondary={author.id !== authorIdParam && true}
+            label={author.fullName}
+          />
         </Link>
       );
-    });
+    }
 
-  const tagsList = tagsTrending
-    .sort((a, b) => a.title?.localeCompare(b.title))
-    .map((tag) => {
-      if (tagSlugParam) {
-        return (
-          <Link to={`/quotes/tag/${tag.slug}`}>
-            <Button
-              primary={tag.slug.toString() === tagSlugParam.toString() && true}
-              secondary={tag.slug !== tagSlugParam && true}
-              label={capitalize(tag.title)}
-            />
-          </Link>
-        );
-      }
+    return (
+      <Link to={`/quotes/author/${author.id}`}>
+        <Button secondary label={author.fullName} />
+      </Link>
+    );
+  });
+
+  const tagsList = tagsTrending.map((tag) => {
+    if (tagSlugParam) {
       return (
         <Link to={`/quotes/tag/${tag.slug}`}>
-          <Button secondary label={capitalize(tag.title)} />
+          <Button
+            primary={tag.slug.toString() === tagSlugParam.toString() && true}
+            secondary={tag.slug !== tagSlugParam && true}
+            label={capitalize(tag.title)}
+          />
         </Link>
       );
-    });
+    }
+    return (
+      <Link to={`/quotes/tag/${tag.slug}`}>
+        <Button secondary label={capitalize(tag.title)} />
+      </Link>
+    );
+  });
 
-  const searchList = searchTrending
-    .sort((a, b) => a.searchId?.localeCompare(b.searchId))
-    .map((searchItem) => {
-      if (searchParam) {
-        return (
-          <Link to={`/quotes/search/${searchItem.searchId}`}>
-            <Button
-              primary={
-                searchItem.searchId.toString() === searchParam.toString() &&
-                true
-              }
-              secondary={searchItem.searchId !== searchParam && true}
-              label={capitalize(searchItem.searchId)}
-            />
-          </Link>
-        );
-      }
+  const searchList = searchTrending.map((searchItem) => {
+    if (searchParam) {
       return (
         <Link to={`/quotes/search/${searchItem.searchId}`}>
-          <Button secondary label={capitalize(searchItem.searchId)} />
+          <Button
+            primary={
+              searchItem.searchId.toString() === searchParam.toString() && true
+            }
+            secondary={searchItem.searchId !== searchParam && true}
+            label={capitalize(searchItem.searchId)}
+          />
         </Link>
       );
-    });
+    }
+    return (
+      <Link to={`/quotes/search/${searchItem.searchId}`}>
+        <Button secondary label={capitalize(searchItem.searchId)} />
+      </Link>
+    );
+  });
 
   useEffect(() => {
     let column;
