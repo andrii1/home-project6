@@ -23,6 +23,7 @@ const tags = require('./tags.router');
 const blogs = require('./blogs.router');
 const analytics = require('./analytics.router');
 const openai = require('./openai.router');
+const queries = require('./queries.router');
 
 /* GET home page. */
 // router.get('/', function(req, res, next) {
@@ -68,5 +69,6 @@ router.use('/tags', tags);
 router.use('/blogs', blogs);
 router.use('/analytics', analytics);
 router.use('/openai', openai);
+router.use('/queries', queries);
 
 module.exports = router;

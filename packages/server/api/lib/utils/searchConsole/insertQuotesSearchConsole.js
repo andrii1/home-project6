@@ -1,14 +1,14 @@
 /* eslint-disable no-console */
 /* eslint-disable no-continue */
-/* eslint-disable no-return-await */
 /* eslint-disable no-await-in-loop */
 /* eslint-disable no-restricted-syntax */
+/* eslint-disable no-return-await */
 // const fetch = require("node-fetch");
 
 require('dotenv').config();
 
-const createQuotesChatGptBasedOnQuery = require('./useChatGptApi');
-const fetchSerpApi = require('./useSerpApi');
+const createQuotesChatGptBasedOnQuery = require('../serpApi/useChatGptApi.js');
+const getSearchQueries = require('./useSearchConsoleApi.js');
 
 // Credentials (from .env)
 const USER_UID = process.env.USER_UID_MOT_PROD;
@@ -49,6 +49,18 @@ async function insertQuote(quoteObj) {
   return await res.json(); // assume it returns { id, title }
 }
 
+async function insertQuery(queryObj) {
+  const res = await fetch(`${API_PATH}/queries`, {
+    method: 'POST',
+    headers: {
+      token: `token ${USER_UID}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(queryObj),
+  });
+  return await res.json(); // assume it returns { id, title }
+}
+
 // Function to get the quote and author
 function getQuoteAndAuthor(quote) {
   const match = quote.match(/^(.*?)[\s"”]?[–-]\s*([\w\s.]+)$/);
@@ -65,18 +77,6 @@ function cleanUp(str) {
     .trim(); // remove leading/trailing space
 }
 
-async function insertQuery(queryObj) {
-  const res = await fetch(`${API_PATH}/queries`, {
-    method: 'POST',
-    headers: {
-      token: `token ${USER_UID}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(queryObj),
-  });
-  return await res.json(); // assume it returns { id, title }
-}
-
 const createQuotes = async () => {
   const existingQuotes = await fetchExistingQuotes();
   const existingAuthors = await fetchExistingAuthors();
@@ -91,7 +91,7 @@ const createQuotes = async () => {
       { id: a.id, fullName: a.fullName },
     ]),
   );
-  const queries = await fetchSerpApi();
+  const queries = await getSearchQueries();
   console.log('queries', queries);
 
   for (const query of queries) {
@@ -103,7 +103,6 @@ const createQuotes = async () => {
       console.log('Duplicate query skipped:', query);
       continue;
     }
-
     const quotes = await createQuotesChatGptBasedOnQuery(query);
 
     console.log('quotes', quotes);
