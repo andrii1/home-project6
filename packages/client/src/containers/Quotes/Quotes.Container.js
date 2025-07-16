@@ -410,10 +410,10 @@ export const Quotes = () => {
             : null,
         }))
         .filter((item) => item.activeUsers)
-        .slice(0, 20);
-      // .sort((a, b) => {
-      //   return b.activeUsers - a.activeUsers;
-      // });
+        .slice(0, 20)
+        .sort((a, b) => {
+          return b.activeUsers - a.activeUsers;
+        });
       setTagsTrending(result);
     }
 
@@ -425,10 +425,9 @@ export const Quotes = () => {
       const response = await fetch(`${apiURL()}/analytics?search=true`);
       const dataSearchAnalytics = await response.json();
 
-      const result = dataSearchAnalytics.slice(0, 20);
-      // sort((a, b) => {
-      //   return b.activeUsers - a.activeUsers;
-      // });
+      const result = dataSearchAnalytics.slice(0, 20).sort((a, b) => {
+        return b.activeUsers - a.activeUsers;
+      });
       setSearchTrending(result);
     }
 

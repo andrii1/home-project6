@@ -130,7 +130,7 @@ const getTopTagsPages = async () => {
         },
       ],
     });
-    const regex = /\/tag\/\d+$/;
+    const regex = /\/quotes\/tag\/[^/]+$/;
     const filteredResponse = response.rows
       .filter((item) => regex.test(item.dimensionValues[0].value))
       .map((item) => {
@@ -172,7 +172,7 @@ const getTopSearchPages = async () => {
         },
       ],
     });
-    const regex = /\/search\/\d+$/;
+    const regex = /\/quotes\/search\/[^/]+$/;
     const filteredResponse = response.rows
       .filter((item) => regex.test(item.dimensionValues[0].value))
       .map((item) => {

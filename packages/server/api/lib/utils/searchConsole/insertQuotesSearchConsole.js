@@ -10,6 +10,14 @@ require('dotenv').config();
 const createQuotesChatGptBasedOnQuery = require('../serpApi/useChatGptApi.js');
 const getSearchQueries = require('./useSearchConsoleApi.js');
 
+const today = new Date();
+const isSunday = today.getDay() === 0; // 0 = Sunday
+
+if (!isSunday) {
+  console.log('Not Sunday, skipping weekly job.');
+  process.exit(0);
+}
+
 // Credentials (from .env)
 const USER_UID = process.env.USER_UID_MOT_PROD;
 const API_PATH = process.env.API_PATH_MOT_PROD;

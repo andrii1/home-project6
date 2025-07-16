@@ -625,7 +625,7 @@ const createQuote = async (token, body) => {
     // }
 
     // Generate a short description using OpenAI
-    const promptAiSummary = `Create a short explanation or emotional analysis of this quote: ${body.title}`;
+    const promptAiSummary = `Create a short (4-5 sentences) explanation or emotional analysis of this quote: ${body.title}`;
 
     const completionAiSummary = await openai.chat.completions.create({
       model: 'gpt-4o-mini',
