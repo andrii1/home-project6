@@ -37,7 +37,7 @@ async function fetchRedditWithApi() {
   for (const subredditName of listOfSubreddits) {
     try {
       const subreddit = await reddit.getSubreddit(subredditName);
-      const posts = await subreddit.getTop({ time: 'week', limit: 100 });
+      const posts = await subreddit.getTop({ time: 'week', limit: 150 });
 
       const postsMap = posts.map((post) => ({
         title: post.title,
